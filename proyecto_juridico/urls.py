@@ -15,8 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import login
+from django.contrib.auth.views import logout_then_login, LoginView
+from Sistema_juridico.views import Inicio
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('juridico/', include('Sistema_juridico.urls',))
+    path('juridico/', include('Sistema_juridico.urls',)),
+    path('inicio/',Inicio.as_view(),name='inicio'),
+    path('accounts/login/', LoginView.as_view(template_name='sesion/login.html'),name='login'),
+    path('logout',logout_then_login,name='logout')
 ]

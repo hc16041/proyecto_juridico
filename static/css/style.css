@@ -1,0 +1,11 @@
+.buscar-nombre {
+    float: left;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+.btn-crear,
+#btn-buscar {
+    margin-left: 5px;
+    float: right;
+}

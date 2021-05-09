@@ -1,15 +1,13 @@
-{%extends 'base.html'%}{%load static%}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
-</head>
-<body>
-    {%block content%}
-    <h1>Bienvenidos</h1>
+{%extends 'base.html'%}{%load static%}{%block title%}Inicio{%endblock%}{%block barra_busqueda%}{%endblock%}{%block content%}
+
+<div class="card">
+    <div class="card-header">
+        <h2>Bienvenidos</h2>
+    </div>
+    <div class="card-body">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum eos id animi molestiae. Suscipit saepe accusamus tempore natus atque perspiciatis corporis, quasi perferendis odio ratione sunt ullam in consequuntur aliquam.
+        </p>
+    </div>
     {%endblock%}
-</body>
-</html>
+</div>
