@@ -1,4 +1,4 @@
-{%load staticfiles%}
+{%load static%}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,13 +35,23 @@
                                 <h2 class="text-center">Bienvenido de nuevo</h2>
                                 <img class="img-fluid mx-auto d-block rounded" src="https://picsum.photos/id/870/300/200" />
                                 <form method="POST">
-                                    {% csrf_token %} {{form.as_p}}
+                                    {% csrf_token %}
+                                    <!-- {{form.as_p}} -->
+                                    <div>
+                                        <td>{{ form.username.label }}</td>
+                                        <td>{{ form.username }}</td>
+                                    </div>
+                                    <div>
+                                        <td>{{ form.password.label }}</td>
+                                        <td>{{ form.password }}</td>
+                                    </div>
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-primary mb-4">
                                             Iniciar Sesion
                                         </button>
                                         <br>
-                                        <a href="#">Contraseña olvidada</a>
+                                        <a href="#"> Contraseña olvidada</a>
+                                        <!--#url  -->
                                     </div>
                                 </form>
                             </div>

@@ -71,11 +71,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'proyecto_juridico.wsgi.application'
-
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-user='AzureAD#JoseHernandez'
 DATABASES = {
 
     'default': {
@@ -90,6 +89,7 @@ DATABASES = {
     },
 }
 
+AUTH_USER_MODEL='Sistema_juridico.Usuario'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

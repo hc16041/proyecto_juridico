@@ -24,5 +24,6 @@ urlpatterns = [
     path('juridico/', include('Sistema_juridico.urls',)),
     path('inicio/',Inicio.as_view(),name='inicio'),
     path('accounts/login/', LoginView.as_view(template_name='sesion/login.html'),name='login'),
-    path('logout',logout_then_login,name='logout')
+    path('logout',logout_then_login,name='logout'),
+    # path('accounts/password_reset,')
 ]

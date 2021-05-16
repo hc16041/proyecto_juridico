@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from .forms import TipoDeAbogadoForm, FormLogin, CasoForm, TipoDeProcesoForm
+from .forms import *
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView, FormView
 from django.db.models import Q
-from .models import  TipoDeAbogado, Caso, TipoDeProceso
+from .models import *
 from django.http import HttpResponseRedirect
 from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_protect
@@ -13,12 +13,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 
 # Create your views here.
+
+    
 class Inicio(TemplateView, LoginRequiredMixin):
     template_name='inicio.html'
     
 class ListarTiposDeAbogados(ListView):
     model = TipoDeAbogado
-    template_name = "abogados/tipo_de_abogado_list.html"
+    template_name = "abogados/tp_abogado_listado.html"
     context_object_name='tipos'
     queryset=TipoDeAbogado.objects.all()
     paginate_by=10
@@ -35,20 +37,20 @@ class ListarTiposDeAbogados(ListView):
 class CrearTipoDeAbogado(CreateView):
     model = TipoDeAbogado
     form_class=TipoDeAbogadoForm
-    template_name = "abogados/crear_tipo_de_abogado.html"
+    template_name = "abogados/tp_abogado_crear.html"
     context_object_name='tipos'
     success_url=reverse_lazy('tipo_de_abogado')
     
 class ActualizarTipoDeAbogado(UpdateView):
     model = TipoDeAbogado
     form_class=TipoDeAbogadoForm
-    template_name = "abogados/editar_tipo_de_abogado.html"
+    template_name = "abogados/tp_abogado_editar.html"
     context_object_name='tipos'
     success_url=reverse_lazy('tipo_de_abogado')
     
 class EliminarTipoDeAbogado(DeleteView):
     model = TipoDeAbogado
-    template_name = "abogados/tipo_de_abogado_confirm_delete.html"
+    template_name = "abogados/tp_abogado_borrar.html"
     success_url=reverse_lazy('tipo_de_abogado')
     
 
@@ -94,3 +96,73 @@ class CrearTipoDeProceso(CreateView):
     template_name = "procesos/crear_tipo_proceso.html"
     success_url=reverse_lazy('tipo_de_abogado')
     
+class ListarTiposDeProcesos(ListView):
+    model = TipoDeProceso
+    template_name = "procesos/tp_proceso_listado.html"
+    context_object_name='tp_p'
+    queryset=TipoDeProceso.objects.all()
+    paginate_by=10
+    
+    #Para la barra de busqueda
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return TipoDeProceso.objects.filter(
+            Q(nombre__icontains=self.request.GET['buscar'])|
+            Q(descripcion__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+    
+class CrearTipoDeProceso(CreateView):
+    model = TipoDeProceso
+    form_class=TipoDeProcesoForm
+    template_name = "procesos/tp_proceso_crear.html"
+    context_object_name='tipos'
+    success_url=reverse_lazy('tipo_de_proceso')
+    
+class ActualizarTipoDeProceso(UpdateView):
+    model = TipoDeProceso
+    form_class=TipoDeProcesoForm
+    template_name = "procesos/tp_proceso_editar.html"
+    context_object_name='tipos'
+    success_url=reverse_lazy('tipo_de_proceso')
+    
+class EliminarTipoDeProceso(DeleteView):
+    model = TipoDeProceso
+    template_name = "abogados/tp_abogado_borrar.html"
+    success_url=reverse_lazy('tipo_de_proceso')
+    
+class ListaCliente(ListView):
+    model=Cliente
+    template_name = "clientes/cliente_list.html"
+    context_object_name='clientes'
+    #solo los que son cliente
+    queryset=Cliente.objects.all()
+    
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Cliente.objects.filter(
+            Q(nombre__icontains=self.request.GET['buscar'])|
+            Q(correo__icontains=self.request.GET['buscar'])|
+            Q(dui__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+    #success_url=reverse_lazy('inicio')
+    
+class CrearCliente(CreateView):
+    model = Cliente
+    form_class=FormCliente
+    template_name = "clientes/cliente_crear.html"
+    context_object_name='tipos'
+    success_url=reverse_lazy('cliente')
+ 
+
+class ActualizarCliente(UpdateView):
+    model = Cliente
+    form_class=FormCliente
+    template_name = "clientes/cliente_editar.html"
+    success_url=reverse_lazy('cliente')
+    
+class EliminarCliente(DeleteView):
+    model = Cliente
+    template_name = "clientes/cliente_borrar.html"
+    success_url=reverse_lazy('cliente')
