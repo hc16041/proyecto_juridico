@@ -95,30 +95,9 @@ class Pago(models.Model):
 
     def __str__(self):
         """Unicode representation of Pago."""
-        return self.cargo
+        return self.descripcion
 
-Estados = (
-    (0, "En Proceso"),
-    (1, "Finalizado")
-)
-class Caso(models.Model):
-    codigo = models.IntegerField(primary_key=True,blank=False, null=False)
-    descripcion = models.TextField(max_length = 220, blank=False, null=False)
-    estado = models.IntegerField(choices=Estados, default=0)
-    tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
-    pago=models.ForeignKey(Pago,on_delete=models.CASCADE)
-    audiencia=models.ForeignKey(Audiencia,on_delete=models.CASCADE)
-    fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
-    
-    
-    class Meta:
-        verbose_name = 'Caso'
-        verbose_name_plural = 'Casos'
 
-    def __str__(self):
-        """Unicode representation of Caso."""
-        return self.codigo
-    
 class ManejadorUsuario(BaseUserManager):
       def create_user(self,correo,nombre,apellido,password=None):
           if not correo:
@@ -223,3 +202,28 @@ class Cliente(Usuario):
 class Abogado(Usuario):
     Tipo_de_abogado=models.OneToOneField(TipoDeAbogado, verbose_name=("Tipo De Abogado"), on_delete=models.CASCADE)
     #es_abogado=models.BooleanField(default=False)
+    
+Estados = (
+    (0, "En Proceso"),
+    (1, "Finalizado")
+)
+class Caso(models.Model):
+    id_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente"), on_delete=models.CASCADE)
+    id_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
+    codigo = models.IntegerField(primary_key=True,blank=False, null=False)
+    descripcion = models.TextField(max_length = 220, blank=False, null=False)
+    estado = models.IntegerField(choices=Estados, default=0)
+    tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
+    pago=models.ForeignKey(Pago,on_delete=models.CASCADE)
+    audiencia=models.ForeignKey(Audiencia,on_delete=models.CASCADE)
+    fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
+    
+    
+    class Meta:
+        verbose_name = 'Caso'
+        verbose_name_plural = 'Casos'
+
+    def __str__(self):
+        """Unicode representation of Caso."""
+        return self.codigo
+    

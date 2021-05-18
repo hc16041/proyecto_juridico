@@ -1,8 +1,7 @@
 from django.contrib import admin
-from .models import TipoDeAbogado
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .forms import FormUsuario
-from .models import Usuario
+from .models import *
 # Register your models here.
 
 
@@ -35,3 +34,11 @@ from .models import Usuario
 #admin.site.register(Usuario,UserAdmin)
 admin.site.register(TipoDeAbogado)
 admin.site.register(Usuario)
+admin.site.register(Caso)
+admin.site.register(Pago)
+admin.site.register(Abogado)
+admin.site.register(TipoDeProceso)
+admin.site.register(FormaDePago)
+admin.site.register(Audiencia)
+admin.site.register(Cliente)
+

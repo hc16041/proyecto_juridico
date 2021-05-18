@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="col-md-10">
-            <a class="btn btn-primary" href="{%url 'crear_cliente'%}" id="crear" style="float: right;">Crear Cliente</a>
+            <a class="btn btn-primary" href="{%url 'crear_caso'%}" id="crear" style="float: right;">Crear Cliente</a>
         </div>
         <br>
         <br>
@@ -33,27 +33,23 @@
                 <table class="table table-responsive table-hover">
                     <thead class="thead-dark ">
                         <tr>
-                            <th scope="col ">Nombre</th>
-                            <th scope="col ">Apellido</th>
-                            <th scope="col ">DUI</th>
-                            <th scope="col ">Telefono</th>
-                            <th scope="col ">Fecha de Nacimiento</th>
-                            <th scope="col ">Usuario</th>
+                            <th scope="col ">Cliente</th>
+                            <th scope="col ">Abogado</th>
+                            <th scope="col ">codigo</th>
+                            <th scope="col ">Descripcion</th>
+                            <th scope="col ">Estado</th>
 
                         </tr>
                     </thead>
                     <tbody>
                         {%for cliente in clientes%}
                         <tr>
-                            <td>{{cliente.nombre}}</td>
-                            <td>{{cliente.apellido}}</td>
-                            <td>{{cliente.dui}}</td>
-                            <td>{{cliente.telefono}}</td>
-                            <td>{{cliente.fecha_nacimiento}}</td>
-                            <td>{{cliente.username}}</td>
-                            <td><a onclick="abrir_modal_edicion('{% url 'editar_cliente' cliente.id %}')" class="btn btn-warning">Editar</a>
-                                <a onclick="abrir_modal_eliminacion('{% url 'eliminar_cliente' cliente.id %}')" class="btn btn-danger">Eliminar</a>
-
+                            <td>{{cliente.id_cliente.get_full_name}}</td>
+                            <td>{{cliente.id_abogado.get_full_name}}</td>
+                            <td>{{cliente.codigo}}</td>
+                            <td>{{cliente.descripcion}}</td>
+                            <td>{{cliente.estado}}</td>
+                            <td>
                             </td>
                         </tr>
                         {%endfor%}
@@ -64,7 +60,7 @@
         {%else%}
         <div class="container">
             <div class="col-md-8">
-                <a class="btn btn-primary" href="{%url 'crear_cliente'%}" id="crear" style="float: right;">Crear Cliente</a>
+                <a class="btn btn-primary" href="{%url 'crear_caso'%}" id="crear" style="float: right;">Crear Cliente</a>
             </div>
             <br>
             <br>

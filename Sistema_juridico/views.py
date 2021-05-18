@@ -166,3 +166,23 @@ class EliminarCliente(DeleteView):
     model = Cliente
     template_name = "clientes/cliente_borrar.html"
     success_url=reverse_lazy('cliente')
+    
+    
+
+class ListaCasos(ListView):
+    model=Caso
+    template_name = "casos/listar.html"
+    context_object_name='clientes'
+    #solo los que son cliente
+    queryset=Caso.objects.all()
+    
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Caso.objects.filter(
+            Q(nombre__icontains=self.request.GET['buscar'])|
+            Q(correo__icontains=self.request.GET['buscar'])|
+            Q(dui__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+    #success_url=reverse_lazy('inicio')
+    
