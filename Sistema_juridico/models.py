@@ -97,7 +97,6 @@ class Pago(models.Model):
         """Unicode representation of Pago."""
         return self.descripcion
 
-
 class ManejadorUsuario(BaseUserManager):
       def create_user(self,correo,nombre,apellido,password=None):
           if not correo:
