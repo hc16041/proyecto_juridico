@@ -76,11 +76,6 @@ class ActualizarTipoDeAbogado(UpdateView):
     context_object_name='tipos'
     success_url=reverse_lazy('tipo_de_abogado')
     
-class EliminarTipoDeAbogado(DeleteView):
-    model = TipoDeAbogado
-    template_name = "abogados/tp_abogado_borrar.html"
-    success_url=reverse_lazy('tipo_de_abogado')
-    
 
 class ListarTiposDeProcesos(ListView):
     model = TipoDeProceso
@@ -154,7 +149,78 @@ class EliminarCliente(DeleteView):
     success_url=reverse_lazy('cliente')
        
 
-class ListaCasos(ListView):
+class ListarInstitucion(ListView):
+    model = Institucion
+    template_name = "institucion/institucion_list.html"
+    context_object_name='institucion'
+    queryset=Institucion.objects.all()
+    paginate_by=10
+    
+    #Para la barra de busqueda
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Institucion.objects.filter(
+            Q(nombre__icontains=self.request.GET['buscar'])|
+            Q(direccion__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+
+class CrearInstitucion(CreateView):
+    model = Institucion
+    form_class= InstitucionForm
+    template_name = "institucion/crear_institucion.html"
+    context_object_name='institucion'
+    success_url=reverse_lazy('institucion')
+ 
+class EliminarInstitucion(DeleteView):
+    model = Institucion
+    template_name = "institucion/institucion_confirm_delete.html"
+    success_url=reverse_lazy('institucion')
+
+class ActualizarInstitucion(UpdateView):
+    model = Institucion
+    form_class=TipoDeAbogadoForm
+    template_name = "abogados/editar_institucion.html"
+    context_object_name='tipos'
+    success_url=reverse_lazy('tipo_de_abogado')
+
+
+class ListarAbogado(ListView):
+    model=Abogado
+    template_name = "abogados/abogados_list.html"
+    context_object_name='abogados'
+    #solo los que son abogado
+    queryset=Abogado.objects.all()
+    
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Abogado.objects.filter(
+            Q(nombre__icontains=self.request.GET['buscar'])|
+            Q(correo__icontains=self.request.GET['buscar'])|
+            Q(dui__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+    #success_url=reverse_lazy('inicio')
+
+class CrearAbogado(CreateView):
+    model = Abogado
+    form_class=FormAbogado
+    template_name = "abogados/crear_abogado.html"
+    context_object_name='tipos'
+    success_url=reverse_lazy('abogado')
+
+class ActualizarAbogado(UpdateView):
+    model = Abogado
+    form_class=FormAbogado
+    template_name = "abogados/editar_abogado.html"
+    success_url=reverse_lazy('abogado')
+
+class EliminarAbogado(DeleteView):
+    model = Abogado
+    template_name = "abogados/eliminar_abogado.html"
+    success_url=reverse_lazy('abogado')
+
+class ListarCasos(ListView):
     model=Caso
     template_name = "casos/listar.html"
     context_object_name='clientes'

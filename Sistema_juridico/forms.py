@@ -200,7 +200,6 @@ class FormCliente(forms.ModelForm):
                          'class':'form-control',
                          'placeholder':'Ingrese el nombre del cliente',
                          'id':'nombre',
-                       
                      }
             ),
                  'correo':forms.TextInput(
@@ -373,45 +372,70 @@ class FormAbogado(forms.ModelForm):
         }
         ))
     class Meta:
-        model=Cliente
-        fields='__all__'
+        model=Abogado
+        fields=('nombre','apellido','dui','direccion','correo','telefono','estado_civil','fecha_nacimiento', 'Tipo_de_abogado')
         widgets={
                  'nombre': forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese el nombre del cliente',
+                         'placeholder':'Ingrese el nombre',
                          'id':'nombre',
-                       
                      }
-                 ),
+            ),
                  'correo':forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese correo del cliente',
-                         'id':'descripcion',
+                         'placeholder':'Ingrese correo ',
+                         'id':'correo',
                      }
-                 ),
+            ),
                  'apellido':forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese apellido del cliente',
-                         'id':'descripcion',
+                         'placeholder':'Ingrese apellido',
+                         'id':'apellido',
                      }
                  ),
                  'direccion':forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese la direccion del cliente',
-                         'id':'descripcion',
+                         'placeholder':'Ingrese la direccion',
+                         'id':'direccion',
                      }
-                 ),
+            ),
                  'telefono':forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese telefono del cliente',
-                         'id':'descripcion',
+                         'placeholder':'Ingrese telefono',
+                         'id':'telefono',
                      }
-                 ),
+            ),
+                 'dui': forms.TextInput(
+                     attrs={
+                         'class':'form-control',
+                         'placeholder':'Ingrese el dui ',
+                         'id':'dui',
+                     }
+            ),
+                 'estado_civil':forms.Select(
+                attrs={
+                    'id':'estado_civil',
+                    'class':'form-control form-control-sm col-sm-2'
+                }
+            ),
+                 'fecha_nacimiento':forms.DateInput(
+                     attrs={
+                         'class':'form-control form-control-sm col-sm-4',
+                         'type': 'date',
+                         'id':'fecha_nacimiento'
+                         }
+            ),
+                 'Tipo_de_abogado':forms.Select(
+                attrs={
+                    'id':'tipo',
+                    'class':'form-control form-control-sm col-sm-2'
+                }
+            ),
              }
        
     def clean_password2(self):
@@ -428,3 +452,62 @@ class FormAbogado(forms.ModelForm):
         if commit:
             usuario.save()
         return usuario
+
+class InstitucionForm(forms.ModelForm):
+    class Meta:
+        model=Institucion
+        fields='__all__'
+        labels={
+            'nombre': 'Nombre de la institucion',
+            'direccion': 'Direccion de la institucion',
+            'descripcion':'Descripcion',
+            'correo':'Correo',
+            'telefono':'Telefono',
+            'tipo':'Tipo de institucion',
+        }
+        widgets={
+            'nombre': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese el nombre de la institucion',
+                    'id':'nombre',
+                }
+            ),
+            'direccion': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese la direccion de la institucion',
+                    'id':'direccion',
+                }
+            ),
+            'descripcion':forms.Textarea(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese descripcion de la institucion',
+                    'id':'descripcion',
+                }
+            ),
+            
+            'correo': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese el email de la institucion',
+                    'id':'correo',
+                }
+            ),
+
+            'telefono': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese el telefono de la institucion',
+                    'id':'telefono',
+                }
+            ),
+            'tipo': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese el tipo de institucion',
+                    'id':'tipo',
+                }
+            ),
+        }
