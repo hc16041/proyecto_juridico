@@ -8,6 +8,7 @@ from django.contrib.admin import widgets
 # Create your models here.
 
 
+
 class TipoDeAbogado(models.Model):
     nombre = models.CharField(max_length = 100, blank=False, null=False)
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
@@ -200,9 +201,12 @@ class Cliente(Usuario):
     #es_cliente=models.BooleanField(default=False)
 
 class Abogado(Usuario):
-    Tipo_de_abogado=models.OneToOneField(TipoDeAbogado, verbose_name=("Tipo De Abogado"), on_delete=models.CASCADE)
+
+   Tipo_de_abogado=models.OneToOneField(TipoDeAbogado, verbose_name=("Tipo De Abogado"), on_delete=models.CASCADE)
     #es_abogado=models.BooleanField(default=False)
     
+    
+
 Estados = (
     ('P', 'En Proceso'),
     ('F', 'Finalizado')
@@ -222,6 +226,23 @@ class Caso(models.Model):
     class Meta:
         verbose_name = 'Caso'
         verbose_name_plural = 'Casos'
+
+    def __str__(self):
+        """Unicode representation of Caso."""
+        return self.codigo
+    
+class Reporte(models.Model):
+    codigo_caso=models.ForeignKey(Caso,verbose_name="codigo caso"),on_delete=models.CASCADE
+    dui_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente"), on_delete=models.CASCADE)
+    nombre_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
+    codigo = models.IntegerField(primary_key=True,blank=False, null=False)
+    estado_cliente = models.IntegerField(choices=Estados, default=0)
+    tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
+    
+    
+    class Meta:
+        verbose_name = 'Reporte'
+        verbose_name_plural = 'Reporte'
 
     def __str__(self):
         """Unicode representation of Caso."""
