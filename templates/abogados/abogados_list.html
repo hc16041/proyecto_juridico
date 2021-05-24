@@ -53,7 +53,6 @@
                             <td>{{abogado.username}}</td>
                             <td><a onclick="abrir_modal_edicion('{% url 'editar_abogado' abogado.id %}')" class="btn btn-warning">Editar</a>
                                 <a onclick="abrir_modal_eliminacion('{% url 'eliminar_abogado' abogado.id %}')" class="btn btn-danger">Eliminar</a>
-
                             </td>
                         </tr>
                         {%endfor%}
