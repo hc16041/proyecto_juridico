@@ -179,10 +179,10 @@ class EliminarInstitucion(DeleteView):
 
 class ActualizarInstitucion(UpdateView):
     model = Institucion
-    form_class=TipoDeAbogadoForm
-    template_name = "abogados/editar_institucion.html"
+    form_class=InstitucionForm
+    template_name = "institucion/editar_institucion.html"
     context_object_name='tipos'
-    success_url=reverse_lazy('tipo_de_abogado')
+    success_url=reverse_lazy('institucion')
 
 
 class ListarAbogado(ListView):
