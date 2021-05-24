@@ -185,4 +185,19 @@ class ListaCasos(ListView):
         ).distinct()
         return super().get_queryset()
     #success_url=reverse_lazy('inicio')
+
+class ListaReportes(ListView):
+    model=Reporte
+    template_name = "reportes/reporte_list.html"
+    context_object_name='reportes'
+    queryset=Reporte.objects.all()
+    paginate_by=10
     
+    #Para la barra de busqueda
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Reporte.objects.filter(
+            Q(nombre__icontains=self.request.GET['buscar'])|
+            Q(descripcion__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()

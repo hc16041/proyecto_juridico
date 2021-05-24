@@ -232,19 +232,18 @@ class Caso(models.Model):
         return self.codigo
     
 class Reporte(models.Model):
-    codigo_caso=models.ForeignKey(Caso,verbose_name="codigo caso"),on_delete=models.CASCADE
+    codigo=models.ForeignKey(Caso,verbose_name=("Id caso"),on_delete=models.CASCADE)
     dui_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente"), on_delete=models.CASCADE)
     nombre_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
-    codigo = models.IntegerField(primary_key=True,blank=False, null=False)
+    codigo_reporte = models.IntegerField(primary_key=True,blank=False, null=False)
     estado_cliente = models.IntegerField(choices=Estados, default=0)
     tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
     
     
     class Meta:
         verbose_name = 'Reporte'
-        verbose_name_plural = 'Reporte'
+        verbose_name_plural = 'Reportes'
 
     def __str__(self):
         """Unicode representation of Caso."""
         return self.codigo
-    
