@@ -33,22 +33,20 @@
                 <table class="table table-responsive table-hover">
                     <thead class="thead-dark ">
                         <tr>
-                            <th scope="col ">Cliente</th>
-                            <th scope="col ">Abogado</th>
-                            <th scope="col ">codigo</th>
-                            <th scope="col ">Descripcion</th>
+                            <th scope="col ">Nombre del Caso</th>
                             <th scope="col ">Estado</th>
+                            <th scope="col ">Abogado</th>
+                            <th scope="col ">Tipo de Proceso</th>
 
                         </tr>
                     </thead>
                     <tbody>
                         {%for cliente in clientes%}
                         <tr>
-                            <td>{{cliente.id_cliente.get_full_name}}</td>
-                            <td>{{cliente.id_abogado.get_full_name}}</td>
                             <td>{{cliente.codigo}}</td>
-                            <td>{{cliente.descripcion}}</td>
-                            <td>{{cliente.estado}}</td>
+                            <td>{{cliente.get_estado_display}}</td>
+                            <td>{{cliente.id_abogado.get_full_name}}</td>
+                            <td>{{cliente.tipo_de_proceso}}</td>
                             <td>
                             </td>
                         </tr>

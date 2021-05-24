@@ -144,7 +144,7 @@ class Usuario(AbstractBaseUser,PermissionsMixin):
     nombre = models.CharField(max_length = 150)
     apellido = models.CharField(max_length = 150)
     direccion = models.CharField(max_length = 150)
-    dui = models.CharField(max_length = 10)
+    dui = models.CharField(max_length = 10, unique=True)
     telefono=models.CharField(max_length = 8)
     fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
     fecha_nacimiento = models.DateField(null=True)
@@ -204,15 +204,15 @@ class Abogado(Usuario):
     #es_abogado=models.BooleanField(default=False)
     
 Estados = (
-    (0, "En Proceso"),
-    (1, "Finalizado")
+    ('P', 'En Proceso'),
+    ('F', 'Finalizado')
 )
 class Caso(models.Model):
     id_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente"), on_delete=models.CASCADE)
     id_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
     codigo = models.IntegerField(primary_key=True,blank=False, null=False)
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
-    estado = models.IntegerField(choices=Estados, default=0)
+    estado = models.CharField(choices=Estados, default=0, max_length=2)
     tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
     pago=models.ForeignKey(Pago,on_delete=models.CASCADE)
     audiencia=models.ForeignKey(Audiencia,on_delete=models.CASCADE)
