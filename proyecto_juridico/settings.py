@@ -78,10 +78,15 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DATABASES = {
 
     'default': {
-    
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'sql_server.pyodbc',
+        'HOST': 'DESKTOP-8UJ281S',
+        'PORT': '1433',
+        'NAME': 'db_juridica',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            'unicode_results': True,
+        },
+    },
 }
 
 AUTH_USER_MODEL='Sistema_juridico.Usuario'

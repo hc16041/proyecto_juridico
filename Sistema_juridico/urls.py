@@ -9,12 +9,7 @@ urlpatterns = [
     path('eliminar_tipo_de_abogado/<int:pk>/',EliminarTipoDeAbogado.as_view(),name='eliminar_tipo_de_abogado'),
 
     path('crear_caso/',CrearCaso.as_view(),name='crear_caso'),
-<<<<<<< HEAD
     path('tipo_de_proceso/',ListarTiposDeProcesos.as_view(), name='tipo_de_proceso'),
-=======
-
-    path('tipo_de_proceso/',login_required(ListarTiposDeProcesos.as_view()), name='tipo_de_proceso'),
->>>>>>> eed17e75a2438989ef22b78b98e0f0ecc65356e3
     path('crear_tipo_de_proceso/',CrearTipoDeProceso.as_view(),name='crear_tipo_de_proceso'),
     path('editar_tipo_de_proceso/<int:pk>',ActualizarTipoDeProceso.as_view(),name='editar_tipo_de_proceso'),
     path('eliminar_tipo_de_proceso/<int:pk>/',EliminarTipoDeProceso.as_view(),name='eliminar_tipo_de_proceso'),

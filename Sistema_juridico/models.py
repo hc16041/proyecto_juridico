@@ -138,8 +138,9 @@ class Usuario(AbstractBaseUser,PermissionsMixin):
     fecha_nacimiento = models.DateField(null=True)
     estado_civil = models.IntegerField(choices=Estado_Civil, default=0)
     username=models.CharField( max_length=50)
-    is_staff=models.BooleanField(default=False)
     is_active=models.BooleanField(default=True)
+    is_staff=models.BooleanField(default=False)
+    
     
     
     objects=ManejadorUsuario()
@@ -228,7 +229,6 @@ class Caso(models.Model):
     
 class Reporte(models.Model):
     codigo_caso=models.ForeignKey(Caso,verbose_name="codigo caso",on_delete=models.CASCADE)
-    codigo=models.ForeignKey(Caso,verbose_name=("Id caso"),on_delete=models.CASCADE)
     dui_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente"), on_delete=models.CASCADE)
     nombre_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
     codigo_reporte = models.IntegerField(primary_key=True,blank=False, null=False)
@@ -242,7 +242,7 @@ class Reporte(models.Model):
 
     def __str__(self):
         """Unicode representation of Caso."""
-        return self.codigo
+        return self.tipo_de_proceso
 
 class USCitizen(models.Model):
     nombre=models.CharField( max_length=50)
