@@ -1,0 +1,21 @@
+{%extends 'base.html'%}{%load static%} {%block title%}Crear Abogado{%endblock%} {%block content%}
+<div class="container">
+    <div class="card ">
+        <div class="card-header">
+            <strong>Registro de Abogado</strong>
+        </div>
+        <div class="card-body card_block">
+            <form method="post" enctype="multipart/form-data">
+                {%csrf_token %} {{form.as_p}}
+                <ul class="errorlist">
+                    <p>Nota: Asegúrese de que este valor tenga más de 220 caracteres</p>
+                </ul>
+                <div class="text-center ">
+                    <button type="submit " class="btn btn-primary">Guardar</button>
+                    <button type="reset" onclick="history.back()" class="btn btn-danger ">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{%endblock%}

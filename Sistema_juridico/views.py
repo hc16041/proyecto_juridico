@@ -133,6 +133,36 @@ class EliminarTipoDeProceso(DeleteView):
     template_name = "abogados/tp_abogado_borrar.html"
     success_url=reverse_lazy('tipo_de_proceso')
     
+class ListaAbogado(ListView):
+    model=Cliente
+    template_name = "abogados/abogado_list.html"
+    context_object_name='abogados'
+    #solo los que son abogado
+    queryset=Abogado.objects.all()
+    
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Abogado.objects.filter(
+            Q(nombre__icontains=self.request.GET['buscar'])|
+            Q(correo__icontains=self.request.GET['buscar'])|
+            Q(dui__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+    #success_url=reverse_lazy('inicio')
+    
+class CrearAbogado(CreateView):
+    model = Abogado
+    form_class=FormAbogado
+    template_name = "abogados/crear_abogado.html"
+    context_object_name='abogados'
+    success_url=reverse_lazy('abogados')
+ 
+class ActualizarAbogado(UpdateView):
+    model = Abogado
+    form_class= FormAbogado
+    template_name = "abogados/editar_abogado.html"
+    success_url=reverse_lazy('abogados')   
+
 class ListaCliente(ListView):
     model=Cliente
     template_name = "clientes/cliente_list.html"
@@ -157,7 +187,6 @@ class CrearCliente(CreateView):
     context_object_name='tipos'
     success_url=reverse_lazy('cliente')
  
-
 class ActualizarCliente(UpdateView):
     model = Cliente
     form_class=FormCliente

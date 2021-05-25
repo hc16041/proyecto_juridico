@@ -234,7 +234,7 @@ class FormCliente(forms.ModelForm):
                  'dui': forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese el dui del cliente',
+                         'placeholder': 'Ingrese numero de dui',
                          'id':'dui',
                        
                      }
@@ -373,45 +373,70 @@ class FormAbogado(forms.ModelForm):
         }
         ))
     class Meta:
-        model=Cliente
-        fields='__all__'
+        model= Abogado
+        fields=('nombre', 'apellido', 'dui', 'direccion', 'estado_civil', 'correo', 'telefono', 'fecha_nacimiento', 'Tipo_de_abogado')
         widgets={
                  'nombre': forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese el nombre del cliente',
+                         'placeholder':'Ingrese nombre',
                          'id':'nombre',
-                       
-                     }
-                 ),
-                 'correo':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese correo del cliente',
-                         'id':'descripcion',
                      }
                  ),
                  'apellido':forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese apellido del cliente',
+                         'placeholder':'Ingrese apellido',
+                         'id':'descripcion',
+                     }
+                 ),
+                 'correo':forms.TextInput(
+                     attrs={
+                         'class':'form-control',
+                         'placeholder':'Ingrese correo',
                          'id':'descripcion',
                      }
                  ),
                  'direccion':forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese la direccion del cliente',
+                         'placeholder':'Ingrese direccion',
                          'id':'descripcion',
                      }
                  ),
                  'telefono':forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese telefono del cliente',
+                         'placeholder':'Ingrese telefono',
                          'id':'descripcion',
                      }
                  ),
+                 'dui': forms.TextInput(
+                     attrs={
+                         'class':'form-control',
+                         'placeholder':'Ingrese numero de dui',
+                         'id':'dui',
+                     }
+                ),
+                 'estado_civil':forms.Select(
+                      attrs={
+                         'id':'estado_civil',
+                          'class':'form-control form-control-sm col-sm-2'
+                    }
+                ),
+                 'fecha_nacimiento':forms.DateInput(
+                     attrs={
+                         'class':'form-control form-control-sm col-sm-4',
+                         'type': 'date',
+                         'id':'fecha_nacimiento'
+                         }
+                ),
+                'Tipo_de_abogado':forms.Select(
+                      attrs={
+                        'id':'Tipo_de_abogado',
+                        'class':'form-control form-control-sm col-sm-2'
+                      }
+                 )
              }
        
     def clean_password2(self):
