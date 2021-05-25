@@ -52,7 +52,7 @@
                             <td>{{cliente.fecha_nacimiento}}</td>
                             <td>{{cliente.username}}</td>
                             <td><a onclick="abrir_modal_edicion('{% url 'editar_cliente' cliente.id %}')" class="btn btn-warning">Editar</a>
-
+                                <td><a onclick="abrir_modal_edicion('{% url 'detalle_cliente' cliente.id %}')" class="btn btn-danger">Detalle</a>
                             </td>
                         </tr>
                         {%endfor%}
@@ -79,6 +79,11 @@
 </div>
 
 <script type="text/javascript">
+    function abrir_modal_edicion(url) {
+        $('#edicion').load(url, function() {
+            $(this).modal('show');
+        });
+    }
     function abrir_modal_edicion(url) {
         $('#edicion').load(url, function() {
             $(this).modal('show');

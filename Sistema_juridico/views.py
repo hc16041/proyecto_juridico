@@ -163,6 +163,11 @@ class ActualizarAbogado(UpdateView):
     template_name = "abogados/editar_abogado.html"
     success_url=reverse_lazy('abogados')   
 
+class DetalleAbogado(DetailView):
+    model = Abogado
+    template_name = "abogados/detalle_abogado.html"
+    success_url = reverse_lazy('abogados')
+
 class ListaCliente(ListView):
     model=Cliente
     template_name = "clientes/cliente_list.html"
@@ -197,7 +202,11 @@ class EliminarCliente(DeleteView):
     model = Cliente
     template_name = "clientes/cliente_borrar.html"
     success_url=reverse_lazy('cliente')
-    
+
+class DetalleCliente(DetailView):
+    model = Cliente
+    template_name = "clientes/detalle_cliente.html"
+    success_url=reverse_lazy('clientes')
     
 
 class ListaCasos(ListView):

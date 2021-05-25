@@ -52,6 +52,7 @@
                             <td>{{abogado.fecha_nacimiento}}</td>
                             <td>{{abogado.username}}</td>
                             <td><a onclick="abrir_modal_edicion('{% url 'editar_abogado' abogado.id %}')" class="btn btn-warning">Editar</a>
+                                <a onclick="abrir_modal_detalle('{% url 'detalle_abogado' abogado.id %}')" class="btn btn-danger">Detalles</a>
 
                             </td>
                         </tr>
@@ -78,8 +79,14 @@
 <div id="eliminacion" class="modal fade" role="dialog">
 </div>
 
+
 <script type="text/javascript">
     function abrir_modal_edicion(url) {
+        $('#edicion').load(url, function() {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_detalle(url) {
         $('#edicion').load(url, function() {
             $(this).modal('show');
         });

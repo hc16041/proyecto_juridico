@@ -9,7 +9,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form action="{% url 'detalle_abogado' object.id %}" method="POST">
+        <form action="{% url 'detalle_cliente' object.id %}" method="POST">
             {% csrf_token %}
             <div class="modal-body">
                <div class="row">
@@ -36,9 +36,6 @@
                     </div>
                     <div class="col-md-12">
                         <p lead="card-text">Fecha de Nacimiento: {{object.fecha_nacimiento}}</p>
-                    </div>
-                    <div class="col-md-10">
-                        <p lead="card-text">Tipo de abogado: {{object.Tipo_de_abogado}}</p>
                     </div>
                </div>
             </div>
