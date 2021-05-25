@@ -1,7 +1,7 @@
-{%extends 'base.html'%}{%load static%}{%block title%}Clientes{%endblock%} {%block content%}
+{%extends 'base.html'%}{%load static%}{%block title%} Institucion {%endblock%} {%block content%}
 <div class="card">
     <div class="card-header">
-        <strong>Clientes</strong>
+        <strong>Institucion</strong>
     </div>
     <div class="card-body card_block">
         <div class="row ">
@@ -9,8 +9,8 @@
                 <!--Barra de busqueda-->
                 <form method="GET">
                     <div id="custom-search-input">
-                        <div class="input-group col-md-10">
-                            <label for="nombre" style="margin: 5px;">Nombre: </label>
+                        <div class="input-group col-sm-10">
+                            <label for="nombre" style="margin: px;">Nombre: </label>
                             <input type="text" class="form-control" placeholder="Ingrese el nombre a buscar" name="buscar" style="border-radius: 5px;" id="buscar" value="{{request.GET.buscar}}">
                             <span class="input-group-list">
                                         <i class="icon icon-search"></i>
@@ -20,11 +20,11 @@
                     </div>
                 </form>
                 <!--Fin Barra de busqueda-->
-                <br> {%if clientes%}
+                <br> {%if institucion%}
             </div>
         </div>
         <div class="col-md-10">
-            <a class="btn btn-primary" href="{%url 'crear_cliente'%}" id="crear" style="float: right;">Crear Cliente</a>
+            <a class="btn btn-primary" href="{%url 'crear_institucion'%}" id="crear" style="float: right;">Crear institucion</a>
         </div>
         <br>
         <br>
@@ -34,26 +34,17 @@
                     <thead class="thead-dark ">
                         <tr>
                             <th scope="col ">Nombre</th>
-                            <th scope="col ">Apellido</th>
-                            <th scope="col ">DUI</th>
-                            <th scope="col ">Telefono</th>
-                            <th scope="col ">Fecha de Nacimiento</th>
-                            <th scope="col ">Usuario</th>
-                            <th scope="col ">Opciones</th>
-
+                            <th scope="col ">Direccion</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {%for cliente in clientes%}
+                        {%for instituciones in institucion%}
                         <tr>
-                            <td>{{cliente.nombre}}</td>
-                            <td>{{cliente.apellido}}</td>
-                            <td>{{cliente.dui}}</td>
-                            <td>{{cliente.telefono}}</td>
-                            <td>{{cliente.fecha_nacimiento}}</td>
-                            <td>{{cliente.username}}</td>
-                            <td><a onclick="abrir_modal_edicion('{% url 'editar_cliente' cliente.id %}')" class="btn btn-warning">Editar</a>
-                                <td><a onclick="abrir_modal_edicion('{% url 'detalle_cliente' cliente.id %}')" class="btn btn-danger">Detalle</a>
+                            <td>{{instituciones.nombre}}</td>
+                            <td>{{instituciones.direccion}}</td>
+                            <td>
+                                <a onclick="abrir_modal_edicion('{% url 'editar_institucion' instituciones.id %}')" class="btn btn-warning">Editar</a>
+                                <a onclick="abrir_modal_eliminacion('{% url 'eliminar_institucion' instituciones.id %}')" class="btn btn-danger">Eliminar</a>
                             </td>
                         </tr>
                         {%endfor%}
@@ -64,11 +55,11 @@
         {%else%}
         <div class="container">
             <div class="col-md-8">
-                <a class="btn btn-primary" href="{%url 'crear_cliente'%}" id="crear" style="float: right;">Crear Cliente</a>
+                <a class="btn btn-primary" href="{%url 'crear_institucion'%}" id="crear" style="float: right;">Crear institucion</a>
             </div>
             <br>
             <br>
-            <h1>No existen Clientes</h1>
+            <h1>No existen Instituciones</h1>
 
         </div>
     </div>
@@ -85,12 +76,12 @@
             $(this).modal('show');
         });
     }
-    function abrir_modal_edicion(url) {
-        $('#edicion').load(url, function() {
+
+    function abrir_modal_eliminacion(url) {
+        $('#eliminacion').load(url, function() {
             $(this).modal('show');
         });
     }
-
 </script>
 
 {%endblock%}

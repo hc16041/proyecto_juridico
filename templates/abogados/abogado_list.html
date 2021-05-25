@@ -1,7 +1,7 @@
-{%extends 'base.html'%}{%load static%}{%block title%}Clientes{%endblock%} {%block content%}
+{%extends 'base.html'%}{%load static%}{%block title%}Abogados{%endblock%} {%block content%}
 <div class="card">
     <div class="card-header">
-        <strong>Clientes</strong>
+        <strong>Abogados</strong>
     </div>
     <div class="card-body card_block">
         <div class="row ">
@@ -20,11 +20,11 @@
                     </div>
                 </form>
                 <!--Fin Barra de busqueda-->
-                <br> {%if clientes%}
+                <br> {%if abogados%}
             </div>
         </div>
         <div class="col-md-10">
-            <a class="btn btn-primary" href="{%url 'crear_cliente'%}" id="crear" style="float: right;">Crear Cliente</a>
+            <a class="btn btn-primary" href="{%url 'crear_abogado'%}" id="crear" style="float: right;">Crear Abogado</a>
         </div>
         <br>
         <br>
@@ -39,21 +39,21 @@
                             <th scope="col ">Telefono</th>
                             <th scope="col ">Fecha de Nacimiento</th>
                             <th scope="col ">Usuario</th>
-                            <th scope="col ">Opciones</th>
 
                         </tr>
                     </thead>
                     <tbody>
-                        {%for cliente in clientes%}
+                        {%for abogado in abogados%}
                         <tr>
-                            <td>{{cliente.nombre}}</td>
-                            <td>{{cliente.apellido}}</td>
-                            <td>{{cliente.dui}}</td>
-                            <td>{{cliente.telefono}}</td>
-                            <td>{{cliente.fecha_nacimiento}}</td>
-                            <td>{{cliente.username}}</td>
-                            <td><a onclick="abrir_modal_edicion('{% url 'editar_cliente' cliente.id %}')" class="btn btn-warning">Editar</a>
-                                <td><a onclick="abrir_modal_edicion('{% url 'detalle_cliente' cliente.id %}')" class="btn btn-danger">Detalle</a>
+                            <td>{{abogado.nombre}}</td>
+                            <td>{{abogado.apellido}}</td>
+                            <td>{{abogado.dui}}</td>
+                            <td>{{abogado.telefono}}</td>
+                            <td>{{abogado.fecha_nacimiento}}</td>
+                            <td>{{abogado.username}}</td>
+                            <td><a onclick="abrir_modal_edicion('{% url 'editar_abogado' abogado.id %}')" class="btn btn-warning">Editar</a>
+                                <a onclick="abrir_modal_detalle('{% url 'detalle_abogado' abogado.id %}')" class="btn btn-danger">Detalles</a>
+
                             </td>
                         </tr>
                         {%endfor%}
@@ -64,11 +64,11 @@
         {%else%}
         <div class="container">
             <div class="col-md-8">
-                <a class="btn btn-primary" href="{%url 'crear_cliente'%}" id="crear" style="float: right;">Crear Cliente</a>
+                <a class="btn btn-primary" href="{%url 'crear_abogado'%}" id="crear" style="float: right;">Crear Abogado</a>
             </div>
             <br>
             <br>
-            <h1>No existen Clientes</h1>
+            <h1>No existen registros de abogados</h1>
 
         </div>
     </div>
@@ -79,18 +79,18 @@
 <div id="eliminacion" class="modal fade" role="dialog">
 </div>
 
+
 <script type="text/javascript">
     function abrir_modal_edicion(url) {
         $('#edicion').load(url, function() {
             $(this).modal('show');
         });
     }
-    function abrir_modal_edicion(url) {
+    function abrir_modal_detalle(url) {
         $('#edicion').load(url, function() {
             $(this).modal('show');
         });
     }
 
 </script>
-
 {%endblock%}

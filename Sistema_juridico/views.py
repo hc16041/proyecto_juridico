@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from .forms import *
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView, FormView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView, FormView,View
 from django.db.models import Q
 from .models import *
 from django.http import HttpResponseRedirect
@@ -79,6 +79,7 @@ def logoutUsuario(request):
     return HttpResponseRedirect('/sesion/login/')
 
 from django.http import HttpResponseRedirect
+from django.core.mail import send_mail
 
 def someview(request):
    ...
@@ -173,7 +174,11 @@ class EliminarCliente(LoginRequiredMixin,DeleteView):
     model = Cliente
     template_name = "clientes/cliente_borrar.html"
     success_url=reverse_lazy('cliente')
-    
+
+class DetalleCliente(DetailView):
+    model = Cliente
+    template_name = "clientes/detalle_cliente.html"
+    success_url=reverse_lazy('clientes')
     
 
 class ListaCasos(LoginRequiredMixin,ListView):
@@ -207,4 +212,70 @@ class ListaCasos(LoginRequiredMixin,ListView):
         ).distinct()
         return super().get_queryset()
     #success_url=reverse_lazy('inicio')
+
+class ListaReportes(ListView):
+    model=Reporte
+    template_name = "reportes/reporte_list.html"
+    context_object_name='reportes'
+    queryset=Reporte.objects.all()
+    paginate_by=10
     
+    #Para la barra de busqueda
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Reporte.objects.filter(
+            Q(nombre__icontains=self.request.GET['buscar'])|
+            Q(descripcion__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+
+class contactomail(View):
+    def get(self,request):
+        form=contactoForm()
+        return render(request,'email.html',{'forma':form})
+    def post(self,request):
+        form=contactoForm(request.POST)
+        if form.is_valid():
+            datos=form.cleaned_data
+
+            email = send_mail('title', 'body', to=['Jennifereunicemonge@gmail.com'])
+            email.send()
+
+            return HttpResponseRedirect('/')
+        return render(request,'email.html',{'forma':form})
+
+class ListarInstitucion(ListView):
+    model = Institucion
+    template_name = "institucion/institucion_list.html"
+    context_object_name='institucion'
+    queryset=Institucion.objects.all()
+    paginate_by=10
+    
+    #Para la barra de busqueda
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Institucion.objects.filter(
+            Q(nombre__icontains=self.request.GET['buscar'])|
+            Q(direccion__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+
+class CrearInstitucion(CreateView):
+    model = Institucion
+    form_class= InstitucionForm
+    template_name = "institucion/crear_institucion.html"
+    context_object_name='institucion'
+    success_url=reverse_lazy('institucion')
+ 
+class EliminarInstitucion(DeleteView):
+    model = Institucion
+    template_name = "institucion/institucion_confirm_delete.html"
+    success_url=reverse_lazy('institucion')
+
+class ActualizarInstitucion(UpdateView):
+    model = Institucion
+    form_class=InstitucionForm
+    template_name = "institucion/editar_institucion.html"
+    context_object_name='institucion'
+    success_url=reverse_lazy('institucion')
+

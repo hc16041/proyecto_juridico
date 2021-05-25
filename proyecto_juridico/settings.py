@@ -78,15 +78,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DATABASES = {
 
     'default': {
-        'ENGINE': 'sql_server.pyodbc',
-        'HOST': 'DESKTOP-8UJ281S',
-        'PORT': '1433',
-        'NAME': 'db_juridica',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-            'unicode_results': True,
-        },
-    },
+    
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
 
 AUTH_USER_MODEL='Sistema_juridico.Usuario'
@@ -137,3 +132,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST ='smtp.googlemail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER ='Jennifereunicemonge@gmail.com'
+EMAIL_HOST_PASSWORD = 'Jennifer27313'
+EMAIL_USE_TLS = True

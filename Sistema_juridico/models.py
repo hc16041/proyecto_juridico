@@ -228,9 +228,10 @@ class Caso(models.Model):
     
 class Reporte(models.Model):
     codigo_caso=models.ForeignKey(Caso,verbose_name="codigo caso",on_delete=models.CASCADE)
+    codigo=models.ForeignKey(Caso,verbose_name=("Id caso"),on_delete=models.CASCADE)
     dui_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente"), on_delete=models.CASCADE)
     nombre_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
-    codigo = models.IntegerField(primary_key=True,blank=False, null=False)
+    codigo_reporte = models.IntegerField(primary_key=True,blank=False, null=False)
     estado_cliente = models.IntegerField(choices=Estados, default=0)
     tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
     
@@ -242,7 +243,6 @@ class Reporte(models.Model):
     def __str__(self):
         """Unicode representation of Caso."""
         return self.codigo
-    
 
 class USCitizen(models.Model):
     nombre=models.CharField( max_length=50)
