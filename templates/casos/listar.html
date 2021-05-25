@@ -1,7 +1,7 @@
-{%extends 'base.html'%}{%load static%}{%block title%}Clientes{%endblock%} {%block content%}
+{%extends 'base.html'%}{%load static%}{%block title%}Casos{%endblock%} {%block content%}
 <div class="card">
     <div class="card-header">
-        <strong>Clientes</strong>
+        <strong>Casos</strong>
     </div>
     <div class="card-body card_block">
         <div class="row ">
@@ -10,8 +10,8 @@
                 <form method="GET">
                     <div id="custom-search-input">
                         <div class="input-group col-md-10">
-                            <label for="nombre" style="margin: 5px;">Nombre: </label>
-                            <input type="text" class="form-control" placeholder="Ingrese el nombre a buscar" name="buscar" style="border-radius: 5px;" id="buscar" value="{{request.GET.buscar}}">
+                            <label for="nombre" style="margin: 5px;">Código de caso: </label>
+                            <input type="text" class="form-control" placeholder="Ingrese el código de caso" name="buscar" style="border-radius: 5px;" id="buscar" value="{{request.GET.buscar}}">
                             <span class="input-group-list">
                                         <i class="icon icon-search"></i>
                                         <button type="submit" class="btn btn-success" id="buscar" style="margin-left: 5px;">Buscar</button>
@@ -20,11 +20,11 @@
                     </div>
                 </form>
                 <!--Fin Barra de busqueda-->
-                <br> {%if clientes%}
+                <br> {%if casos%}
             </div>
         </div>
         <div class="col-md-10">
-            <a class="btn btn-primary" href="{%url 'crear_caso'%}" id="crear" style="float: right;">Crear Cliente</a>
+            <a class="btn btn-primary" href="{%url 'crear_caso'%}" id="crear" style="float: right;">Crear Caso</a>
         </div>
         <br>
         <br>
@@ -58,11 +58,10 @@
         {%else%}
         <div class="container">
             <div class="col-md-8">
-                <a class="btn btn-primary" href="{%url 'crear_caso'%}" id="crear" style="float: right;">Crear Cliente</a>
+                <a class="btn btn-primary" href="{%url 'crear_caso'%}" id="crear" style="float: right;">Crear Caso</a>
             </div>
             <br>
             <br>
-            <h1>No existen Clientes</h1>
 
         </div>
     </div>

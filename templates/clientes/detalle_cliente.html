@@ -25,9 +25,30 @@
                     <div class="col-md-10">
                         <p lead="card-text">Dirección: {{object.direccion}}</p>
                     </div>
-                    <div class="col-md-10">
-                        <p lead="card-text">Estado civil: {{object.estado_civil}}</p>
-                    </div>
+                    <div>
+                        <div class="col-md-10"> {% ifequal object.estado_civil 0 %}
+                            <p lead="card-text">Estado Civil: Soltero/a</p>
+                        </div>
+    
+                        <div class="col-md-10"> {%else%} 
+                                {% ifequal object.estado_civil 1 %}
+                            <p lead="card-text">Estado Civil: Casado/a</p>
+                        </div>
+    
+                        <div class="col-md-10"> {%else%} 
+                                {% ifequal object.estado_civil 2 %}
+                            <p lead="card-text">Estado Civil: Divorciado/a</p>
+                        </div>
+    
+                        <div class="col-md-10"> {%else%}
+                                {% ifequal object.estado_civil 3 %}
+                            <p lead="card-text">Estado Civil: Viudo/a</p>
+                        </div>
+                                        {%endifequal%}
+                                    {%endifequal%}
+                                {%endifequal%}
+                            {%endifequal%}
+                        </div>
                     <div class="col-md-12">
                         <p lead="card-text">Correo: {{object.correo}}</p>
                     </div>

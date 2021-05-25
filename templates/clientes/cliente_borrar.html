@@ -1,12 +1,12 @@
 <div id="eliminacion" class="modal-dialog modal-sm" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 class="modal-title">Elemento a eliminar : {{object}}</h2>
+            <h2 class="modal-title">Elemento a eliminar : {{object.nombre}}</h2>
             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form action="{% url 'eliminar_institucion' object.id %}" method="POST">
+        <form action="{% url 'eliminar_cliente' object.id %}" method="POST">
             {% csrf_token %}
             <div class="modal-footer">
                 <button class="btn btn-danger" type="submit" data-dismiss="modal">Cancelar</button>

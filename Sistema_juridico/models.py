@@ -138,7 +138,8 @@ class ManejadorUsuario(BaseUserManager):
 Estado_Civil= (
     (0, "Soltero"),
     (1, "Casado"),
-    (2,"Divorciado")
+    (2,"Divorciado"),
+    (3, "Viudo")
 )
 class Usuario(AbstractBaseUser,PermissionsMixin):
     correo = models.EmailField(verbose_name='correo electronico',max_length=100,unique=True)
