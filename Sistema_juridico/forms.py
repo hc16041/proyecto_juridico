@@ -483,3 +483,8 @@ class Meta:
                  )
                  
              }
+class contactoForm(forms.Form):
+    origen=forms.CharField()
+    asunto=forms.CharField(required=True)
+    destino=forms.EmailField()
+    contenido=forms.CharField(max_length=999, widget=forms.Textarea)

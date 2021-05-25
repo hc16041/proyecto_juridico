@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from .forms import *
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView, FormView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView, FormView,View
 from django.db.models import Q
 from .models import *
 from django.http import HttpResponseRedirect
@@ -11,6 +11,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 
@@ -201,3 +203,18 @@ class ListaReportes(ListView):
             Q(descripcion__icontains=self.request.GET['buscar'])
         ).distinct()
         return super().get_queryset()
+
+class contactomail(View):
+    def get(self,request):
+        form=contactoForm()
+        return render(request,'email.html',{'forma':form})
+    def post(self,request):
+        form=contactoForm(request.POST)
+        if form.is_valid():
+            datos=form.cleaned_data
+
+            email = send_mail('title', 'body', to=['Jennifereunicemonge@gmail.com'])
+            email.send()
+
+            return HttpResponseRedirect('/')
+        return render(request,'email.html',{'forma':form})

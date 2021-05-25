@@ -145,7 +145,7 @@ class Usuario(AbstractBaseUser,PermissionsMixin):
     nombre = models.CharField(max_length = 150)
     apellido = models.CharField(max_length = 150)
     direccion = models.CharField(max_length = 150)
-    dui = models.CharField(max_length = 10, unique=True)
+    dui = models.CharField(max_length = 10)
     telefono=models.CharField(max_length = 8)
     fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
     fecha_nacimiento = models.DateField(null=True)
