@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import (BaseUserManager,AbstractBaseUser)
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import Permission, PermissionsMixin
 from django.utils import timezone
 from django.utils.datetime_safe import datetime
 from django.contrib.admin import widgets
@@ -100,41 +100,28 @@ class Pago(models.Model):
 
 
 class ManejadorUsuario(BaseUserManager):
-      def create_user(self,correo,nombre,apellido,password=None):
+      def _create_user(self,correo,nombre,apellido,password,is_staff,is_superuser,**extra_fields):
           if not correo:
               raise ValueError('Usuarios deben tener un correo electronico valido')
           usuario=self.model(
               correo=self.normalize_email(correo),
               nombre=nombre,
-              apellido=apellido
+              apellido=apellido,
+              is_staff=is_staff,
+              is_superuser=is_superuser,
+              **extra_fields
               )
           
           usuario.set_password(password)
-          usuario.save(using=self._db)
+          usuario.save(using=self.db)
           return usuario
       
-    #   def create_staffuser(self,correo,apellido, nombre, password):
-    #       usuario=self.create_user(
-    #           correo,
-    #           nombre=nombre,
-    #           apellido=apellido,
-    #           password=password,
-    #       )
-    #       usuario.staff=True
-    #       usuario.save(using=self._db)
-    #       return usuario
+      def create_user(self,correo,nombre, apellido,password=None,**extra_fields):
+          return self._create_user(correo,nombre,apellido,password,False,False,**extra_fields)
       
-      def create_superuser(self,correo,nombre, apellido,password):
-          usuario=self.create_user(
-              correo,
-              nombre=nombre,
-              apellido=apellido,
-              password=password
-          )
-          usuario.usuario_administrador=True
-          usuario.save(using=self._db)
-          return usuario
-
+      def create_superuser(self,correo,nombre, apellido,password=None,**extra_fields):
+          return self._create_user(correo,nombre,apellido,password,True,True,**extra_fields)
+      
 Estado_Civil= (
     (0, "Soltero"),
     (1, "Casado"),
@@ -145,14 +132,15 @@ class Usuario(AbstractBaseUser,PermissionsMixin):
     nombre = models.CharField(max_length = 150)
     apellido = models.CharField(max_length = 150)
     direccion = models.CharField(max_length = 150)
-    dui = models.CharField(max_length = 10, unique=True)
+    dui = models.CharField(max_length = 10)
     telefono=models.CharField(max_length = 8)
     fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
     fecha_nacimiento = models.DateField(null=True)
     estado_civil = models.IntegerField(choices=Estado_Civil, default=0)
     username=models.CharField( max_length=50)
-    usuario_activo=models.BooleanField(default=True)
-    usuario_administrador=models.BooleanField(default=False)
+    is_staff=models.BooleanField(default=False)
+    is_active=models.BooleanField(default=True)
+    
     
     objects=ManejadorUsuario()
     
@@ -162,7 +150,7 @@ class Usuario(AbstractBaseUser,PermissionsMixin):
     class meta:
         verbose_name='usuario'
         verbose_name_plural='usuarios'
-    
+        
     def get_full_name(self):
         full_name = '%s %s' % (self.nombre, self.apellido)
         return full_name.strip()
@@ -182,16 +170,17 @@ class Usuario(AbstractBaseUser,PermissionsMixin):
     @property
     def is_staff(self):
         "El usuario es staff(no super usuario)?"
-        return self.usuario_administrador
+        return True
     
-    # @property
-    # def is_admin(self):
-    #     "El usuario es admin(super usuario)?"
-    #     return self.admin
+    @property
+    def is_admin(self):
+       "El usuario es admin(super usuario)?"
+       return self.admin
     
     def __str__(self):
         return self.nombre + ' ' + self.apellido + ' ' + self.correo
-
+    
+    
 Rol_Cliente= (
     (0, "Demandante"),
     (1,"Demandado")
@@ -199,7 +188,13 @@ Rol_Cliente= (
 class Cliente(Usuario):
     rol_cliente = models.IntegerField(choices=Rol_Cliente, default=0)
     #es_cliente=models.BooleanField(default=False)
-
+    class Meta:
+        verbose_name = 'Cliente'
+        verbose_name_plural = 'Clientes'
+        permissions = ( 
+            ('view_caso', 'puede ver publicaciones y categorías del blog'),
+        )
+    
 class Abogado(Usuario):
 
    Tipo_de_abogado=models.OneToOneField(TipoDeAbogado, verbose_name=("Tipo De Abogado"), on_delete=models.CASCADE)
@@ -232,7 +227,7 @@ class Caso(models.Model):
         return self.codigo
     
 class Reporte(models.Model):
-    codigo_caso=models.ForeignKey(Caso,verbose_name="codigo caso"),on_delete=models.CASCADE
+    codigo_caso=models.ForeignKey(Caso,verbose_name="codigo caso",on_delete=models.CASCADE)
     dui_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente"), on_delete=models.CASCADE)
     nombre_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
     codigo = models.IntegerField(primary_key=True,blank=False, null=False)
@@ -242,9 +237,19 @@ class Reporte(models.Model):
     
     class Meta:
         verbose_name = 'Reporte'
-        verbose_name_plural = 'Reporte'
+        verbose_name_plural = 'Reportes'
 
     def __str__(self):
         """Unicode representation of Caso."""
         return self.codigo
     
+
+class USCitizen(models.Model):
+    nombre=models.CharField( max_length=50)
+    class Meta:
+        permissions = [
+            # Permission identifier     human-readable permission name
+            ("can_drive",               "Can drive"),
+            ("can_vote",                "Can vote in elections"),
+            ("can_drink",               "Can drink alcohol"),
+        ]

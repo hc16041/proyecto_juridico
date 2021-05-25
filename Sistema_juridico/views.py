@@ -9,16 +9,17 @@ from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import permission_required
 
 # Create your views here.
 
     
-class Inicio(TemplateView, LoginRequiredMixin):
+class Inicio(LoginRequiredMixin,TemplateView):
     template_name='inicio.html'
     
-class ListarTiposDeAbogados(ListView):
+class ListarTiposDeAbogados(LoginRequiredMixin,ListView):
     model = TipoDeAbogado
     template_name = "abogados/tp_abogado_listado.html"
     context_object_name='tipos'
@@ -34,21 +35,21 @@ class ListarTiposDeAbogados(ListView):
         ).distinct()
         return super().get_queryset()
     
-class CrearTipoDeAbogado(CreateView):
+class CrearTipoDeAbogado(LoginRequiredMixin,CreateView):
     model = TipoDeAbogado
     form_class=TipoDeAbogadoForm
     template_name = "abogados/tp_abogado_crear.html"
     context_object_name='tipos'
     success_url=reverse_lazy('tipo_de_abogado')
     
-class ActualizarTipoDeAbogado(UpdateView):
+class ActualizarTipoDeAbogado(LoginRequiredMixin,UpdateView):
     model = TipoDeAbogado
     form_class=TipoDeAbogadoForm
     template_name = "abogados/tp_abogado_editar.html"
     context_object_name='tipos'
     success_url=reverse_lazy('tipo_de_abogado')
     
-class EliminarTipoDeAbogado(DeleteView):
+class EliminarTipoDeAbogado(LoginRequiredMixin,DeleteView):
     model = TipoDeAbogado
     template_name = "abogados/tp_abogado_borrar.html"
     success_url=reverse_lazy('tipo_de_abogado')
@@ -84,19 +85,21 @@ def someview(request):
    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-class CrearCaso(CreateView):
+class CrearCaso(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
+    permission_required=''
     model = Caso
     form_class=CasoForm
     template_name = "casos/caso.html"
     success_url=reverse_lazy('inicio')
 
-class CrearTipoDeProceso(CreateView):
+class CrearTipoDeProceso(LoginRequiredMixin,CreateView):
     model =TipoDeProceso
     form_class=TipoDeProcesoForm
     template_name = "procesos/crear_tipo_proceso.html"
     success_url=reverse_lazy('tipo_de_abogado')
     
-class ListarTiposDeProcesos(ListView):
+class ListarTiposDeProcesos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required=''
     model = TipoDeProceso
     template_name = "procesos/tp_proceso_listado.html"
     context_object_name='tp_p'
@@ -112,26 +115,26 @@ class ListarTiposDeProcesos(ListView):
         ).distinct()
         return super().get_queryset()
     
-class CrearTipoDeProceso(CreateView):
+class CrearTipoDeProceso(LoginRequiredMixin,CreateView):
     model = TipoDeProceso
     form_class=TipoDeProcesoForm
     template_name = "procesos/tp_proceso_crear.html"
     context_object_name='tipos'
     success_url=reverse_lazy('tipo_de_proceso')
     
-class ActualizarTipoDeProceso(UpdateView):
+class ActualizarTipoDeProceso(LoginRequiredMixin,UpdateView):
     model = TipoDeProceso
     form_class=TipoDeProcesoForm
     template_name = "procesos/tp_proceso_editar.html"
     context_object_name='tipos'
     success_url=reverse_lazy('tipo_de_proceso')
     
-class EliminarTipoDeProceso(DeleteView):
+class EliminarTipoDeProceso(LoginRequiredMixin,DeleteView):
     model = TipoDeProceso
     template_name = "abogados/tp_abogado_borrar.html"
     success_url=reverse_lazy('tipo_de_proceso')
     
-class ListaCliente(ListView):
+class ListaCliente(LoginRequiredMixin,ListView):
     model=Cliente
     template_name = "clientes/cliente_list.html"
     context_object_name='clientes'
@@ -148,33 +151,52 @@ class ListaCliente(ListView):
         return super().get_queryset()
     #success_url=reverse_lazy('inicio')
     
-class CrearCliente(CreateView):
+class CrearCliente(LoginRequiredMixin,CreateView):
     model = Cliente
     form_class=FormCliente
     template_name = "clientes/cliente_crear.html"
     context_object_name='tipos'
     success_url=reverse_lazy('cliente')
+    
+    @method_decorator(permission_required('Sistema_juridico.view_caso',reverse_lazy('cliente')))
+    def dispatch(self, *args, **kwargs):
+        return super(CrearCliente, self).dispatch(*args, **kwargs)
  
 
-class ActualizarCliente(UpdateView):
+class ActualizarCliente(LoginRequiredMixin,UpdateView):
     model = Cliente
     form_class=FormCliente
     template_name = "clientes/cliente_editar.html"
     success_url=reverse_lazy('cliente')
     
-class EliminarCliente(DeleteView):
+class EliminarCliente(LoginRequiredMixin,DeleteView):
     model = Cliente
     template_name = "clientes/cliente_borrar.html"
     success_url=reverse_lazy('cliente')
     
     
 
-class ListaCasos(ListView):
+class ListaCasos(LoginRequiredMixin,ListView):
     model=Caso
     template_name = "casos/listar.html"
     context_object_name='clientes'
     #solo los que son cliente
     queryset=Caso.objects.all()
+    
+    def get_login_url(self):
+        if not self.request.user.is_authenticated:
+            # el usuario no está logueado, ir a la página de login
+            return super(ListaCasos, self).get_login_url()
+        # El usuario está logueado pero no está autorizado
+        return '/no_autorizado/'
+    
+    def test_func(self):
+        # obtenemos todos los grupos del usuario logueado
+        grupos = self.request.user.groups.all()
+        # comparamos que el usuario pertenezca al grupo GERENTE
+        if 'Abogado' in grupos:
+            return True
+        return False
     
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:

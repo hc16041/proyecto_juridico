@@ -1,7 +1,7 @@
 from django import forms
 from .models import *
 from django.contrib.auth.forms import AuthenticationForm, ReadOnlyPasswordHashField
-from django.contrib.auth.models import User #Usuario
+from django.contrib.auth.models import Permission, User #Usuario
 from django.contrib.auth.hashers import make_password 
 
 
@@ -174,113 +174,6 @@ class FormActualizarUsuario(forms.ModelForm):
     def clean_password(self):
         return self.initial['password']
 
-class FormCliente(forms.ModelForm):
-    # password1 = forms.CharField(label='Contraseña',widget=forms.PasswordInput(
-    #     attrs={
-    #         'class':'form-control',
-    #         'placeholder':'Contraseña',
-    #         'id':'password1',
-    #         'required':'required'
-    #     }
-    #     ))
-    # password2 = forms.CharField(label='Confirmar Contraseña',widget=forms.PasswordInput(
-        # attrs={
-        #     'class':'form-control',
-        #     'placeholder':'Confirmar Contraseña',
-        #     'id':'password2',
-        #     'required':'required'
-        # }
-        # ))
-    class Meta:
-        model=Cliente
-        fields=('nombre','apellido','dui','direccion','correo','telefono','estado_civil','fecha_nacimiento')
-        widgets={
-                 'nombre': forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese el nombre del cliente',
-                         'id':'nombre',
-                       
-                     }
-            ),
-                 'correo':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese correo del cliente',
-                         'id':'correo',
-                     }
-            ),
-                 'apellido':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese apellido del cliente',
-                         'id':'apellido',
-                     }
-                 ),
-                 'direccion':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese la direccion del cliente',
-                         'id':'direccion',
-                     }
-            ),
-                 'telefono':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese telefono del cliente',
-                         'id':'telefono',
-                     }
-            ),
-                 'dui': forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese el dui del cliente',
-                         'id':'dui',
-                       
-                     }
-            ),
-                 'estado_civil':forms.Select(
-                attrs={
-                    'id':'estado_civil',
-                    'class':'form-control form-control-sm col-sm-2'
-                }
-            ),
-                 'fecha_nacimiento':forms.DateInput(
-                     attrs={
-                         'class':'form-control form-control-sm col-sm-4',
-                         'type': 'date',
-                         'id':'fecha_nacimiento'
-                         }
-    
-                 )
-                 
-             }
-
-    def clean_password2(self):
-        password1=make_password('')
-        # password2=self.cleaned_data.get("password2")
-        # if password1!=password2:
-        #     raise forms.ValidationError("Contraseñas no coinciden")
-        # return password2
-    
-    def save(self,commit=True):
-         #guarda contraseña en formato Hash
-         #crea una contraseña aleatoria
-        password1=BaseUserManager().make_random_password(15)
-        nombre=self.cleaned_data.get("nombre")
-        apellido=self.cleaned_data.get("apellido")
-        
-        usuario=super().save(commit=False)
-        #Se crea un usuario aleatorio
-        usuario.username=nombre[0:2]+apellido[0:2]
-        #usar es cliente si es necesario, se debe de agregar al modelo de cliente
-        #usuario.es_cliente=True
-        usuario.set_password(password1)
-        
-        if commit:
-            usuario.save()
-        return usuario
-
 class FormUsuario(forms.ModelForm):
     password1 = forms.CharField(label='Contraseña',widget=forms.PasswordInput(
         attrs={
@@ -355,6 +248,105 @@ class FormUsuario(forms.ModelForm):
             usuario.save()
         return usuario
 
+
+class FormCliente(forms.ModelForm):
+    
+    class Meta:
+        model=Cliente
+        
+        permission=('view_caso','Ver caso')
+        fields=('nombre','apellido','dui','direccion','correo','telefono','estado_civil','fecha_nacimiento')
+        widgets={
+                 'nombre': forms.TextInput(
+                     attrs={
+                         'class':'form-control',
+                         'placeholder':'Ingrese el nombre del cliente',
+                         'id':'nombre',
+                       
+                     }
+            ),
+                 'correo':forms.TextInput(
+                     attrs={
+                         'class':'form-control',
+                         'placeholder':'Ingrese correo del cliente',
+                         'id':'correo',
+                     }
+            ),
+                 'apellido':forms.TextInput(
+                     attrs={
+                         'class':'form-control',
+                         'placeholder':'Ingrese apellido del cliente',
+                         'id':'apellido',
+                     }
+                 ),
+                 'direccion':forms.TextInput(
+                     attrs={
+                         'class':'form-control',
+                         'placeholder':'Ingrese la direccion del cliente',
+                         'id':'direccion',
+                     }
+            ),
+                 'telefono':forms.TextInput(
+                     attrs={
+                         'class':'form-control',
+                         'placeholder':'Ingrese telefono del cliente',
+                         'id':'telefono',
+                     }
+            ),
+                 'dui': forms.TextInput(
+                     attrs={
+                         'class':'form-control',
+                         'placeholder':'Ingrese el dui del cliente',
+                         'id':'dui',
+                       
+                     }
+            ),
+                 'estado_civil':forms.Select(
+                attrs={
+                    'id':'estado_civil',
+                    'class':'form-control form-control-sm col-sm-2'
+                }
+            ),
+                 'fecha_nacimiento':forms.SelectDateWidget(
+                     attrs={
+                         'class':'form-control form-control-sm col-sm-4',
+                         'type': 'date',
+                         'id':'fecha_nacimiento'
+                         }
+    
+                 )
+                 
+             }
+        
+        
+    
+    def clean_password2(self):
+        password1=make_password('')
+        # password2=self.cleaned_data.get("password2")
+        # if password1!=password2:
+        #     raise forms.ValidationError("Contraseñas no coinciden")
+        # return password2
+    
+    def save(self,commit=True):
+         #guarda contraseña en formato Hash
+         #crea una contraseña aleatoria
+        password1=BaseUserManager().make_random_password(15)
+        print(password1)
+        nombre=self.cleaned_data.get("nombre")
+        apellido=self.cleaned_data.get("apellido")
+        
+        usuario=super().save(commit=False)
+        #Se crea un usuario aleatorio
+        usuario.username=nombre[0:3]+apellido[0:3]
+        
+        usuario.is_cliente=True
+        #usar es cliente si es necesario, se debe de agregar al modelo de cliente
+        usuario.set_password(password1)
+        if commit:
+            usuario.save()
+        return usuario
+
+
 class FormAbogado(forms.ModelForm):
     password1 = forms.CharField(label='Contraseña',widget=forms.PasswordInput(
         attrs={
@@ -425,6 +417,7 @@ class FormAbogado(forms.ModelForm):
          #guarda contraseña en formato Hash
         usuario=super().save(commit=False)
         usuario.set_password(self.cleaned_data["password1"])
+        usuario.is_abogado=True
         if commit:
             usuario.save()
         return usuario
