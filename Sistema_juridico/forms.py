@@ -432,7 +432,7 @@ class FormAbogado(forms.ModelForm):
 class ReporteForm(forms.ModelForm):
     class Meta:
         model=Reporte
-        fields=('codigo_de_caso','dui_cliente','nombre_abogado','tipo_de_proceso','estado_cliente')
+        fields=('__all__')
         labels={
             'codigo de caso': 'codigo de caso',
             'dui cliente':'dui cliente',
