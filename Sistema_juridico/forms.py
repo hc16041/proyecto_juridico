@@ -487,3 +487,62 @@ class contactoForm(forms.Form):
     asunto=forms.CharField(required=True)
     destino=forms.EmailField()
     contenido=forms.CharField(max_length=999, widget=forms.Textarea)
+
+class InstitucionForm(forms.ModelForm):
+    class Meta:
+        model=Institucion
+        fields='__all__'
+        labels={
+            'nombre': 'Nombre de la institucion',
+            'direccion': 'Direccion de la institucion',
+            'descripcion':'Descripcion',
+            'correo':'Correo',
+            'telefono':'Telefono',
+            'tipo':'Tipo de institucion',
+        }
+        widgets={
+            'nombre': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese el nombre de la institucion',
+                    'id':'nombre',
+                }
+            ),
+            'direccion': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese la direccion de la institucion',
+                    'id':'direccion',
+                }
+            ),
+            'descripcion':forms.Textarea(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese descripcion de la institucion',
+                    'id':'descripcion',
+                }
+            ),
+            
+            'correo': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese el email de la institucion',
+                    'id':'correo',
+                }
+            ),
+
+            'telefono': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese el telefono de la institucion',
+                    'id':'telefono',
+                }
+            ),
+            'tipo': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese el tipo de institucion',
+                    'id':'tipo',
+                }
+            ),
+        }
