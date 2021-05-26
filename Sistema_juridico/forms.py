@@ -253,8 +253,6 @@ class FormCliente(forms.ModelForm):
     
     class Meta:
         model=Cliente
-        
-        permission=('view_caso','Ver caso')
         fields=('nombre','apellido','dui','direccion','correo','telefono','estado_civil','fecha_nacimiento')
         widgets={
                  'nombre': forms.TextInput(

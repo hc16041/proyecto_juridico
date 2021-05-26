@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import (BaseUserManager,AbstractBaseUser)
-from django.contrib.auth.models import Permission, PermissionsMixin
+from django.contrib.auth.models import Group, Permission, PermissionsMixin
 from django.utils import timezone
 from django.utils.datetime_safe import datetime
 from django.contrib.admin import widgets
+from django.contrib.contenttypes.models import ContentType
 # Create your models here.
 
 
@@ -98,29 +99,87 @@ class Pago(models.Model):
         """Unicode representation of Pago."""
         return self.descripcion
 
+class Rol(models.Model):
+    """Model definition for Rol."""
+
+    # TODO: Define fields here
+    id = models.AutoField(primary_key = True)
+    rol = models.CharField('Rol', max_length=50,unique = True)
+
+    class Meta:
+        """Meta definition for Rol."""
+
+        verbose_name = 'Rol'
+        verbose_name_plural = 'Rols'
+
+    def __str__(self):
+        """Unicode representation of Rol."""
+        return self.rol
+    
+    def save(self,*args,**kwargs):
+        permisos_defecto = ['add','change','delete','view']
+        if not self.id:
+            nuevo_grupo,creado = Group.objects.get_or_create(name = f'{self.rol}')
+            for permiso_temp in permisos_defecto:
+                permiso,created = Permission.objects.update_or_create(
+                    name = f'Can {permiso_temp} {self.rol}',
+                    content_type = ContentType.objects.get_for_model(Rol),
+                    codename = f'{permiso_temp}_{self.rol}'
+                )
+                if creado:
+                    nuevo_grupo.permissions.add(permiso.id)
+            super().save(*args,**kwargs)
+        else:
+            rol_antiguo = Rol.objects.filter(id = self.id).values('rol').first()
+            if rol_antiguo['rol'] == self.rol:
+                super().save(*args,**kwargs)
+            else:
+                Group.objects.filter(name = rol_antiguo['rol']).update(name = f'{self.rol}')
+                for permiso_temp in permisos_defecto:
+                    Permission.objects.filter(codename = f"{permiso_temp}_{rol_antiguo['rol']}").update(
+                        codename = f'{permiso_temp}_{self.rol}',
+                        name = f'Can {permiso_temp} {self.rol}'
+                    )
+                super().save(*args,**kwargs)
+        
 
 class ManejadorUsuario(BaseUserManager):
-      def _create_user(self,correo,nombre,apellido,password,is_staff,is_superuser,**extra_fields):
+      def create_user(self,correo,nombre,apellido,password=None):
           if not correo:
               raise ValueError('Usuarios deben tener un correo electronico valido')
           usuario=self.model(
               correo=self.normalize_email(correo),
               nombre=nombre,
               apellido=apellido,
-              is_staff=is_staff,
-              is_superuser=is_superuser,
-              **extra_fields
               )
           
           usuario.set_password(password)
-          usuario.save(using=self.db)
+          usuario.save(using=self._db)
           return usuario
       
-      def create_user(self,correo,nombre, apellido,password=None,**extra_fields):
-          return self._create_user(correo,nombre,apellido,password,False,False,**extra_fields)
+      def create_staffuser(self,correo,nombre, apellido,password):
+          usuario=self.create_user(
+              correo,
+              nombre=nombre,
+              apellido=apellido,
+              password=password
+          )
+          usuario.is_staff=True
+          usuario.save(using=self._db)
+          return usuario
       
-      def create_superuser(self,correo,nombre, apellido,password=None,**extra_fields):
-          return self._create_user(correo,nombre,apellido,password,True,True,**extra_fields)
+      def create_superuser(self,correo,nombre, apellido,password):
+          usuario=self.create_user(
+              correo,
+              nombre=nombre,
+              apellido=apellido,
+              password=password
+          )
+          usuario.is_staff=True
+          usuario.is_superuser=True
+          usuario.save(using=self._db)
+          return usuario
+          
       
 Estado_Civil= (
     (0, "Soltero"),
@@ -128,7 +187,7 @@ Estado_Civil= (
     (2,"Divorciado"),
     (3, "Viudo")
 )
-class Usuario(AbstractBaseUser,PermissionsMixin):
+class Usuario(AbstractBaseUser, PermissionsMixin):
     correo = models.EmailField(verbose_name='correo electronico',max_length=100,unique=True)
     nombre = models.CharField(max_length = 150)
     apellido = models.CharField(max_length = 150)
@@ -139,9 +198,10 @@ class Usuario(AbstractBaseUser,PermissionsMixin):
     fecha_nacimiento = models.DateField(null=True)
     estado_civil = models.IntegerField(choices=Estado_Civil, default=0)
     username=models.CharField( max_length=50)
-    is_active=models.BooleanField(default=True)
+    rol = models.ForeignKey(Rol, on_delete=models.CASCADE,blank = True,null = True)
+    is_active= models.BooleanField(default=True)
+    is_superuser=models.BooleanField(default=False)
     is_staff=models.BooleanField(default=False)
-    
     
     
     objects=ManejadorUsuario()
@@ -182,6 +242,32 @@ class Usuario(AbstractBaseUser,PermissionsMixin):
     def __str__(self):
         return self.nombre + ' ' + self.apellido + ' ' + self.correo
     
+    def save(self,*args,**kwargs):
+        if not self.id:
+            super().save(*args,**kwargs)
+            if self.rol is not None:
+                grupo = Group.objects.filter(name = self.rol.rol).first()
+                print(grupo)
+                if grupo:
+                    self.groups.add(grupo)
+                super().save(*args,**kwargs)
+        else:
+            if self.rol is not None:
+                grupo_antiguo = Usuario.objects.filter(id = self.id).values('rol__rol').first()
+                print(grupo_antiguo['rol__rol'])
+                print(self.rol.rol)
+                if grupo_antiguo['rol__rol'] == self.rol.rol:
+                    print("Entro en igualdad de roles")
+                    super().save(*args,**kwargs)
+                else:
+                    grupo_anterior = Group.objects.filter(name = grupo_antiguo['rol__rol']).first()
+                    if grupo_anterior:
+                        print(grupo_anterior)
+                        self.groups.remove(grupo_anterior)
+                    nuevo_grupo = Group.objects.filter(name = self.rol.rol).first()
+                    if nuevo_grupo:
+                        self.groups.add(nuevo_grupo)
+                    super().save(*args,**kwargs)
     
 Rol_Cliente= (
     (0, "Demandante"),
@@ -198,12 +284,8 @@ class Cliente(Usuario):
         )
     
 class Abogado(Usuario):
-
-   Tipo_de_abogado=models.OneToOneField(TipoDeAbogado, verbose_name=("Tipo De Abogado"), on_delete=models.CASCADE)
+    Tipo_de_abogado=models.OneToOneField(TipoDeAbogado, verbose_name=("Tipo De Abogado"), on_delete=models.CASCADE)
     #es_abogado=models.BooleanField(default=False)
-    
-    
-
 Estados = (
     ('P', 'En Proceso'),
     ('F', 'Finalizado')
@@ -244,13 +326,3 @@ class Reporte(models.Model):
     def __str__(self):
         """Unicode representation of Caso."""
         return self.tipo_de_proceso
-
-class USCitizen(models.Model):
-    nombre=models.CharField( max_length=50)
-    class Meta:
-        permissions = [
-            # Permission identifier     human-readable permission name
-            ("can_drive",               "Can drive"),
-            ("can_vote",                "Can vote in elections"),
-            ("can_drink",               "Can drink alcohol"),
-        ]

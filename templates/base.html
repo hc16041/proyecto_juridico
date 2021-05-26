@@ -21,6 +21,7 @@
         <div class="container-fluid">
             <div class="card-header">
                 <!--Inicio de barra de navegación-->
+                {% if request.user.is_superuser %}
                 <nav class="navbar navbar-expand-md navbar-light bg-light">
                     <ul class="navbar-nav ml-auto">
                         <li>
@@ -63,10 +64,11 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{%url 'institucion'%}">Instituciones</a>
                             </li>
-                    
+
                         </ul>
                     </div>
                 </nav>
+                {%endif%}
                 <!--IFin de barra de navegación-->
             </div>
         </div>

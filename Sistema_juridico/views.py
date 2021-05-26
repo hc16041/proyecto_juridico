@@ -12,12 +12,14 @@ from django.views.decorators.cache import never_cache
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import permission_required
+from .mixins import LoginYSuperStaffMixin,LoginMixin,ValidarPermisosMixin
 
 # Create your views here.
 
     
 class Inicio(LoginRequiredMixin,TemplateView):
     template_name='inicio.html'
+
     
 class ListarTiposDeAbogados(LoginRequiredMixin,ListView):
     model = TipoDeAbogado
@@ -135,6 +137,48 @@ class EliminarTipoDeProceso(LoginRequiredMixin,DeleteView):
     template_name = "abogados/tp_abogado_borrar.html"
     success_url=reverse_lazy('tipo_de_proceso')
     
+
+class ListaAbogado(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    
+    model=Abogado
+    template_name = "abogados/abogado_list.html"
+    permission_required = ('Sistema_juridico.view_abogado', 'Sistema_juridico.add_abogado',
+                           'Sistema_juridico.delete_abogado', 'Sistema_juridico.change_abogado')
+    context_object_name='abogados'
+    #solo los que son abogado
+    queryset=Abogado.objects.all()
+
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Abogado.objects.filter(
+            Q(nombre__icontains=self.request.GET['buscar'])|
+            Q(correo__icontains=self.request.GET['buscar'])|
+            Q(dui__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+    #success_url=reverse_lazy('inicio')
+
+class CrearAbogado(LoginYSuperStaffMixin, ValidarPermisosMixin,CreateView):
+    model = Abogado
+    
+    form_class=FormAbogado
+    template_name = "abogados/crear_abogado.html"
+    permission_required=('Sistema_juridico.view_abogado','Sistema_juridico.add_abogado')
+    context_object_name='abogados'
+    success_url=reverse_lazy('abogados')
+    
+class ActualizarAbogado(LoginRequiredMixin,UpdateView):
+    model = Abogado
+    form_class= FormAbogado
+    template_name = "abogados/editar_abogado.html"
+    success_url=reverse_lazy('abogados')   
+
+class DetalleAbogado(LoginRequiredMixin,DetailView):
+    model = Abogado
+    template_name = "abogados/detalle_abogado.html"
+    success_url = reverse_lazy('abogados')
+
+
 class ListaCliente(LoginRequiredMixin,ListView):
     model=Cliente
     template_name = "clientes/cliente_list.html"
@@ -175,7 +219,7 @@ class EliminarCliente(LoginRequiredMixin,DeleteView):
     template_name = "clientes/cliente_borrar.html"
     success_url=reverse_lazy('cliente')
 
-class DetalleCliente(DetailView):
+class DetalleCliente(LoginRequiredMixin,DetailView):
     model = Cliente
     template_name = "clientes/detalle_cliente.html"
     success_url=reverse_lazy('clientes')
@@ -213,7 +257,7 @@ class ListaCasos(LoginRequiredMixin,ListView):
         return super().get_queryset()
     #success_url=reverse_lazy('inicio')
 
-class ListaReportes(ListView):
+class ListaReportes(LoginRequiredMixin,ListView):
     model=Reporte
     template_name = "reportes/reporte_list.html"
     context_object_name='reportes'
@@ -229,7 +273,7 @@ class ListaReportes(ListView):
         ).distinct()
         return super().get_queryset()
 
-class contactomail(View):
+class contactomail(LoginRequiredMixin,View):
     def get(self,request):
         form=contactoForm()
         return render(request,'email.html',{'forma':form})
@@ -244,7 +288,7 @@ class contactomail(View):
             return HttpResponseRedirect('/')
         return render(request,'email.html',{'forma':form})
 
-class ListarInstitucion(ListView):
+class ListarInstitucion(LoginRequiredMixin,ListView):
     model = Institucion
     template_name = "institucion/institucion_list.html"
     context_object_name='institucion'
@@ -260,19 +304,19 @@ class ListarInstitucion(ListView):
         ).distinct()
         return super().get_queryset()
 
-class CrearInstitucion(CreateView):
+class CrearInstitucion(LoginRequiredMixin,CreateView):
     model = Institucion
     form_class= InstitucionForm
     template_name = "institucion/crear_institucion.html"
     context_object_name='institucion'
     success_url=reverse_lazy('institucion')
  
-class EliminarInstitucion(DeleteView):
+class EliminarInstitucion(LoginRequiredMixin,DeleteView):
     model = Institucion
     template_name = "institucion/institucion_confirm_delete.html"
     success_url=reverse_lazy('institucion')
 
-class ActualizarInstitucion(UpdateView):
+class ActualizarInstitucion(LoginRequiredMixin,UpdateView):
     model = Institucion
     form_class=InstitucionForm
     template_name = "institucion/editar_institucion.html"

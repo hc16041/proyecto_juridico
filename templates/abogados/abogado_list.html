@@ -1,4 +1,4 @@
-{%extends 'base.html'%}{%load static%}{%block title%}Abogados{%endblock%} {%block content%}
+{%extends 'base.html'%}{%load static%}{%block title%}Abogados{%endblock%} {%block content%} {%if request.user.is_staff%}
 <div class="card">
     <div class="card-header">
         <strong>Abogados</strong>
@@ -86,11 +86,11 @@
             $(this).modal('show');
         });
     }
+
     function abrir_modal_detalle(url) {
         $('#edicion').load(url, function() {
             $(this).modal('show');
         });
     }
-
 </script>
-{%endblock%}
+{%endif%} {%endblock%}

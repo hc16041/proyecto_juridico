@@ -20,7 +20,7 @@ urlpatterns = [
     path('editar_institucion/<int:pk>', ActualizarInstitucion.as_view(), name='editar_institucion'),
     path('eliminar_institucion/<int:pk>/', EliminarInstitucion.as_view(), name='eliminar_institucion'),
 
-    path('abogados/',login_required(ListaAbogado.as_view()), name='abogados'),
+    path('abogados/',ListaAbogado.as_view(), name='abogados'),
     path('crear_abogado/',CrearAbogado.as_view(),name='crear_abogado'),
     path('editar_abogado/<int:pk>',ActualizarAbogado.as_view(),name='editar_abogado'),
     path('detalle_abogado/<int:pk>', DetalleAbogado.as_view(), name='detalle_abogado'),
