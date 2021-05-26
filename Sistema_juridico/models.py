@@ -157,16 +157,7 @@ class ManejadorUsuario(BaseUserManager):
           usuario.save(using=self._db)
           return usuario
       
-      def create_staffuser(self,correo,nombre, apellido,password):
-          usuario=self.create_user(
-              correo,
-              nombre=nombre,
-              apellido=apellido,
-              password=password
-          )
-          usuario.is_staff=True
-          usuario.save(using=self._db)
-          return usuario
+      
       
       def create_superuser(self,correo,nombre, apellido,password):
           usuario=self.create_user(
@@ -175,7 +166,7 @@ class ManejadorUsuario(BaseUserManager):
               apellido=apellido,
               password=password
           )
-          usuario.is_staff=True
+          
           usuario.is_superuser=True
           usuario.save(using=self._db)
           return usuario
@@ -310,19 +301,5 @@ class Caso(models.Model):
         """Unicode representation of Caso."""
         return self.codigo
     
-class Reporte(models.Model):
-    codigo_caso=models.ForeignKey(Caso,verbose_name="codigo caso",on_delete=models.CASCADE)
-    dui_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente"), on_delete=models.CASCADE)
-    nombre_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
-    codigo_reporte = models.IntegerField(primary_key=True,blank=False, null=False)
-    estado_cliente = models.IntegerField(choices=Estados, default=0)
-    tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
-    
-    
-    class Meta:
-        verbose_name = 'Reporte'
-        verbose_name_plural = 'Reportes'
 
-    def __str__(self):
-        """Unicode representation of Caso."""
-        return self.tipo_de_proceso
+    

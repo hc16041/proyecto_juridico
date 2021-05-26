@@ -31,5 +31,5 @@ urlpatterns = [
     path('detalle_cliente/<int:pk>', DetalleCliente.as_view(), name='detalle_cliente'),
 
     path('caso/',ListaCasos.as_view(), name='caso'),
-    path('reporte/',login_required(ListaReportes.as_view()),name='reporte'),
+    
 ]
