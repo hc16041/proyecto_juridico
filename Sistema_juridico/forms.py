@@ -73,9 +73,22 @@ class CasoForm(forms.ModelForm):
             'descripcion':'Descripcion'
         }
         widgets={
+
+            'id_cliente': forms.Select(
+                attrs={
+                    'id':'id_cliente',
+                    'class':'form-control form-control-sm col-sm-6',
+                }
+            ),
+            'id_abogado': forms.Select(
+                attrs={
+                    'id':'id_abogado',
+                    'class':'form-control form-control-sm col-sm-6',
+                }
+            ),
             'codigo': forms.TextInput(
                 attrs={
-                    'class':'form-control',
+                    'class':'form-control form-control-sm col-sm-6',
                     'placeholder':'Ingrese el codigo del caso',
                     'id':'codigo',
                     
@@ -83,7 +96,7 @@ class CasoForm(forms.ModelForm):
             ),
             'descripcion':forms.Textarea(
                 attrs={
-                    'class':'form-control',
+                    'class':'form-control form-control-sm col-sm-6',
                     'placeholder':'Ingrese descripcion del tipo de abogado',
                     'id':'descripcion',
                 }
@@ -91,16 +104,22 @@ class CasoForm(forms.ModelForm):
             'estado':forms.Select(
                 attrs={
                     'id':'estado',
-                    'class':'form-control form-control-sm col-sm-2'
+                    'class':'form-control form-control-sm col-sm-6'
                 }
             ),
             'tipo_de_proceso':forms.Select(
                 attrs={
                     'id':'tipo_de_proceso',
-                    'class':'form-control form-control-sm col-sm-2'
+                    'class':'form-control form-control-sm col-sm-6'
                 }
             ),
-            
+            'tipo_pago':forms.RadioSelect(
+                attrs={
+                    '':'Contado',
+                    '':'Credito',
+                    'id':'tipo_pago',
+                }
+            ),
             
         }
     
@@ -493,4 +512,46 @@ class InstitucionForm(forms.ModelForm):
                     'id':'tipo',
                 }
             ),
+        }
+
+class FormaDePagoForm(forms.ModelForm):
+    class Meta:
+        model=FormaDePago
+        fields='__all__'
+        labels={
+          
+        }
+        widgets={
+
+           'plazo':forms.NumberInput (
+                attrs={
+                    'class':'form-control form-control-sm col-sm-4',
+                    'placeholder':'Ingrese cantidad del plazo',
+                    'id':'plazo',
+                }
+            ),   
+
+           'cuota':forms.NumberInput(
+                attrs={
+                    'id':'cuota',
+                    'class':'form-control form-control-sm col-sm-4'
+                }
+            ),
+        
+            'monto':forms.TextInput(
+                     attrs={
+                         'class':'form-control form-control-sm col-sm-4',
+                         'id':'monto'
+                         }
+    
+                 ),
+
+            'fecha_fin_credito':forms.DateInput(
+                     attrs={
+                         'class':'form-control form-control-sm col-sm-4',
+                         'type': 'date',
+                         'id':'fecha_fin_credito'
+                         }
+    
+                 )
         }

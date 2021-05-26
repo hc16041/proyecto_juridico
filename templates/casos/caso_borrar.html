@@ -1,0 +1,17 @@
+<div id="eliminacion" class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Elemento a eliminar : {{object.codigo}}</h2>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form action="{% url 'eliminar_caso' object.codigo %}" method="POST">
+            {% csrf_token %}
+            <div class="modal-footer">
+                <button class="btn btn-danger" type="submit" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" type="submit">Confirmar</button>
+            </div>
+        </form>
+    </div>
+</div>

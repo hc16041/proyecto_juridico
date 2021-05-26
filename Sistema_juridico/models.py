@@ -67,10 +67,10 @@ class Audiencia(models.Model):
         return self.detalle
 
 class FormaDePago(models.Model):
-    tipo = models.CharField(max_length = 150,blank=False, null=False)
     plazo = models.IntegerField()
     cuota = models.IntegerField()
     monto=models.DecimalField( max_digits=5, decimal_places=2)
+    fecha_fin_credito = models.DateField(null=True)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
     class Meta:
@@ -278,18 +278,23 @@ class Abogado(Usuario):
     Tipo_de_abogado=models.OneToOneField(TipoDeAbogado, verbose_name=("Tipo De Abogado"), on_delete=models.CASCADE)
     #es_abogado=models.BooleanField(default=False)
 Estados = (
-    ('P', 'En Proceso'),
-    ('F', 'Finalizado')
+    (0, 'En Proceso'),
+    (1, 'Finalizado')
+)
+Tipo_Pago =(
+    (0, "Contado"),
+    (1, "Credito")
 )
 class Caso(models.Model):
     id_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente"), on_delete=models.CASCADE)
     id_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
     codigo = models.IntegerField(primary_key=True,blank=False, null=False)
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
-    estado = models.CharField(choices=Estados, default=0, max_length=2)
+    estado = models.IntegerField(choices=Estados, default=0)
     tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
-    pago=models.ForeignKey(Pago,on_delete=models.CASCADE)
-    audiencia=models.ForeignKey(Audiencia,on_delete=models.CASCADE)
+    tipo_pago = models.IntegerField(choices=Tipo_Pago, default=0)
+    #pago=models.ForeignKey(Pago,on_delete=models.CASCADE)
+    #audiencia=models.ForeignKey(Audiencia,on_delete=models.CASCADE)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
     
@@ -299,7 +304,5 @@ class Caso(models.Model):
 
     def __str__(self):
         """Unicode representation of Caso."""
-        return self.codigo
-    
-
+        return self.descripcion
     

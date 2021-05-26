@@ -7,11 +7,11 @@
         <div class="card-body card_block">
 
             <form method="post" enctype="multipart/form-data">
-
                 {% csrf_token %} {{form.as_p}}
+                <a onclick="abrir_modal_crear('{% url 'crear_formaPago'  %}')" class="btn btn-warning">Asignar Cuota</a>
 
                 <ul class="errorlist">
-                    <p>Nota: Asegúrese de que este valor tenga menos de 220 caracteres</p>
+                    <p></p>
                 </ul>
                 <div class="text-center ">
                     <button type="submit " class="btn btn-primary">Guardar</button>
@@ -21,4 +21,14 @@
         </div>
     </div>
 </div>
+
+<div id="crear" class="modal fade" role="dialog">
+</div>
+<script type="text/javascript">
+    function abrir_modal_crear(url) {
+        $('#crear').load(url, function() {
+            $(this).modal('show');
+        });
+    }
+</script>
 {%endblock%}

@@ -8,8 +8,6 @@ urlpatterns = [
     path('editar_tipo_de_abogado/<int:pk>',ActualizarTipoDeAbogado.as_view(),name='editar_tipo_de_abogado'),
     path('eliminar_tipo_de_abogado/<int:pk>/',EliminarTipoDeAbogado.as_view(),name='eliminar_tipo_de_abogado'),
 
-    path('crear_caso/',login_required(CrearCaso.as_view()),name='crear_caso'),
-
     path('tipo_de_proceso/',login_required(ListarTiposDeProcesos.as_view()), name='tipo_de_proceso'),
     path('crear_tipo_de_proceso/',CrearTipoDeProceso.as_view(),name='crear_tipo_de_proceso'),
     path('editar_tipo_de_proceso/<int:pk>',ActualizarTipoDeProceso.as_view(),name='editar_tipo_de_proceso'),
@@ -30,6 +28,10 @@ urlpatterns = [
     path('editar_cliente/<int:pk>',ActualizarCliente.as_view(),name='editar_cliente'),
     path('detalle_cliente/<int:pk>', DetalleCliente.as_view(), name='detalle_cliente'),
 
+    path('crear_caso/',login_required(CrearCaso.as_view()),name='crear_caso'),
     path('caso/',ListaCasos.as_view(), name='caso'),
+    path('eliminar_caso/<int:pk>',EliminarCaso.as_view(),name='eliminar_caso'),
+    path('editar_caso/<int:pk>',ActualizarCaso.as_view(),name='editar_caso'),
+    path('crear_formaPago/',CrearFormaDePago.as_view(),name='crear_formaPago'),
     
 ]

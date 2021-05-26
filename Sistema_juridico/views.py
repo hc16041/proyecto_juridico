@@ -90,7 +90,7 @@ class CrearCaso(CreateView):
     model = Caso
     form_class=CasoForm
     template_name = "casos/caso.html"
-    success_url=reverse_lazy('inicio')
+    success_url=reverse_lazy('caso')
 
 class CrearTipoDeProceso(CreateView):
     model =TipoDeProceso
@@ -225,6 +225,24 @@ class ListaCasos(ListView):
         ).distinct()
         return super().get_queryset()
     #success_url=reverse_lazy('inicio')
+
+class EliminarCaso(DeleteView):
+    model = Caso
+    template_name = "casos/caso_borrar.html"
+    success_url=reverse_lazy('caso')
+
+class ActualizarCaso(UpdateView):
+    model = Caso
+    form_class=CasoForm
+    template_name = "casos/caso_editar.html"
+    success_url=reverse_lazy('caso')
+    
+class CrearFormaDePago(CreateView):
+    model = FormaDePago
+    form_class=FormaDePagoForm
+    template_name = "formapago/crear.html"
+    context_object_name='formapagos'
+    success_url=reverse_lazy('crear_caso')    
 
 
 
