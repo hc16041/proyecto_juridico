@@ -346,22 +346,7 @@ class FormCliente(forms.ModelForm):
 
 
 class FormAbogado(forms.ModelForm):
-    password1 = forms.CharField(label='Contraseña',widget=forms.PasswordInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'Contraseña',
-            'id':'password1',
-            'required':'required'
-        }
-        ))
-    password2 = forms.CharField(label='Confirmar Contraseña',widget=forms.PasswordInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'Confirmar Contraseña',
-            'id':'password2',
-            'required':'required'
-        }
-        ))
+    
     class Meta:
         model= Abogado
         fields=('nombre', 'apellido', 'dui', 'direccion', 'estado_civil', 'correo', 'telefono', 'fecha_nacimiento', 'Tipo_de_abogado')
