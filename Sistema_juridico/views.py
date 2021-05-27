@@ -213,15 +213,13 @@ class ListaCasos(ListView):
     model=Caso
     template_name = "casos/listar.html"
     context_object_name='clientes'
-    #solo los que son cliente
     queryset=Caso.objects.all()
     
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
             return Caso.objects.filter(
-            Q(nombre__icontains=self.request.GET['buscar'])|
-            Q(correo__icontains=self.request.GET['buscar'])|
-            Q(dui__icontains=self.request.GET['buscar'])
+            Q(codigo__icontains=self.request.GET['buscar'])|
+            Q(descripcion__icontains=self.request.GET['buscar'])
         ).distinct()
         return super().get_queryset()
     #success_url=reverse_lazy('inicio')
@@ -236,14 +234,47 @@ class ActualizarCaso(UpdateView):
     form_class=CasoForm
     template_name = "casos/caso_editar.html"
     success_url=reverse_lazy('caso')
-    
-class CrearFormaDePago(CreateView):
+
+class CrearFormaDePagoModal(CreateView):
     model = FormaDePago
     form_class=FormaDePagoForm
     template_name = "formapago/crear.html"
     context_object_name='formapagos'
-    success_url=reverse_lazy('crear_caso')    
+    success_url=reverse_lazy('crear_caso')
 
+class CrearFormaDePago(CreateView):
+    model = FormaDePago
+    form_class=FormaDePagoForm
+    template_name = "formapago/formapago_crear.html"
+    context_object_name='formapagos'
+    success_url=reverse_lazy('formaPago')     
+
+class ListaFormaDePago(ListView):
+    model=FormaDePago
+    template_name = "formapago/formapago_listar.html"
+    context_object_name='formapagos'
+    queryset=FormaDePago.objects.all()
+    
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return FormaDePago.objects.filter(
+            Q(cuota__icontains=self.request.GET['buscar'])|
+            Q(plazo__icontains=self.request.GET['buscar'])|
+            Q(monto__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+    #success_url=reverse_lazy('inicio')
+
+class EliminarFormaDePago(DeleteView):
+    model = FormaDePago
+    template_name = "formapago/formapago_borrar.html"
+    success_url=reverse_lazy('formaPago')
+
+class ActualizarFormaDePago(UpdateView):
+    model = FormaDePago
+    form_class=FormaDePagoForm
+    template_name = "formapago/formapago_editar.html"
+    success_url=reverse_lazy('formaPago')
 
 
 class contactomail(View):
@@ -296,3 +327,41 @@ class ActualizarInstitucion(UpdateView):
     context_object_name='institucion'
     success_url=reverse_lazy('institucion')
 
+class CrearAudiencia(CreateView):
+    model = Audiencia
+    form_class=AudienciaForm
+    template_name = "audiencia/audiencia_crear.html"
+    context_object_name='audiencias'
+    success_url=reverse_lazy('audiencia')
+
+class ListaAudiencia(ListView):
+    model=Audiencia
+    template_name = "audiencia/audiencia_listar.html"
+    context_object_name='audiencias'
+    queryset=Audiencia.objects.all()
+    
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Audiencia.objects.filter(
+            Q(detalle__icontains=self.request.GET['buscar'])|
+            Q(descripcion__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()    
+
+class ActualizarAudiencia(UpdateView):
+    model = Audiencia
+    form_class=AudienciaForm
+    template_name = "audiencia/audiencia_editar.html"
+    success_url=reverse_lazy('audiencia') 
+
+class EliminarAudiencia(DeleteView):
+    model = Audiencia
+    template_name = "audiencia/audiencia_borrar.html"
+    success_url=reverse_lazy('audiencia')
+
+class CrearAudienciaModal(CreateView):
+    model = Audiencia
+    form_class=AudienciaForm
+    template_name = "audiencia/audienciaCrear_modal.html"
+    context_object_name='audiencias'
+    success_url=reverse_lazy('audiencia')

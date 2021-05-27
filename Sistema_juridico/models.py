@@ -51,11 +51,17 @@ class Institucion(models.Model):
 
     def __str__(self):
         return self.nombre
+Detalle =(
+    (0, "Nuevo"),
+    (1, "Reprogramado")
+)
 
 class Audiencia(models.Model):
-    detalle = models.CharField(max_length = 150,blank=False,null=False)
+    id = models.AutoField(primary_key = True)
+    detalle = models.IntegerField(choices=Detalle, default=0)
     fecha = models.DateField()
-    hora = models.DateTimeField()
+    hora = models.TimeField()
+    juzgado= models.ForeignKey(Institucion, on_delete=models.CASCADE,blank = True,null = True)
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
@@ -67,6 +73,7 @@ class Audiencia(models.Model):
         return self.detalle
 
 class FormaDePago(models.Model):
+    id = models.AutoField(primary_key = True)
     plazo = models.IntegerField()
     cuota = models.IntegerField()
     monto=models.DecimalField( max_digits=5, decimal_places=2)
@@ -74,11 +81,11 @@ class FormaDePago(models.Model):
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
     class Meta:
-        verbose_name = 'Forma De Pago'
-        verbose_name_plural = 'Forma De Pagos'
+        verbose_name = 'FormaDePago'
+        verbose_name_plural = 'FormaDePagos'
 
     def __str__(self):
-        return self.tipo
+        return self.fecha_fin_credito
 
 class Pago(models.Model):
     fecha = models.DateField()

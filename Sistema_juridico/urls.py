@@ -32,6 +32,16 @@ urlpatterns = [
     path('caso/',ListaCasos.as_view(), name='caso'),
     path('eliminar_caso/<int:pk>',EliminarCaso.as_view(),name='eliminar_caso'),
     path('editar_caso/<int:pk>',ActualizarCaso.as_view(),name='editar_caso'),
+
+    path('formaPago_crear/',CrearFormaDePagoModal.as_view(),name='formaPago_crear'),
     path('crear_formaPago/',CrearFormaDePago.as_view(),name='crear_formaPago'),
-    
+    path('formaPago/',login_required(ListaFormaDePago.as_view()), name='formaPago'),
+    path('eliminar_formaPago/<int:pk>',EliminarFormaDePago.as_view(),name='eliminar_formaPago'),
+    path('editar_formaPago/<int:pk>',ActualizarFormaDePago.as_view(),name='editar_formaPago'),
+
+    path('crear_audiencia/',CrearAudiencia.as_view(),name='crear_audiencia'),
+    path('audiencia/',login_required(ListaAudiencia.as_view()), name='audiencia'),
+    path('editar_audiencia/<int:pk>',ActualizarAudiencia.as_view(),name='editar_audiencia'),
+    path('eliminar_audiencia/<int:pk>',EliminarAudiencia.as_view(),name='eliminar_audiencia'),
+    path('audiencia_asignar/',CrearAudienciaModal.as_view(),name='audiencia_asignar'),
 ]

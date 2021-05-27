@@ -555,3 +555,57 @@ class FormaDePagoForm(forms.ModelForm):
     
                  )
         }
+
+class AudienciaForm(forms.ModelForm):
+    class Meta:
+        model=Audiencia
+        fields='__all__'
+        labels={
+          
+        }
+        widgets={
+
+           'detalle':forms.Select(
+                attrs={
+                    'class':'form-control form-control-sm col-sm-4',
+                    'placeholder':'---------------------',
+                    'id':'detalle',
+                }
+            ),
+
+           'fecha':forms.DateInput(
+                attrs={
+                    'class':'form-control form-control-sm col-sm-4',
+                    'type': 'date',
+                    'id':'fecha'
+                }
+    
+            ),   
+
+           'hora':forms.TimeInput(
+                attrs={
+                    'type': 'time',
+                    'id':'hora',
+                    'class':'form-control form-control-sm col-sm-4'
+                }
+            ),
+
+           'juzgado':forms.Select(
+                attrs={
+                    'class':'form-control form-control-sm col-sm-4',
+                    'placeholder':'---------------------',
+                    'id':'juzgado',
+                }
+            ),
+        
+            'descripcion':forms.Textarea(
+                attrs={
+                    'class':'form-control form-control-sm col-sm-4',
+                    'placeholder':'Descripcion',
+                    'id':'descripcion'
+                         }
+    
+                 ),
+
+    
+        }
