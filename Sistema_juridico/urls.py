@@ -30,8 +30,9 @@ urlpatterns = [
 
     path('crear_caso/',login_required(CrearCaso.as_view()),name='crear_caso'),
     path('caso/',ListaCasos.as_view(), name='caso'),
-    path('eliminar_caso/<int:pk>',EliminarCaso.as_view(),name='eliminar_caso'),
+    path('detalle_caso/<int:pk>',Detallecaso.as_view(),name='detalle_caso'),
     path('editar_caso/<int:pk>',ActualizarCaso.as_view(),name='editar_caso'),
+    path('asignar_cliente/',AsignarCliente.as_view(),name='asignar_cliente'),
 
     path('formaPago_crear/',CrearFormaDePagoModal.as_view(),name='formaPago_crear'),
     path('crear_formaPago/',CrearFormaDePago.as_view(),name='crear_formaPago'),

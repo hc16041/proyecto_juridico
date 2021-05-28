@@ -73,11 +73,12 @@ class CasoForm(forms.ModelForm):
             'descripcion':'Descripcion'
         }
         widgets={
-
+    
             'id_cliente': forms.Select(
                 attrs={
                     'id':'id_cliente',
                     'class':'form-control form-control-sm col-sm-6',
+                    
                 }
             ),
             'id_abogado': forms.Select(
@@ -364,6 +365,7 @@ class FormCliente(forms.ModelForm):
         return usuario
 
 
+
 class FormAbogado(forms.ModelForm):
     
     class Meta:
@@ -434,21 +436,30 @@ class FormAbogado(forms.ModelForm):
              }
        
     def clean_password2(self):
-        password1=self.cleaned_data.get("password1")
-        password2=self.cleaned_data.get("password2")
-        if password1!=password2:
-            raise forms.ValidationError("Contraseñas no coinciden")
-        return password2
+        password1=make_password('')
+        # password2=self.cleaned_data.get("password2")
+        # if password1!=password2:
+        #     raise forms.ValidationError("Contraseñas no coinciden")
+        # return password2
     
     def save(self,commit=True):
          #guarda contraseña en formato Hash
+         #crea una contraseña aleatoria
+        password1=BaseUserManager().make_random_password(15)
+        print(password1)
+        nombre=self.cleaned_data.get("nombre")
+        apellido=self.cleaned_data.get("apellido")
+        
         usuario=super().save(commit=False)
-        usuario.set_password(self.cleaned_data["password1"])
-        usuario.is_abogado=True
+        #Se crea un usuario aleatorio
+        usuario.username=nombre[0:3]+apellido[0:3]
+        
+        usuario.is_cliente=True
+        #usar es cliente si es necesario, se debe de agregar al modelo de cliente
+        usuario.set_password(password1)
         if commit:
             usuario.save()
         return usuario
-
 class contactoForm(forms.Form):
     origen=forms.CharField()
     asunto=forms.CharField(required=True)

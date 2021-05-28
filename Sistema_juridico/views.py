@@ -207,12 +207,28 @@ class DetalleCliente(DetailView):
     model = Cliente
     template_name = "clientes/detalle_cliente.html"
     success_url=reverse_lazy('clientes')
+
+class AsignarCliente(ListView):
+    model=Cliente
+    template_name = "casos/asignar_cliente.html"
+    context_object_name='clientes'
+    #solo los que son cliente
+    queryset=Cliente.objects.all()
     
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Cliente.objects.filter(
+            Q(nombre__icontains=self.request.GET['buscar'])|
+            Q(correo__icontains=self.request.GET['buscar'])|
+            Q(dui__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+    #success_url=reverse_lazy('inicio')
 
 class ListaCasos(ListView):
     model=Caso
     template_name = "casos/listar.html"
-    context_object_name='clientes'
+    context_object_name='casos'
     queryset=Caso.objects.all()
     
     def get_queryset(self):
@@ -224,9 +240,9 @@ class ListaCasos(ListView):
         return super().get_queryset()
     #success_url=reverse_lazy('inicio')
 
-class EliminarCaso(DeleteView):
+class Detallecaso(DetailView):
     model = Caso
-    template_name = "casos/caso_borrar.html"
+    template_name = "casos/detalle_caso.html"
     success_url=reverse_lazy('caso')
 
 class ActualizarCaso(UpdateView):
@@ -365,3 +381,4 @@ class CrearAudienciaModal(CreateView):
     template_name = "audiencia/audienciaCrear_modal.html"
     context_object_name='audiencias'
     success_url=reverse_lazy('audiencia')
+

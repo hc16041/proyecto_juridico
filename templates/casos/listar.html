@@ -20,7 +20,7 @@
                     </div>
                 </form>
                 <!--Fin Barra de busqueda-->
-                <br> {%if clientes%}
+                <br> {%if casos%}
             </div>
         </div>
         <div class="col-md-10">
@@ -43,20 +43,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {%for cliente in clientes%}
+                        {%for caso in casos%}
                         <tr>
-                            <td>{{cliente.id_cliente.get_full_name}}</td>
-                            <td>{{cliente.id_abogado.get_full_name}}</td>
-                            <td>{{cliente.codigo}}</td>
-                            <td>{{cliente.descripcion}}</td>
-                            {% firstof cliente.estado as value %}
+                            <td>{{caso.id_cliente.get_full_name}}</td>
+                            <td>{{caso.id_abogado.get_full_name}}</td>
+                            <td>{{caso.codigo}}</td>
+                            <td>{{caso.descripcion}}</td>
+                            {% firstof caso.estado as value %}
                             {%if value %}
                             <td>Finalizado</td>
                             {%else%}
                             <td>En Proceso</td>
                             {%endif%}
-                            <td><a onclick="abrir_modal_edicion('{% url 'editar_caso' cliente.codigo %}')" class="btn btn-warning">Editar</a>
-                                <a onclick="abrir_modal_eliminacion('{% url 'eliminar_caso' cliente.codigo %}')" class="btn btn-danger">Eliminar</a>
+                            <td><a onclick="abrir_modal_edicion('{% url 'editar_caso' caso.codigo %}')" class="btn btn-warning">Editar</a>
+                                <a onclick="abrir_modal_detalle('{% url 'detalle_caso' caso.codigo %}')" class="btn btn-danger">detalle</a>
 
                             </td>
                         </tr>
@@ -80,7 +80,7 @@
 {%endif%}
 <div id="edicion" class="modal fade" role="dialog">
 </div>
-<div id="eliminacion" class="modal fade" role="dialog">
+<div id="view" class="modal fade" role="dialog">
 </div>
 
 <script type="text/javascript">
@@ -90,8 +90,8 @@
         });
     }
 
-    function abrir_modal_eliminacion(url) {
-        $('#eliminacion').load(url, function() {
+    function abrir_modal_detalle(url) {
+        $('#view').load(url, function() {
             $(this).modal('show');
         });
     }

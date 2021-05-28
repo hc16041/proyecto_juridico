@@ -293,7 +293,7 @@ Tipo_Pago =(
     (1, "Credito")
 )
 class Caso(models.Model):
-    id_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente"), on_delete=models.CASCADE)
+    id_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente:"), on_delete=models.CASCADE)
     id_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
     codigo = models.IntegerField(primary_key=True,blank=False, null=False)
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
