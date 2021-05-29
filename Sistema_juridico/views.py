@@ -9,7 +9,7 @@ from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import permission_required
 from .mixins import LoginYSuperStaffMixin,LoginMixin,ValidarPermisosMixin

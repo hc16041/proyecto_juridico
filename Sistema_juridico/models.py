@@ -139,14 +139,14 @@ class Rol(models.Model):
 
           
 class ManejadorUsuario(BaseUserManager):
-    def _create_user(self,correo,nombre, apellido, password, **extra_fields):
+    def _create_user(self,nombre, apellido,correo, password, **extra_fields):
         """
         Create and save a user with the given username, email, and password.
         """
         if not correo:
             raise ValueError('The given correo must be set')
         correo = self.normalize_email(correo)
-        user = self.model(correo=correo, nombre=nombre,apellido=apellido, **extra_fields)
+        user = self.model(nombre=nombre,apellido=apellido,correo=correo,  **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -154,7 +154,7 @@ class ManejadorUsuario(BaseUserManager):
     def create_user(self,nombre, apellido,correo=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(correo,nombre, apellido, password, **extra_fields)
+        return self._create_user(nombre, apellido,correo, password, **extra_fields)
 
     def create_superuser(self, nombre, apellido,correo, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
