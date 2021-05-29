@@ -21,55 +21,8 @@
         <div class="container-fluid">
             <div class="card-header">
                 <!--Inicio de barra de navegación-->
-                {% if request.user.is_superuser %}
-                <nav class="navbar navbar-expand-md navbar-light bg-light">
-                    <ul class="navbar-nav ml-auto">
-                        <li>
-                            <h2>{{user}}</h2>
-                        </li>
-                        <li>
-                            <a class="btn btn-outline-danger" href="{%url 'logout'%} ">Cerrar Sesión</a>
-                        </li>
-                    </ul>
-                </nav>
-                <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-                    <a class="navbar-brand" href="{%url 'inicio'%}">Sistema Juridico</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="{%url 'inicio'%}">Inicio</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{%url 'caso'%}">Casos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{%url 'cliente'%}">Clientes</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{%url 'reporte'%}">Reportes</a>
-                            </li>
-                            <li class="nav-item">
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Abogado</a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{%url 'abogados'%}">Abogados</a>
-                                        <a class="dropdown-item" href="{%url 'tipo_de_abogado'%}">Tipos de abogado</a>
-                                    </div>
-                                </li>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{%url 'tipo_de_proceso'%}">Procesos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{%url 'institucion'%}">Instituciones</a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </nav>
-                {%endif%}
-                <!--IFin de barra de navegación-->
+                {% if request.user.rol.rol%} {%include 'barras/cliente.html'%} {%else%} {%include 'barras/abogado.html'%} {%endif%}
+                <!--Fin de barra de navegación-->
             </div>
         </div>
         <!--Fin del Encabezado-->

@@ -124,6 +124,7 @@ class TipoDeProcesoForm(forms.ModelForm):
             'descripcion':forms.Textarea(
                 attrs={
                     'class':'form-control',
+                    'rows':'3',
                     'placeholder':'Ingrese descripcion del tipo de proceso',
                     'id':'descripcion',
                 }
@@ -306,10 +307,13 @@ class FormCliente(forms.ModelForm):
                 }
             ),
                  'fecha_nacimiento':forms.SelectDateWidget(
+                     years=range(1900, 2020),
                      attrs={
-                         'class':'form-control form-control-sm col-sm-4',
+                         'class':'form-control form-control-sm col-sm-2',
                          'type': 'date',
-                         'id':'fecha_nacimiento'
+                         'id':'fecha_nacimiento',
+                         
+                         
                          }
     
                  )
@@ -325,6 +329,7 @@ class FormCliente(forms.ModelForm):
         #     raise forms.ValidationError("Contraseñas no coinciden")
         # return password2
     
+    
     def save(self,commit=True):
          #guarda contraseña en formato Hash
          #crea una contraseña aleatoria
@@ -332,13 +337,14 @@ class FormCliente(forms.ModelForm):
         print(password1)
         nombre=self.cleaned_data.get("nombre")
         apellido=self.cleaned_data.get("apellido")
-        
+        correo=self.cleaned_data.get("correo")
         usuario=super().save(commit=False)
+        #se agrega el rol de una vez
+        usuario.rol=Rol.objects.get(id=1)
         #Se crea un usuario aleatorio
-        usuario.username=nombre[0:3]+apellido[0:3]
+        username=nombre[0:3]+apellido[0:3]
+        usuario.username=username
         
-        usuario.is_cliente=True
-        #usar es cliente si es necesario, se debe de agregar al modelo de cliente
         usuario.set_password(password1)
         if commit:
             usuario.save()
@@ -346,22 +352,6 @@ class FormCliente(forms.ModelForm):
 
 
 class FormAbogado(forms.ModelForm):
-    password1 = forms.CharField(label='Contraseña',widget=forms.PasswordInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'Contraseña',
-            'id':'password1',
-            'required':'required'
-        }
-        ))
-    password2 = forms.CharField(label='Confirmar Contraseña',widget=forms.PasswordInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'Confirmar Contraseña',
-            'id':'password2',
-            'required':'required'
-        }
-        ))
     class Meta:
         model= Abogado
         fields=('nombre', 'apellido', 'dui', 'direccion', 'estado_civil', 'correo', 'telefono', 'fecha_nacimiento', 'Tipo_de_abogado')
@@ -414,9 +404,10 @@ class FormAbogado(forms.ModelForm):
                           'class':'form-control form-control-sm col-sm-2'
                     }
                 ),
-                 'fecha_nacimiento':forms.DateInput(
+                 'fecha_nacimiento':forms.SelectDateWidget(
+                     years=range(1900, 2020),
                      attrs={
-                         'class':'form-control form-control-sm col-sm-4',
+                         'class':'form-control form-control-sm col-sm-2',
                          'type': 'date',
                          'id':'fecha_nacimiento'
                          }
@@ -438,12 +429,24 @@ class FormAbogado(forms.ModelForm):
     
     def save(self,commit=True):
          #guarda contraseña en formato Hash
+         #crea una contraseña aleatoria
+        password1=BaseUserManager().make_random_password(15)
+        print(password1)
+        nombre=self.cleaned_data.get("nombre")
+        apellido=self.cleaned_data.get("apellido")
+        correo=self.cleaned_data.get("correo")
         usuario=super().save(commit=False)
-        usuario.set_password(self.cleaned_data["password1"])
-        usuario.is_abogado=True
+        #se agrega el rol de una vez
+        usuario.rol=Rol.objects.get(id=2)
+        #Se crea un usuario aleatorio
+        username=nombre[0:3]+apellido[0:3]
+        usuario.username=username
+        
+        usuario.set_password(password1)
         if commit:
             usuario.save()
         return usuario
+
 
 class ReporteForm(forms.ModelForm):
     class Meta:

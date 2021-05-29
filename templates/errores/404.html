@@ -1,0 +1,23 @@
+{%extends 'base.html'%}{%load static%}{%block title%}Lo sentimos, esta página no esta disponible{%endblock%} {%block content%}
+
+<div class="card">
+    <div class="card-header">
+
+    </div>
+    <div class="card-body card_block">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-md-2 text-center">
+                    <p><i class="fa fa-exclamation-triangle fa-5x"></i><br/>Status Code: 404</p>
+                </div>
+                <div class="col-md-10">
+                    <h3>Oops! <br> 404 Not Found</h3>
+                    <p>Lo sentimos, se ha producido un error, no se ha encontrado la página solicitada.</p>
+                    <a class="btn btn-danger" href="javascript:history.back()">Go Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{%endblock%}

@@ -27,3 +27,5 @@ urlpatterns = [
     path('logout',logout_then_login,name='logout'),
     # path('accounts/password_reset,')
 ]
+handler404 = 'Sistema_juridico.views.handler404'
+handler403 = 'Sistema_juridico.views.handler403'

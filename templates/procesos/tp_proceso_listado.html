@@ -1,4 +1,4 @@
-{%extends 'base.html'%}{%load static%}{%block title%}Tipo de Procesos{%endblock%} {%block content%}
+{%extends 'base.html'%}{%load static%}{%block title%}Tipo de Procesos{%endblock%} {%block content%} {%if perms.Sistema_juridico.can_view_tipodeproceso%}
 <div class="card">
     <div class="card-header">
         <strong>Tipo de Procesos</strong>
@@ -36,6 +36,8 @@
                             <th scope="col ">Nombre</th>
                             <th scope="col ">Descripcion</th>
                             <th scope="col ">Acciones</th>
+
+
                         </tr>
                     </thead>
                     <tbody>
@@ -84,5 +86,4 @@
         });
     }
 </script>
-
-{%endblock%}
+{%endif%} {%endblock%}

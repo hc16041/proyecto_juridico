@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.utils.datetime_safe import datetime
 from django.contrib.admin import widgets
 from django.contrib.contenttypes.models import ContentType
+from django.core.validators import RegexValidator
 # Create your models here.
 
 
@@ -32,6 +33,7 @@ class TipoDeProceso(models.Model):
         verbose_name = 'Tipo de proceso'
         verbose_name_plural = 'Tipos de procesos'
         ordering=['nombre']
+        permissions = (("can_view_tipodeproceso", "Ver tipos de proceso"),) 
         
     def __str__(self):
         return self.nombre
@@ -143,44 +145,36 @@ class Rol(models.Model):
                 super().save(*args,**kwargs)
         
 
+          
 class ManejadorUsuario(BaseUserManager):
-      def create_user(self,correo,nombre,apellido,password=None):
-          if not correo:
-              raise ValueError('Usuarios deben tener un correo electronico valido')
-          usuario=self.model(
-              correo=self.normalize_email(correo),
-              nombre=nombre,
-              apellido=apellido,
-              )
-          
-          usuario.set_password(password)
-          usuario.save(using=self._db)
-          return usuario
-      
-      def create_staffuser(self,correo,nombre, apellido,password):
-          usuario=self.create_user(
-              correo,
-              nombre=nombre,
-              apellido=apellido,
-              password=password
-          )
-          usuario.is_staff=True
-          usuario.save(using=self._db)
-          return usuario
-      
-      def create_superuser(self,correo,nombre, apellido,password):
-          usuario=self.create_user(
-              correo,
-              nombre=nombre,
-              apellido=apellido,
-              password=password
-          )
-          usuario.is_staff=True
-          usuario.is_superuser=True
-          usuario.save(using=self._db)
-          return usuario
-          
-      
+    def _create_user(self,correo,nombre, apellido, password, **extra_fields):
+        """
+        Create and save a user with the given username, email, and password.
+        """
+        if not correo:
+            raise ValueError('The given correo must be set')
+        correo = self.normalize_email(correo)
+        user = self.model(correo=correo, nombre=nombre,apellido=apellido, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self,nombre, apellido,correo=None, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(correo,nombre, apellido, password, **extra_fields)
+
+    def create_superuser(self, nombre, apellido,correo, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self._create_user(nombre, apellido,correo, password, **extra_fields)
+
 Estado_Civil= (
     (0, "Soltero"),
     (1, "Casado"),
@@ -192,16 +186,27 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     nombre = models.CharField(max_length = 150)
     apellido = models.CharField(max_length = 150)
     direccion = models.CharField(max_length = 150)
-    dui = models.CharField(max_length = 10)
+    dui = models.CharField(max_length = 10,validators=[RegexValidator("^\d{8}-\d{1}$",message="Dui Invalido")])
     telefono=models.CharField(max_length = 8)
     fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
     fecha_nacimiento = models.DateField(null=True)
     estado_civil = models.IntegerField(choices=Estado_Civil, default=0)
     username=models.CharField( max_length=50)
     rol = models.ForeignKey(Rol, on_delete=models.CASCADE,blank = True,null = True)
-    is_active= models.BooleanField(default=True)
+    is_active = models.BooleanField(
+        ('active'),
+        default=True,
+        help_text=(
+            'Designates whether this user should be treated as active. '
+            'Unselect this instead of deleting accounts.'
+        ),
+    )
     is_superuser=models.BooleanField(default=False)
-    is_staff=models.BooleanField(default=False)
+    is_staff = models.BooleanField(
+        ('staff status'),
+        default=False,
+        help_text=('Designates whether the user can log into this admin site.'),
+    )
     
     
     objects=ManejadorUsuario()
@@ -220,24 +225,6 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         """Return the short name for the user."""
         return self.nombre
-    
-    def has_perm(self,perm,obj=None):
-        "El usuario cuenta con permiso en especifico?"
-        return True
-    
-    def has_module_perms(self,app_label):
-        "El usuario cuenta con los permisos para ver una app en especifico"
-        return True
-    
-    @property
-    def is_staff(self):
-        "El usuario es staff(no super usuario)?"
-        return True
-    
-    @property
-    def is_admin(self):
-       "El usuario es admin(super usuario)?"
-       return self.admin
     
     def __str__(self):
         return self.nombre + ' ' + self.apellido + ' ' + self.correo
