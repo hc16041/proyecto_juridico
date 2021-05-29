@@ -7,6 +7,7 @@
         <div class="card-body card_block">
 
             <form method="post" enctype="multipart/form-data">
+<<<<<<< HEAD
 
 
                 <div class="card-body d-flex justify-content-between align-items-center">
@@ -15,10 +16,11 @@
 
                 {% csrf_token %} {{form.as_p}}
                 <a onclick="" class="btn btn-warning">Asignar Cuota</a>
+=======
+                
+                {% csrf_token %} {{form.as_p}}
+>>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
 
-                <ul class="errorlist">
-                    <p></p>
-                </ul>
                 <div class="text-center ">
                     <button type="submit " class="btn btn-primary">Guardar</button>
                     <button type="reset" onclick="history.back()" class="btn btn-danger ">Cancelar</button>

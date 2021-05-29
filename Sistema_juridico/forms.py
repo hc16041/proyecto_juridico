@@ -67,16 +67,15 @@ class FormLogin(AuthenticationForm):
     #     self.fields['password'].widget.attrs['placeholder'] = 'Contraseña'
     
 class CasoForm(forms.ModelForm):
-        
+    codigo_caso=forms.IntegerField(min_value=1,max_value=1500000)
     class Meta:
         model=Caso
         fields='__all__'
         labels={
-            'codigo': 'Codigo',
+            'codigo caso': 'Codigo caso',
             'descripcion':'Descripcion'
         }
         widgets={
-
             'id_cliente': forms.Select(
                 attrs={
                     'id':'id_cliente',
@@ -336,10 +335,7 @@ class FormCliente(forms.ModelForm):
                          'class':'form-control form-control-sm col-sm-2',
                          'type': 'date',
                          'id':'fecha_nacimiento',
-                         
-                         
                          }
-    
                  )
                  
              }
@@ -635,7 +631,7 @@ class FormaDePagoForm(forms.ModelForm):
 class AudienciaForm(forms.ModelForm):
     class Meta:
         model=Audiencia
-        fields=('detalle', 'fecha', 'hora', 'juzgado', 'descripcion')
+        fields= '__all__'
         labels={
           
         }
@@ -649,14 +645,14 @@ class AudienciaForm(forms.ModelForm):
                 }
             ),
 
-           'fecha':forms.DateInput(
-                attrs={
-                    'class':'form-control',
-                    'type': 'date',
-                    'id':'fecha'
-                }
-    
-            ),   
+           'fecha':forms.SelectDateWidget(
+                     years=range(2021, 2100),
+                     attrs={
+                         'class':'form-control form-control-sm col-sm-2',
+                         'type': 'date',
+                         'id':'fecha',
+                         }
+                 ),   
 
            'hora':forms.TimeInput(
                 attrs={

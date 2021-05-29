@@ -24,7 +24,12 @@
             <div class="card-header">
                 <h1>{{request.user.rol.rol}}</h1>
                 <!--Inicio de barra de navegación-->
+<<<<<<< HEAD
                 {% if request.user.rol.rol == "Cliente"%} {%include 'barras/cliente.html'%} {% elif request.user.rol.rol == "Abogado"%} {%include 'barras/abogado.html'%} {%else%}{%include 'barras/administrador.html'%}{%endif%}
+=======
+                {%include 'barras/administrador.html'%}
+                
+>>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
                 <!--Fin de barra de navegación-->
             </div>
         </div>

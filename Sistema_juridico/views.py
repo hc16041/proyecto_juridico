@@ -9,7 +9,7 @@ from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
-from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import permission_required
 from .mixins import LoginYSuperStaffMixin,LoginMixin,ValidarPermisosMixin
@@ -226,16 +226,21 @@ class ListaCasos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_caso'
     model=Caso
     template_name = "casos/listar.html"
-    context_object_name='clientes'
+    context_object_name='casos'
     #solo los que son cliente
-    queryset=Cliente.objects.all()
+    queryset=Caso.objects.all()
     
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
             return Caso.objects.filter(
+<<<<<<< HEAD
             Q(nombre__icontains=self.request.GET['buscar'])|
             Q(correo__icontains=self.request.GET['buscar'])|
             Q(dui__icontains=self.request.GET['buscar'])
+=======
+            Q(codigo_caso__icontains=self.request.GET['buscar'])|
+            Q(estado__icontains=self.request.GET['buscar'])
+>>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
         ).distinct()
         return super().get_queryset()
     #success_url=reverse_lazy('inicio')
@@ -357,3 +362,42 @@ def handler403(request,exception=None):
 def handler404(request,exception=None):
     return render(request,'errores/404.html')
 
+<<<<<<< HEAD
+=======
+
+class CrearAudiencia(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
+    permission_required='Sistema_juridico.add_caso'
+    model = Audiencia, Caso
+    form_class= AudienciaForm
+    template_name = "audiencia/crear_audiencia.html"
+    context_object_name='audiencia'
+    success_url=reverse_lazy('audiencia')
+
+class ListaAudiencia(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required='Sistema_juridico.view_caso'
+    model = Audiencia, Caso
+    template_name = "audiencia/audiencia_list.html"
+    context_object_name='audiencia'
+    queryset=Audiencia.objects.all()
+    paginate_by=10
+    
+    #Para la barra de busqueda
+
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Audiencia.objects.filter(
+            Q(detalle__icontains=self.request.GET['buscar'])|
+            Q(codigo_caso_id=int(self.request.GET['buscar']))
+        ).distinct()
+        return super().get_queryset()
+
+class ActualizarAudiencia(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
+    permission_required='Sistema_juridico.change_caso'
+    model = Audiencia
+    form_class=AudienciaForm
+    template_name = "audiencia/audiencia_editar.html"
+    context_object_name='audiencia'
+    success_url=reverse_lazy('audiencia')
+
+
+>>>>>>> a171a513ab5eb240d962602dddd97959f84a043f

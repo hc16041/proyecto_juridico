@@ -8,9 +8,13 @@ urlpatterns = [
     path('editar_tipo_de_abogado/<int:pk>',ActualizarTipoDeAbogado.as_view(),name='editar_tipo_de_abogado'),
     path('eliminar_tipo_de_abogado/<int:pk>/',EliminarTipoDeAbogado.as_view(),name='eliminar_tipo_de_abogado'),
 
+
     path('crear_caso/',CrearCaso.as_view(),name='crear_caso'),
 
     path('tipo_de_proceso/',ListarTiposDeProcesos.as_view(), name='tipo_de_proceso'),
+
+    path('tipo_de_proceso/',login_required(ListarTiposDeProcesos.as_view()), name='tipo_de_proceso'),
+
     path('crear_tipo_de_proceso/',CrearTipoDeProceso.as_view(),name='crear_tipo_de_proceso'),
     path('editar_tipo_de_proceso/<int:pk>',ActualizarTipoDeProceso.as_view(),name='editar_tipo_de_proceso'),
     path('eliminar_tipo_de_proceso/<int:pk>/',EliminarTipoDeProceso.as_view(),name='eliminar_tipo_de_proceso'),
@@ -30,9 +34,23 @@ urlpatterns = [
     path('editar_cliente/<int:pk>',ActualizarCliente.as_view(),name='editar_cliente'),
     path('detalle_cliente/<int:pk>', DetalleCliente.as_view(), name='detalle_cliente'),
 
-    path('crear_caso/',login_required(CrearCaso.as_view()),name='crear_caso'),
+    path('crear_caso/',CrearCaso.as_view(),name='crear_caso'),
+    path('editar_caso/<int:pk>', ActualizarCaso.as_view(), name='editar_caso'),
+    path('detalle_caso/<int:pk>', DetalleCaso.as_view(), name='detalle_caso'),
     path('caso/',ListaCasos.as_view(), name='caso'),
+
+    path('audiencia/', ListaAudiencia.as_view(), name= 'audiencia'),
+    path('crear_audiencia/', CrearAudiencia.as_view(), name='crear_audiencia'),
+    path('editar_audiencia/<int:pk>', ActualizarAudiencia.as_view(), name='editar_audiencia'),
+
+
     path('reporte/',ListaReportes.as_view(),name='reporte'),
     path('403/', handler403),
     path('404/', handler404),
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
 ]

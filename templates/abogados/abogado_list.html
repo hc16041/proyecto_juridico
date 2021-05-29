@@ -51,7 +51,7 @@
                             <td>{{abogado.telefono}}</td>
                             <td>{{abogado.fecha_nacimiento}}</td>
                             <td>{{abogado.username}}</td>
-                            <td><a onclick="abrir_modal_edicion('{% url 'editar_abogado' abogado.id %}')" class="btn btn-warning">Editar</a>
+                            <td><a class="btn btn-warning" href="{% url 'editar_abogado' abogado.id %}" id="editar">Editar</a>
                                 <a onclick="abrir_modal_detalle('{% url 'detalle_abogado' abogado.id %}')" class="btn btn-danger">Detalles</a>
 
                             </td>

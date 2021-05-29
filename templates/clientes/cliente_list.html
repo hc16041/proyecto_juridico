@@ -43,8 +43,8 @@
                             <td>{{cliente.rol.rol}}</td>
                             <td>
                                 <a class="btn btn-warning" href="{% url 'editar_cliente' cliente.id %}" id="editar" style="float: right;">Editar</a>
-                                <td><a onclick="abrir_modal_edicion('{% url 'detalle_cliente' cliente.id %}')" class="btn btn-danger">Detalle</a>
-                                </td>
+                                <a onclick="abrir_modal_edicion('{% url 'detalle_cliente' cliente.id %}')" class="btn btn-danger">Detalle</a>
+                            </td>
                         </tr>
                         {%endfor%}
                     </tbody>

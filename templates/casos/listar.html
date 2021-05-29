@@ -49,14 +49,17 @@
                             <td>{{caso.id_abogado.get_full_name}}</td>
                             <td>{{caso.codigo_caso}}</td>
                             <td>{{caso.descripcion}}</td>
+<<<<<<< HEAD
                             {% firstof caso.estado as value %} {%if value %}
                             <td>Finalizado</td>
                             {%else%}
                             <td>En Proceso</td>
                             {%endif%}
+=======
+                            <td>{{caso.estado}}</td>
+>>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
                             <td><a class="btn btn-warning" href="{% url 'editar_caso' caso.codigo_caso %}" id="editar">Editar</a>
                                 <a onclick="abrir_modal_detalle('{% url 'detalle_caso' caso.codigo_caso %}')" class="btn btn-danger">Detalle</a>
-                                <a onclick="abrir_modal_audienciaA('{% url 'crear_audiencia' %}')" class="btn btn-info">Asignar Audiencia</a>
                             </td>
                         </tr>
                         {%endfor%}
