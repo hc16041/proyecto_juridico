@@ -49,8 +49,7 @@
                             <td>{{caso.id_abogado.get_full_name}}</td>
                             <td>{{caso.codigo_caso}}</td>
                             <td>{{caso.descripcion}}</td>
-                            {% firstof caso.estado as value %}
-                            {%if value %}
+                            {% firstof caso.estado as value %} {%if value %}
                             <td>Finalizado</td>
                             {%else%}
                             <td>En Proceso</td>
@@ -84,7 +83,6 @@
 </div>
 
 <script type="text/javascript">
-
     function abrir_modal_detalle(url) {
         $('#view').load(url, function() {
             $(this).modal('show');

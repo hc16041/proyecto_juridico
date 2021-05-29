@@ -16,12 +16,15 @@
 </head>
 
 <body>
+
     <div class="card">
         <!--Inicio del Encabezado-->
+
         <div class="container-fluid">
             <div class="card-header">
+                <h1>{{request.user.rol.rol}}</h1>
                 <!--Inicio de barra de navegación-->
-                {% if request.user.rol.rol%} {%include 'barras/cliente.html'%} {%else%} {%include 'barras/abogado.html'%} {%endif%}
+                {% if request.user.rol.rol == "Cliente"%} {%include 'barras/cliente.html'%} {% elif request.user.rol.rol == "Abogado"%} {%include 'barras/abogado.html'%} {%else%}{%include 'barras/administrador.html'%}{%endif%}
                 <!--Fin de barra de navegación-->
             </div>
         </div>

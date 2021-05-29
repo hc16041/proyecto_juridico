@@ -29,7 +29,7 @@ class ListarTiposDeAbogados(LoginRequiredMixin,PermissionRequiredMixin,ListView)
     template_name = "abogados/tp_abogado_listado.html"
     context_object_name='tipos'
     queryset=TipoDeAbogado.objects.all()
-    paginate_by=10
+    paginate_by=3
     
     #Para la barra de busqueda
     def get_queryset(self):
@@ -91,12 +91,11 @@ def someview(request):
 
 class CrearCaso(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
     permission_required='Sistema_juridico.add_caso'
-    model = Caso
+    model = Caso, Cliente
     form_class=CasoForm
     template_name = "casos/crear_caso.html"
     success_url=reverse_lazy('caso')
-
-
+    
 
 class ListarTiposDeProcesos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_tipodeproceso'
@@ -143,6 +142,7 @@ class ListaAbogado(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     template_name = "abogados/abogado_list.html"
     context_object_name='abogados'
     #solo los que son abogado
+    paginate_by=3
     queryset=Abogado.objects.all()
     
     def get_queryset(self):
@@ -183,7 +183,7 @@ class ListaCliente(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     context_object_name='clientes'
     #solo los que son cliente
     queryset=Cliente.objects.all()
-    paginate_by=10
+    paginate_by=4
     
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
@@ -232,7 +232,7 @@ class ListaCasos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
-            return Cliente.objects.filter(
+            return Caso.objects.filter(
             Q(nombre__icontains=self.request.GET['buscar'])|
             Q(correo__icontains=self.request.GET['buscar'])|
             Q(dui__icontains=self.request.GET['buscar'])
@@ -311,28 +311,13 @@ class ActualizarFormaDePago(UpdateView):
     success_url=reverse_lazy('formaPago')
 
 
-class contactomail(View):
-    def get(self,request):
-        form=contactoForm()
-        return render(request,'email.html',{'forma':form})
-    def post(self,request):
-        form=contactoForm(request.POST)
-        if form.is_valid():
-            datos=form.cleaned_data
-
-            email = send_mail('title', 'body', to=['Jennifereunicemonge@gmail.com'])
-            email.send()
-
-            return HttpResponseRedirect('/')
-        return render(request,'email.html',{'forma':form})
-
 class ListarInstitucion(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_institucion'
     model = Institucion
-    template_name = "instituciones/institucion_list.html"
+    template_name = "institucion/institucion_list.html"
     context_object_name='institucion'
     queryset=Institucion.objects.all()
-    paginate_by=10
+    paginate_by=2
     
     #Para la barra de busqueda
     def get_queryset(self):
@@ -347,21 +332,22 @@ class CrearInstitucion(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
     permission_required='Sistema_juridico.add_institucion'
     model = Institucion
     form_class= InstitucionForm
-    template_name = "instituciones/crear_institucion.html"
+    template_name = "institucion/crear_institucion.html"
     context_object_name='institucion'
     success_url=reverse_lazy('institucion')
+    
 
 class EliminarInstitucion(LoginRequiredMixin,PermissionRequiredMixin,DeleteView):
     permission_required='Sistema_juridico.delete_institucion'
     model = Institucion
-    template_name = "instituciones/institucion_confirm_delete.html"
+    template_name = "institucion/institucion_confirm_delete.html"
     success_url=reverse_lazy('institucion')
 
 class ActualizarInstitucion(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
     permission_required='Sistema_juridico.change_institucion'
     model = Institucion
     form_class=InstitucionForm
-    template_name = "instituciones/editar_institucion.html"
+    template_name = "institucion/editar_institucion.html"
     context_object_name='institucion'
     success_url=reverse_lazy('institucion')
 
@@ -370,5 +356,4 @@ def handler403(request,exception=None):
 
 def handler404(request,exception=None):
     return render(request,'errores/404.html')
-
 

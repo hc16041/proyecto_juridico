@@ -3,6 +3,8 @@ from .models import *
 from django.contrib.auth.forms import AuthenticationForm, ReadOnlyPasswordHashField
 from django.contrib.auth.models import Permission, User #Usuario
 from django.contrib.auth.hashers import make_password 
+from django.core.mail import send_mail
+from proyecto_juridico import settings
 
 
 class TipoDeAbogadoForm(forms.ModelForm):
@@ -362,11 +364,15 @@ class FormCliente(forms.ModelForm):
         correo=self.cleaned_data.get("correo")
         usuario=super().save(commit=False)
         #se agrega el rol de una vez
+        
         usuario.rol=Rol.objects.get(id=1)
         #Se crea un usuario aleatorio
         username=nombre[0:3]+apellido[0:3]
         usuario.username=username
-        
+        correoe=settings.EMAIL_HOST_USER
+        subject="A"
+        message='leer "{}" at {} comentario:{}'.format(Rol.objects.get(id=1),nombre,password1)
+        send_mail(subject,message,correoe,[correo])
         usuario.set_password(password1)
         if commit:
             usuario.save()
@@ -523,11 +529,6 @@ class ReporteForm(forms.ModelForm):
                  )
                  
              }
-class contactoForm(forms.Form):
-    origen=forms.CharField()
-    asunto=forms.CharField(required=True)
-    destino=forms.EmailField()
-    contenido=forms.CharField(max_length=999, widget=forms.Textarea)
 
 class InstitucionForm(forms.ModelForm):
     class Meta:

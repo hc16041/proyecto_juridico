@@ -35,5 +35,4 @@ urlpatterns = [
     path('reporte/',ListaReportes.as_view(),name='reporte'),
     path('403/', handler403),
     path('404/', handler404),
-
 ]
