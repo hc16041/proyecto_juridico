@@ -12,7 +12,7 @@ from django.core.validators import RegexValidator
 
 
 class TipoDeAbogado(models.Model):
-    nombre = models.CharField(max_length = 100, blank=False, null=False)
+    nombre = models.CharField(max_length = 100, blank=False, null=False,validators=[RegexValidator("^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$",message="Introduzca letras del alfabeto")])
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
@@ -25,7 +25,7 @@ class TipoDeAbogado(models.Model):
         return self.nombre
     
 class TipoDeProceso(models.Model):
-    nombre = models.CharField(max_length = 100, blank=False, null=False)
+    nombre = models.CharField(max_length = 100, blank=False, null=False,validators=[RegexValidator("^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$",message="Introduzca letras del alfabeto")])
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
@@ -39,11 +39,11 @@ class TipoDeProceso(models.Model):
         return self.nombre
     
 class Institucion(models.Model):
-    nombre = models.CharField(max_length = 150,blank=False, null=False)
+    nombre = models.CharField(max_length = 150,blank=False, null=False,validators=[RegexValidator("^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$",message="Introduzca letras del alfabeto")])
     direccion = models.CharField(max_length = 150,blank=False, null=False)
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
     correo = models.EmailField(max_length=150,blank=False, null=False)
-    telefono = models.IntegerField()
+    telefono = models.IntegerField(max_length = 9,validators=[RegexValidator("^\d{4}-\d{4}$",message="Telefono invalido")])
     tipo = models.CharField(max_length = 150,blank=False, null=False)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
@@ -175,11 +175,11 @@ Estado_Civil= (
 )
 class Usuario(AbstractBaseUser, PermissionsMixin):
     correo = models.EmailField(verbose_name='correo electronico',max_length=100,unique=True)
-    nombre = models.CharField(max_length = 150)
-    apellido = models.CharField(max_length = 150)
+    nombre= models.CharField(max_length = 150,validators=[RegexValidator("^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$",message="Introduzca letras del alfabeto")])
+    apellido = models.CharField(max_length = 150,validators=[RegexValidator("^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$",message="Introduzca letras del alfabeto")])
     direccion = models.CharField(max_length = 150)
-    dui = models.CharField(max_length = 10,validators=[RegexValidator("^\d{8}-\d{1}$",message="Dui Invalido")])
-    telefono=models.CharField(max_length = 8)
+    dui = models.CharField(max_length = 10, validators=[RegexValidator("^\d{8}-\d{1}$",message="Dui invalido")])
+    telefono=models.CharField(max_length = 9,validators=[RegexValidator("^\d{4}-\d{4}$",message="Telefono invalido")])
     fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
     fecha_nacimiento = models.DateField(null=True)
     estado_civil = models.IntegerField(choices=Estado_Civil, default=0)
@@ -296,7 +296,7 @@ class Caso(models.Model):
 class Audiencia(models.Model):
     id = models.AutoField(primary_key = True)
     codigo_caso= models.ForeignKey(Caso, on_delete=models.CASCADE)
-    detalle = models.IntegerField(choices=Detalle, default=0)
+    detalle = models.IntegerField(choices=Detalle, default=0,)
     fecha = models.DateField()
     hora = models.TimeField()
     juzgado= models.ForeignKey(Institucion, on_delete=models.CASCADE,blank = True,null = True)

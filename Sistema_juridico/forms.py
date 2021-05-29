@@ -65,16 +65,15 @@ class FormLogin(AuthenticationForm):
     #     self.fields['password'].widget.attrs['placeholder'] = 'Contraseña'
     
 class CasoForm(forms.ModelForm):
-        
+    codigo_caso=forms.IntegerField(min_value=1,max_value=1500000)
     class Meta:
         model=Caso
         fields='__all__'
         labels={
-            'codigo': 'Codigo',
+            'codigo caso': 'Codigo caso',
             'descripcion':'Descripcion'
         }
         widgets={
-
             'id_cliente': forms.Select(
                 attrs={
                     'id':'id_cliente',
