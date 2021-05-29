@@ -9,7 +9,7 @@ from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import permission_required
 from .mixins import LoginYSuperStaffMixin,LoginMixin,ValidarPermisosMixin
@@ -93,8 +93,9 @@ class CrearCaso(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
     permission_required='Sistema_juridico.add_caso'
     model = Caso
     form_class=CasoForm
-    template_name = "casos/caso.html"
-    success_url=reverse_lazy('inicio')
+    template_name = "casos/crear_caso.html"
+    success_url=reverse_lazy('caso')
+
 
 
 class ListarTiposDeProcesos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
@@ -143,7 +144,7 @@ class ListaAbogado(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     context_object_name='abogados'
     #solo los que son abogado
     queryset=Abogado.objects.all()
-
+    
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
             return Abogado.objects.filter(
@@ -159,7 +160,6 @@ class CrearAbogado(LoginRequiredMixin, PermissionRequiredMixin,CreateView):
     model = Abogado
     form_class=FormAbogado
     template_name = "abogados/crear_abogado.html"
-    permission_required=('Sistema_juridico.view_abogado','Sistema_juridico.add_abogado')
     context_object_name='abogados'
     success_url=reverse_lazy('abogados')
 
@@ -228,26 +228,11 @@ class ListaCasos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     template_name = "casos/listar.html"
     context_object_name='clientes'
     #solo los que son cliente
-    queryset=Caso.objects.all()
-    
-    def get_login_url(self):
-        if not self.request.user.is_authenticated:
-            # el usuario no está logueado, ir a la página de login
-            return super(ListaCasos, self).get_login_url()
-        # El usuario está logueado pero no está autorizado
-        return '/no_autorizado/'
-    
-    def test_func(self):
-        # obtenemos todos los grupos del usuario logueado
-        grupos = self.request.user.groups.all()
-        # comparamos que el usuario pertenezca al grupo GERENTE
-        if 'Abogado' in grupos:
-            return True
-        return False
+    queryset=Cliente.objects.all()
     
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
-            return Caso.objects.filter(
+            return Cliente.objects.filter(
             Q(nombre__icontains=self.request.GET['buscar'])|
             Q(correo__icontains=self.request.GET['buscar'])|
             Q(dui__icontains=self.request.GET['buscar'])
@@ -257,22 +242,76 @@ class ListaCasos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
 
 class ListaReportes(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_reporte'
-    model=Reporte
+    #model=Reporte
     template_name = "reportes/reporte_list.html"
     context_object_name='reportes'
-    queryset=Reporte.objects.all()
+    #queryset=Reporte.objects.all()
     paginate_by=10
     
-    #Para la barra de busqueda
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
-            return Reporte.objects.filter(
-            Q(nombre__icontains=self.request.GET['buscar'])|
+            return Caso.objects.filter(
+            Q(codigo__icontains=self.request.GET['buscar'])|
             Q(descripcion__icontains=self.request.GET['buscar'])
         ).distinct()
         return super().get_queryset()
+    #success_url=reverse_lazy('inicio')
 
-class contactomail(LoginRequiredMixin,View):
+class DetalleCaso(DetailView):
+    model = Caso
+    template_name = "casos/detalle_caso.html"
+    success_url=reverse_lazy('caso')
+    
+
+class ActualizarCaso(UpdateView):
+    model = Caso
+    form_class=CasoForm
+    template_name = "casos/caso_editar.html"
+    success_url=reverse_lazy('caso')
+
+class CrearFormaDePagoModal(CreateView):
+    model = FormaDePago
+    form_class=FormaDePagoForm
+    template_name = "formapago/crear.html"
+    context_object_name='formapagos'
+    success_url=reverse_lazy('crear_caso')
+
+class CrearFormaDePago(CreateView):
+    model = FormaDePago
+    form_class=FormaDePagoForm
+    template_name = "formapago/formapago_crear.html"
+    context_object_name='formapagos'
+    success_url=reverse_lazy('formaPago')     
+
+class ListaFormaDePago(ListView):
+    model=FormaDePago
+    template_name = "formapago/formapago_listar.html"
+    context_object_name='formapagos'
+    queryset=FormaDePago.objects.all()
+    
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return FormaDePago.objects.filter(
+            Q(cuota__icontains=self.request.GET['buscar'])|
+            Q(plazo__icontains=self.request.GET['buscar'])|
+            Q(monto__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+    #success_url=reverse_lazy('inicio')
+
+class EliminarFormaDePago(DeleteView):
+    model = FormaDePago
+    template_name = "formapago/formapago_borrar.html"
+    success_url=reverse_lazy('formaPago')
+
+class ActualizarFormaDePago(UpdateView):
+    model = FormaDePago
+    form_class=FormaDePagoForm
+    template_name = "formapago/formapago_editar.html"
+    success_url=reverse_lazy('formaPago')
+
+
+class contactomail(View):
     def get(self,request):
         form=contactoForm()
         return render(request,'email.html',{'forma':form})

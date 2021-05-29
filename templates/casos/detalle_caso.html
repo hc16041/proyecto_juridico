@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+<p class="bg-dark">
+<div id="view" class="modal-dialog modal-lg" role="document">
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Detalle de : {{object}}</h2>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form action="{% url 'detalle_caso' object.codigo_caso%}" method="POST">
+            {% csrf_token %}
+            <div class="modal-body">
+               <div class="row">
+                   <div class="col-md-12">
+                       <p lead="card-text">Nombre cliente: {{object.id_cliente}}</p>
+                   </div>
+                   <div class="col-md-12">
+                    <p lead="card-text">Nombre abogado: {{object.id_abogado}}</p>
+                    </div>
+
+                    <div class="col-md-10">
+                        <p lead="card-text">Codigo del Caso: {{object.codigo_caso}}</p>
+                    </div>
+                    <div class="col-md-12">
+                        <p lead="card-text">Descripcion: {{object.descripcion}}</p>
+                    </div>
+                    <div>
+                    <div class="col-md-10"> {% ifequal object.estados 0 %}
+                        <p lead="card-text">Estado: En proceso</p>
+                    </div>
+
+                    <div class="col-md-10"> {%else%} 
+                            {% ifequal object.estados 1 %}
+                        <p lead="card-text">Estado : Finalizado</p>
+                    </div>
+                            {%endifequal%}
+                        {%endifequal%}
+                    </div>
+                    <div class="col-md-12">
+                        <p lead="card-text">Tipo de proceso: {{object.tipo_de_proceso}}</p>
+                    </div>
+                    <div class="col-md-10">
+                        <p lead="card-text">Tipo de pago: {{object.tipo_pago}}</p>
+                    </div>          
+               </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" type="submit" data-dismiss="modal">Aceptar</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,14 +1,16 @@
-{%extends 'base.html'%}{%load static%} {%block title%}Crear Cliente{%endblock%} {%block content%}
+{%extends 'base.html'%}{%load static%} {%block title%}Crear Forma de Pago{%endblock%} {%block content%}
 <div class="container">
     <div class="card ">
         <div class="card-header">
-            <strong>Registro de cliente</strong>
+            <strong>Registro de forma de pago</strong>
         </div>
         <div class="card-body card_block">
+
             <form method="post" enctype="multipart/form-data">
-                {%csrf_token %} {{form.as_p}}
+                {% csrf_token %} {{form.as_p}}
+
                 <ul class="errorlist">
-                    <p>Nota: Asegúrese de que este valor tenga más de 220 caracteres</p>
+                    <p></p>
                 </ul>
                 <div class="text-center ">
                     <button type="submit " class="btn btn-primary">Guardar</button>
@@ -19,4 +21,3 @@
     </div>
 </div>
 {%endblock%}
-

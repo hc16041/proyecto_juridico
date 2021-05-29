@@ -53,34 +53,26 @@ class Institucion(models.Model):
 
     def __str__(self):
         return self.nombre
+Detalle =(
+    (0, "Nuevo"),
+    (1, "Reprogramado")
+)
 
-class Audiencia(models.Model):
-    detalle = models.CharField(max_length = 150,blank=False,null=False)
-    fecha = models.DateField()
-    hora = models.DateTimeField()
-    descripcion = models.TextField(max_length = 220, blank=False, null=False)
-    fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
-    
-    class Meta:
-        verbose_name = 'Audiencia'
-        verbose_name_plural = 'Audiencias'
-
-    def __str__(self):
-        return self.detalle
 
 class FormaDePago(models.Model):
-    tipo = models.CharField(max_length = 150,blank=False, null=False)
+    id = models.AutoField(primary_key = True)
     plazo = models.IntegerField()
     cuota = models.IntegerField()
     monto=models.DecimalField( max_digits=5, decimal_places=2)
+    fecha_fin_credito = models.DateField(null=True)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
     class Meta:
-        verbose_name = 'Forma De Pago'
-        verbose_name_plural = 'Forma De Pagos'
+        verbose_name = 'FormaDePago'
+        verbose_name_plural = 'FormaDePagos'
 
     def __str__(self):
-        return self.tipo
+        return self.fecha_fin_credito
 
 class Pago(models.Model):
     fecha = models.DateField()
@@ -274,20 +266,24 @@ class Abogado(Usuario):
     Tipo_de_abogado=models.OneToOneField(TipoDeAbogado, verbose_name=("Tipo De Abogado"), on_delete=models.CASCADE)
     #es_abogado=models.BooleanField(default=False)
 Estados = (
-    ('P', 'En Proceso'),
-    ('F', 'Finalizado')
+    (0, 'En Proceso'),
+    (1, 'Finalizado')
+)
+Tipo_Pago =(
+    (0, "Contado"),
+    (1, "Credito")
 )
 class Caso(models.Model):
-    id_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente"), on_delete=models.CASCADE)
+    id_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente:"), on_delete=models.CASCADE)
     id_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
-    codigo = models.IntegerField(primary_key=True,blank=False, null=False)
+    codigo_caso= models.IntegerField(primary_key=True)
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
-    estado = models.CharField(choices=Estados, default=0, max_length=2)
+    estado = models.IntegerField(choices=Estados, default=0)
     tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
-    pago=models.ForeignKey(Pago,on_delete=models.CASCADE)
-    audiencia=models.ForeignKey(Audiencia,on_delete=models.CASCADE)
+    tipo_pago = models.IntegerField(choices=Tipo_Pago, default=0)
+    #pago=models.ForeignKey(Pago,on_delete=models.CASCADE)
+    #audiencia=models.ForeignKey(Audiencia,on_delete=models.CASCADE)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
-    
     
     class Meta:
         verbose_name = 'Caso'
@@ -295,21 +291,21 @@ class Caso(models.Model):
 
     def __str__(self):
         """Unicode representation of Caso."""
-        return self.codigo
-    
-class Reporte(models.Model):
-    codigo_caso=models.ForeignKey(Caso,verbose_name="codigo caso",on_delete=models.CASCADE)
-    dui_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente"), on_delete=models.CASCADE)
-    nombre_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
-    codigo_reporte = models.IntegerField(primary_key=True,blank=False, null=False)
-    estado_cliente = models.IntegerField(choices=Estados, default=0)
-    tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
-    
+        return self.descripcion
+
+class Audiencia(models.Model):
+    id = models.AutoField(primary_key = True)
+    codigo_caso= models.ForeignKey(Caso, on_delete=models.CASCADE)
+    detalle = models.IntegerField(choices=Detalle, default=0)
+    fecha = models.DateField()
+    hora = models.TimeField()
+    juzgado= models.ForeignKey(Institucion, on_delete=models.CASCADE,blank = True,null = True)
+    descripcion = models.TextField(max_length = 220, blank=False, null=False)
+    fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
     class Meta:
-        verbose_name = 'Reporte'
-        verbose_name_plural = 'Reportes'
+        verbose_name = 'Audiencia'
+        verbose_name_plural = 'Audiencias'
 
     def __str__(self):
-        """Unicode representation of Caso."""
-        return self.tipo_de_proceso
+        return self.detalle
