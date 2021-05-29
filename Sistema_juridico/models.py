@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.utils.datetime_safe import datetime
 from django.contrib.admin import widgets
 from django.contrib.contenttypes.models import ContentType
+
 # Create your models here.
 
 
@@ -56,21 +57,6 @@ Detalle =(
     (1, "Reprogramado")
 )
 
-class Audiencia(models.Model):
-    id = models.AutoField(primary_key = True)
-    detalle = models.IntegerField(choices=Detalle, default=0)
-    fecha = models.DateField()
-    hora = models.TimeField()
-    juzgado= models.ForeignKey(Institucion, on_delete=models.CASCADE,blank = True,null = True)
-    descripcion = models.TextField(max_length = 220, blank=False, null=False)
-    fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
-    
-    class Meta:
-        verbose_name = 'Audiencia'
-        verbose_name_plural = 'Audiencias'
-
-    def __str__(self):
-        return self.detalle
 
 class FormaDePago(models.Model):
     id = models.AutoField(primary_key = True)
@@ -295,7 +281,7 @@ Tipo_Pago =(
 class Caso(models.Model):
     id_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente:"), on_delete=models.CASCADE)
     id_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
-    codigo = models.IntegerField(primary_key=True,blank=False, null=False)
+    codigo_caso= models.IntegerField(primary_key=True)
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
     estado = models.IntegerField(choices=Estados, default=0)
     tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
@@ -304,7 +290,6 @@ class Caso(models.Model):
     #audiencia=models.ForeignKey(Audiencia,on_delete=models.CASCADE)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
-    
     class Meta:
         verbose_name = 'Caso'
         verbose_name_plural = 'Casos'
@@ -312,4 +297,20 @@ class Caso(models.Model):
     def __str__(self):
         """Unicode representation of Caso."""
         return self.descripcion
+
+class Audiencia(models.Model):
+    id = models.AutoField(primary_key = True)
+    codigo_caso= models.ForeignKey(Caso, on_delete=models.CASCADE)
+    detalle = models.IntegerField(choices=Detalle, default=0)
+    fecha = models.DateField()
+    hora = models.TimeField()
+    juzgado= models.ForeignKey(Institucion, on_delete=models.CASCADE,blank = True,null = True)
+    descripcion = models.TextField(max_length = 220, blank=False, null=False)
+    fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
+    class Meta:
+        verbose_name = 'Audiencia'
+        verbose_name_plural = 'Audiencias'
+
+    def __str__(self):
+        return self.detalle

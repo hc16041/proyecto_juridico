@@ -47,7 +47,7 @@
                         <tr>
                             <td>{{caso.id_cliente.get_full_name}}</td>
                             <td>{{caso.id_abogado.get_full_name}}</td>
-                            <td>{{caso.codigo}}</td>
+                            <td>{{caso.codigo_caso}}</td>
                             <td>{{caso.descripcion}}</td>
                             {% firstof caso.estado as value %}
                             {%if value %}
@@ -55,9 +55,9 @@
                             {%else%}
                             <td>En Proceso</td>
                             {%endif%}
-                            <td><a onclick="abrir_modal_edicion('{% url 'editar_caso' caso.codigo %}')" class="btn btn-warning">Editar</a>
-                                <a onclick="abrir_modal_detalle('{% url 'detalle_caso' caso.codigo %}')" class="btn btn-danger">detalle</a>
-
+                            <td><a class="btn btn-warning" href="{% url 'editar_caso' caso.codigo_caso %}" id="editar">Editar</a>
+                                <a onclick="abrir_modal_detalle('{% url 'detalle_caso' caso.codigo_caso %}')" class="btn btn-danger">Detalle</a>
+                                <a onclick="abrir_modal_audienciaA('{% url 'crear_audiencia' %}')" class="btn btn-info">Asignar Audiencia</a>
                             </td>
                         </tr>
                         {%endfor%}
@@ -78,20 +78,21 @@
     </div>
 </div>
 {%endif%}
-<div id="edicion" class="modal fade" role="dialog">
-</div>
 <div id="view" class="modal fade" role="dialog">
+</div>
+<div id="edicion" class="modal fade" role="dialog">
 </div>
 
 <script type="text/javascript">
-    function abrir_modal_edicion(url) {
-        $('#edicion').load(url, function() {
+
+    function abrir_modal_detalle(url) {
+        $('#view').load(url, function() {
             $(this).modal('show');
         });
     }
 
-    function abrir_modal_detalle(url) {
-        $('#view').load(url, function() {
+    function abrir_modal_audienciaA(url) {
+        $('#edicion').load(url, function() {
             $(this).modal('show');
         });
     }

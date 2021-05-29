@@ -89,8 +89,9 @@ def someview(request):
 class CrearCaso(CreateView):
     model = Caso
     form_class=CasoForm
-    template_name = "casos/caso.html"
+    template_name = "casos/crear_caso.html"
     success_url=reverse_lazy('caso')
+
 
 class CrearTipoDeProceso(CreateView):
     model =TipoDeProceso
@@ -240,10 +241,14 @@ class ListaCasos(ListView):
         return super().get_queryset()
     #success_url=reverse_lazy('inicio')
 
-class Detallecaso(DetailView):
+class DetalleCaso(DetailView):
     model = Caso
     template_name = "casos/detalle_caso.html"
     success_url=reverse_lazy('caso')
+
+    def get_context_data(self,*args,**kwargs):
+    codigo_caso = Caso.objects.all()
+    return {'cc' : codigo_caso}
 
 class ActualizarCaso(UpdateView):
     model = Caso
@@ -346,9 +351,13 @@ class ActualizarInstitucion(UpdateView):
 class CrearAudiencia(CreateView):
     model = Audiencia
     form_class=AudienciaForm
-    template_name = "audiencia/audiencia_crear.html"
+    template_name = "audiencia/crear_audiencia.html"
     context_object_name='audiencias'
-    success_url=reverse_lazy('audiencia')
+    success_url=reverse_lazy('caso')
+
+    def get_context_data(self,*args,**kwargs):
+        codigo_caso = Caso.objects.filter()
+        return {'cc' : codigo_caso}
 
 class ListaAudiencia(ListView):
     model=Audiencia
@@ -368,17 +377,11 @@ class ActualizarAudiencia(UpdateView):
     model = Audiencia
     form_class=AudienciaForm
     template_name = "audiencia/audiencia_editar.html"
-    success_url=reverse_lazy('audiencia') 
+    success_url=reverse_lazy('casos') 
 
 class EliminarAudiencia(DeleteView):
     model = Audiencia
     template_name = "audiencia/audiencia_borrar.html"
-    success_url=reverse_lazy('audiencia')
+    success_url=reverse_lazy('casos')
 
-class CrearAudienciaModal(CreateView):
-    model = Audiencia
-    form_class=AudienciaForm
-    template_name = "audiencia/audienciaCrear_modal.html"
-    context_object_name='audiencias'
-    success_url=reverse_lazy('audiencia')
 

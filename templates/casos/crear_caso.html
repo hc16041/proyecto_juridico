@@ -15,7 +15,6 @@
                 
                 {% csrf_token %} {{form.as_p}}
                 <a onclick="abrir_modal_crear('{% url 'formaPago_crear'  %}')" class="btn btn-warning">Asignar Cuota</a>
-                <a onclick="abrir_modal_crear('{% url 'audiencia_asignar'  %}')" class="btn btn-warning">Asignar Audiencia</a>
 
                 <ul class="errorlist">
                     <p></p>

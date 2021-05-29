@@ -9,22 +9,22 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form action="{% url 'detalle_caso' object.codigo %}" method="POST">
+        <form action="{% url 'detalle_caso' object.codigo_caso%}" method="POST">
             {% csrf_token %}
             <div class="modal-body">
                <div class="row">
                    <div class="col-md-12">
-                       <p lead="card-text">Nombre cliente {{object.id_cliente}}</p>
+                       <p lead="card-text">Nombre cliente: {{object.id_cliente}}</p>
                    </div>
                    <div class="col-md-12">
-                    <p lead="card-text">nombre abogado: {{object.id_abogado}}</p>
+                    <p lead="card-text">Nombre abogado: {{object.id_abogado}}</p>
                     </div>
 
                     <div class="col-md-10">
-                        <p lead="card-text">codigo: {{object.codigo}}</p>
+                        <p lead="card-text">Codigo del Caso: {{object.codigo_caso}}</p>
                     </div>
                     <div class="col-md-12">
-                        <p lead="card-text">descripcion: {{object.descripcion}}</p>
+                        <p lead="card-text">Descripcion: {{object.descripcion}}</p>
                     </div>
                     <div>
                     <div class="col-md-10"> {% ifequal object.estados 0 %}
@@ -35,19 +35,15 @@
                             {% ifequal object.estados 1 %}
                         <p lead="card-text">Estado : Finalizado</p>
                     </div>
-
-                    
                             {%endifequal%}
                         {%endifequal%}
                     </div>
-                    
                     <div class="col-md-12">
-                        <p lead="card-text">tipo de proceso: {{object.tipo_de_proceso}}</p>
+                        <p lead="card-text">Tipo de proceso: {{object.tipo_de_proceso}}</p>
                     </div>
                     <div class="col-md-10">
-                        <p lead="card-text">tipo de pago: {{object.tipo_pago}}</p>
-                    </div>
-                    
+                        <p lead="card-text">Tipo de pago: {{object.tipo_pago}}</p>
+                    </div>          
                </div>
             </div>
             <div class="modal-footer">
@@ -55,5 +51,4 @@
             </div>
         </form>
     </div>
-
 </div>

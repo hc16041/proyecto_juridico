@@ -30,7 +30,7 @@ urlpatterns = [
 
     path('crear_caso/',login_required(CrearCaso.as_view()),name='crear_caso'),
     path('caso/',ListaCasos.as_view(), name='caso'),
-    path('detalle_caso/<int:pk>',Detallecaso.as_view(),name='detalle_caso'),
+    path('detalle_caso/<int:pk>',DetalleCaso.as_view(),name='detalle_caso'),
     path('editar_caso/<int:pk>',ActualizarCaso.as_view(),name='editar_caso'),
     path('asignar_cliente/',AsignarCliente.as_view(),name='asignar_cliente'),
 
@@ -44,5 +44,5 @@ urlpatterns = [
     path('audiencia/',login_required(ListaAudiencia.as_view()), name='audiencia'),
     path('editar_audiencia/<int:pk>',ActualizarAudiencia.as_view(),name='editar_audiencia'),
     path('eliminar_audiencia/<int:pk>',EliminarAudiencia.as_view(),name='eliminar_audiencia'),
-    path('audiencia_asignar/',CrearAudienciaModal.as_view(),name='audiencia_asignar'),
+    
 ]
