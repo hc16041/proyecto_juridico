@@ -19,24 +19,17 @@
                    <div class="col-md-12">
                     <p lead="card-text">Nombre abogado: {{object.id_abogado}}</p>
                     </div>
-
+                    <div class="col-md-10">
+                        <p lead="card-text">Rol Cliente: {{object.rol_cliente}}</p>
+                    </div>
                     <div class="col-md-10">
                         <p lead="card-text">Codigo del Caso: {{object.codigo_caso}}</p>
                     </div>
                     <div class="col-md-12">
                         <p lead="card-text">Descripcion: {{object.descripcion}}</p>
                     </div>
-                    <div>
-                    <div class="col-md-10"> {% ifequal object.estados 0 %}
-                        <p lead="card-text">Estado: En proceso</p>
-                    </div>
-
-                    <div class="col-md-10"> {%else%} 
-                            {% ifequal object.estados 1 %}
-                        <p lead="card-text">Estado : Finalizado</p>
-                    </div>
-                            {%endifequal%}
-                        {%endifequal%}
+                    <div class="col-md-12">
+                        <p lead="card-text">Estado: {{object.estado}}</p>
                     </div>
                     <div class="col-md-12">
                         <p lead="card-text">Tipo de proceso: {{object.tipo_de_proceso}}</p>

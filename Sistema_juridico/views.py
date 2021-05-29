@@ -233,9 +233,8 @@ class ListaCasos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
             return Caso.objects.filter(
-            Q(nombre__icontains=self.request.GET['buscar'])|
-            Q(correo__icontains=self.request.GET['buscar'])|
-            Q(dui__icontains=self.request.GET['buscar'])
+            Q(codigo_caso__icontains=self.request.GET['buscar'])|
+            Q(estado__icontains=self.request.GET['buscar'])
         ).distinct()
         return super().get_queryset()
     #success_url=reverse_lazy('inicio')
@@ -329,7 +328,7 @@ class contactomail(View):
 class ListarInstitucion(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_institucion'
     model = Institucion
-    template_name = "instituciones/institucion_list.html"
+    template_name = "institucion/institucion_list.html"
     context_object_name='institucion'
     queryset=Institucion.objects.all()
     paginate_by=10
@@ -347,21 +346,21 @@ class CrearInstitucion(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
     permission_required='Sistema_juridico.add_institucion'
     model = Institucion
     form_class= InstitucionForm
-    template_name = "instituciones/crear_institucion.html"
+    template_name = "institucion/crear_institucion.html"
     context_object_name='institucion'
     success_url=reverse_lazy('institucion')
 
 class EliminarInstitucion(LoginRequiredMixin,PermissionRequiredMixin,DeleteView):
     permission_required='Sistema_juridico.delete_institucion'
     model = Institucion
-    template_name = "instituciones/institucion_confirm_delete.html"
+    template_name = "institucion/institucion_confirm_delete.html"
     success_url=reverse_lazy('institucion')
 
 class ActualizarInstitucion(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
     permission_required='Sistema_juridico.change_institucion'
     model = Institucion
     form_class=InstitucionForm
-    template_name = "instituciones/editar_institucion.html"
+    template_name = "institucion/editar_institucion.html"
     context_object_name='institucion'
     success_url=reverse_lazy('institucion')
 
@@ -373,9 +372,37 @@ def handler404(request,exception=None):
 
 
 class CrearAudiencia(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
-    permission_required='Sistema_juridico.add_tipodeabogado'
-    model = Audiencia
+    permission_required='Sistema_juridico.add_caso'
+    model = Audiencia, Caso
     form_class= AudienciaForm
     template_name = "audiencia/crear_audiencia.html"
     context_object_name='audiencia'
-    success_url=reverse_lazy('casos')
+    success_url=reverse_lazy('audiencia')
+
+class ListaAudiencia(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required='Sistema_juridico.view_caso'
+    model = Audiencia, Caso
+    template_name = "audiencia/audiencia_list.html"
+    context_object_name='audiencia'
+    queryset=Audiencia.objects.all()
+    paginate_by=10
+    
+    #Para la barra de busqueda
+
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Audiencia.objects.filter(
+            Q(detalle__icontains=self.request.GET['buscar'])|
+            Q(codigo_caso_id=int(self.request.GET['buscar']))
+        ).distinct()
+        return super().get_queryset()
+
+class ActualizarAudiencia(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
+    permission_required='Sistema_juridico.change_caso'
+    model = Audiencia
+    form_class=AudienciaForm
+    template_name = "audiencia/audiencia_editar.html"
+    context_object_name='audiencia'
+    success_url=reverse_lazy('audiencia')
+
+

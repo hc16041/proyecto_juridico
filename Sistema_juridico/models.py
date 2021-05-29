@@ -53,10 +53,6 @@ class Institucion(models.Model):
 
     def __str__(self):
         return self.nombre
-Detalle =(
-    (0, "Nuevo"),
-    (1, "Reprogramado")
-)
 
 
 class FormaDePago(models.Model):
@@ -73,6 +69,7 @@ class FormaDePago(models.Model):
 
     def __str__(self):
         return self.fecha_fin_credito
+
 
 class Pago(models.Model):
     fecha = models.DateField()
@@ -135,9 +132,7 @@ class Rol(models.Model):
                         name = f'Can {permiso_temp} {self.rol}'
                     )
                 super().save(*args,**kwargs)
-        
-
-          
+                 
 class ManejadorUsuario(BaseUserManager):
     def _create_user(self,nombre, apellido,correo, password, **extra_fields):
         """
@@ -168,10 +163,11 @@ class ManejadorUsuario(BaseUserManager):
         return self._create_user(nombre, apellido,correo, password, **extra_fields)
 
 Estado_Civil= (
-    (0, "Soltero"),
-    (1, "Casado"),
-    (2,"Divorciado"),
-    (3, "Viudo")
+    ("Soltero", "Soltero"),
+    ("Casado", "Casado"),
+    ("Divorciado","Divorciado"),
+    ("Viudo", "Viudo"),
+    ("Separado", "Separado")
 )
 class Usuario(AbstractBaseUser, PermissionsMixin):
     correo = models.EmailField(verbose_name='correo electronico',max_length=100,unique=True)
@@ -182,7 +178,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     telefono=models.CharField(max_length = 8)
     fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
     fecha_nacimiento = models.DateField(null=True)
-    estado_civil = models.IntegerField(choices=Estado_Civil, default=0)
+    estado_civil = models.CharField(choices=Estado_Civil, max_length=220)
     username=models.CharField( max_length=50)
     rol = models.ForeignKey(Rol, on_delete=models.CASCADE,blank = True,null = True)
     is_active = models.BooleanField(
@@ -248,12 +244,8 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
                         self.groups.add(nuevo_grupo)
                     super().save(*args,**kwargs)
     
-Rol_Cliente= (
-    (0, "Demandante"),
-    (1,"Demandado")
-)
+
 class Cliente(Usuario):
-    rol_cliente = models.IntegerField(choices=Rol_Cliente, default=0)
     #es_cliente=models.BooleanField(default=False)
     class Meta:
         verbose_name = 'Cliente'
@@ -265,22 +257,31 @@ class Cliente(Usuario):
 class Abogado(Usuario):
     Tipo_de_abogado=models.OneToOneField(TipoDeAbogado, verbose_name=("Tipo De Abogado"), on_delete=models.CASCADE)
     #es_abogado=models.BooleanField(default=False)
+
+
 Estados = (
-    (0, 'En Proceso'),
-    (1, 'Finalizado')
+    ("En Proceso", "En Proceso"),
+    ("Finalizado", "Finalizado")
 )
+
+Rol_Cliente= (
+    ("Demandante", "Demandante"),
+    ("Demandado", "Demandado")
+)
+
 Tipo_Pago =(
-    (0, "Contado"),
-    (1, "Credito")
+    ("Contado", "Contado"),
+    ("Credito", "Credito")
 )
 class Caso(models.Model):
     id_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente:"), on_delete=models.CASCADE)
     id_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
     codigo_caso= models.IntegerField(primary_key=True)
+    rol_cliente = models.CharField(choices=Rol_Cliente, max_length=220)
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
-    estado = models.IntegerField(choices=Estados, default=0)
+    estado = models.CharField(choices=Estados, max_length=220)
     tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
-    tipo_pago = models.IntegerField(choices=Tipo_Pago, default=0)
+    tipo_pago = models.CharField(choices=Tipo_Pago, max_length=220)
     #pago=models.ForeignKey(Pago,on_delete=models.CASCADE)
     #audiencia=models.ForeignKey(Audiencia,on_delete=models.CASCADE)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
@@ -289,14 +290,20 @@ class Caso(models.Model):
         verbose_name = 'Caso'
         verbose_name_plural = 'Casos'
 
+    
     def __str__(self):
-        """Unicode representation of Caso."""
         return self.descripcion
+
+Detalle =(
+    ("Nuevo", "Nuevo"),
+    ("Reprogramado", "Reprogramado")
+)
 
 class Audiencia(models.Model):
     id = models.AutoField(primary_key = True)
     codigo_caso= models.ForeignKey(Caso, on_delete=models.CASCADE)
-    detalle = models.IntegerField(choices=Detalle, default=0)
+    id_cliente=models.ForeignKey(Cliente, on_delete= models.CASCADE)
+    detalle = models.CharField(choices=Detalle, max_length=220)
     fecha = models.DateField()
     hora = models.TimeField()
     juzgado= models.ForeignKey(Institucion, on_delete=models.CASCADE,blank = True,null = True)
@@ -309,3 +316,4 @@ class Audiencia(models.Model):
 
     def __str__(self):
         return self.detalle
+

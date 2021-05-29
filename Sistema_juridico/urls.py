@@ -39,7 +39,10 @@ urlpatterns = [
     path('detalle_caso/<int:pk>', DetalleCaso.as_view(), name='detalle_caso'),
     path('caso/',ListaCasos.as_view(), name='caso'),
 
+    path('audiencia/', ListaAudiencia.as_view(), name= 'audiencia'),
     path('crear_audiencia/', CrearAudiencia.as_view(), name='crear_audiencia'),
+    path('editar_audiencia/<int:pk>', ActualizarAudiencia.as_view(), name='editar_audiencia'),
+
 
     path('reporte/',ListaReportes.as_view(),name='reporte'),
     path('403/', handler403),

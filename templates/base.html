@@ -21,7 +21,8 @@
         <div class="container-fluid">
             <div class="card-header">
                 <!--Inicio de barra de navegación-->
-                {% if request.user.rol.rol%} {%include 'barras/cliente.html'%} {%else%} {%include 'barras/abogado.html'%} {%endif%}
+                {%include 'barras/administrador.html'%}
+                
                 <!--Fin de barra de navegación-->
             </div>
         </div>

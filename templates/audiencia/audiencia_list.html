@@ -20,7 +20,7 @@
                     </div>
                 </form>
                 <!--Fin Barra de busqueda-->
-                <br> {%if audiencias%}
+                <br> {%if audiencia%}
             </div>
         </div>
         <div class="col-md-10">
@@ -33,24 +33,26 @@
                 <table class="table table-responsive table-hover">
                     <thead class="thead-dark ">
                         <tr>
+                            <th scope="col ">Codigo Caso</th>
                             <th scope="col ">Detalle</th>
+                            <th scope="col ">Cliente</th>
                             <th scope="col ">Fecha</th>
                             <th scope="col ">Hora</th>
                             <th scope="col ">Descripcion</th>
-            
-
+                            <th scope="col ">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {%for audiencia in audiencias%}
+                        {%for audiencias in audiencia%}
                         <tr>
-                            <td>{{audiencia.detalle }}</td>
-                            <td>{{audiencia.fecha}}</td>
-                            <td>{{audiencia.hora}}</td>
-                            <td>{{audiencia.descripcion}}</td>
-                            <td><a onclick="abrir_modal_edicion('{% url 'editar_audiencia' audiencia.id %}')" class="btn btn-warning">Editar</a>
-                                <a onclick="abrir_modal_eliminacion('{% url 'eliminar_audiencia' audiencia.id%}')" class="btn btn-danger">Eliminar</a>
-
+                            <td>{{audiencias.codigo_caso_id}}</td>
+                            <td>{{audiencias.detalle}}</td>
+                            <td>{{audiencias.id_cliente}}</td>
+                            <td>{{audiencias.fecha}}</td>
+                            <td>{{audiencias.hora}}</td>
+                            <td>{{audiencias.descripcion}}</td>
+                            <td>
+                            <a class="btn btn-link" href="{%url 'editar_audiencia' audiencias.id%}" >Editar Audiencia</a>
                             </td>
                         </tr>
                         {%endfor%}
@@ -75,19 +77,5 @@
 </div>
 <div id="eliminacion" class="modal fade" role="dialog">
 </div>
-
-<script type="text/javascript">
-    function abrir_modal_edicion(url) {
-        $('#edicion').load(url, function() {
-            $(this).modal('show');
-        });
-    }
-
-    function abrir_modal_eliminacion(url) {
-        $('#eliminacion').load(url, function() {
-            $(this).modal('show');
-        });
-    }
-</script>
 
 {%endblock%}
