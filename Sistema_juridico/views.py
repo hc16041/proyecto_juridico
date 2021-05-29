@@ -9,7 +9,7 @@ from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import permission_required
 from .mixins import LoginYSuperStaffMixin,LoginMixin,ValidarPermisosMixin
@@ -226,13 +226,13 @@ class ListaCasos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_caso'
     model=Caso
     template_name = "casos/listar.html"
-    context_object_name='clientes'
+    context_object_name='casos'
     #solo los que son cliente
-    queryset=Cliente.objects.all()
+    queryset=Caso.objects.all()
     
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
-            return Cliente.objects.filter(
+            return Caso.objects.filter(
             Q(nombre__icontains=self.request.GET['buscar'])|
             Q(correo__icontains=self.request.GET['buscar'])|
             Q(dui__icontains=self.request.GET['buscar'])
@@ -372,3 +372,10 @@ def handler404(request,exception=None):
     return render(request,'errores/404.html')
 
 
+class CrearAudiencia(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
+    permission_required='Sistema_juridico.add_tipodeabogado'
+    model = Audiencia
+    form_class= AudienciaForm
+    template_name = "audiencia/crear_audiencia.html"
+    context_object_name='audiencia'
+    success_url=reverse_lazy('casos')

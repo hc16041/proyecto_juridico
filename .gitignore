@@ -1,6 +1,2 @@
 proyecto_juridico/settings.py
-<<<<<<< HEAD
 db.sqlite3
-=======
-*.sqlite3
->>>>>>> e06f98875dfd7f4424424f9eb4e0543009413e2b
