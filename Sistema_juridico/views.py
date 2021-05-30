@@ -1,29 +1,28 @@
-from django.shortcuts import render, render_to_response
-from django.urls import reverse, reverse_lazy
-from .forms import *
+from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView, FormView,View
 from django.db.models import Q
-from .models import *
 from django.http import HttpResponseRedirect
-from django.contrib.auth import login, logout
+#Decoradores
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
+#Autenticacion
+from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import User
+#Posiblemente este no ira.
 from django.contrib.auth.decorators import permission_required
-from .mixins import LoginYSuperStaffMixin,LoginMixin,ValidarPermisosMixin
-from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
-from django.template import RequestContext
-from urllib import request
+from .forms import *
+from .models import *
 
 
-# Create your views here.
-
+#Pagina de inicio
 class Inicio(LoginRequiredMixin,TemplateView):
     template_name='inicio.html'
 
+#Bloque de vistas para Tipo de Abogados
 class ListarTiposDeAbogados(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_tipodeabogado'
     model = TipoDeAbogado
@@ -63,8 +62,9 @@ class EliminarTipoDeAbogado(LoginRequiredMixin,PermissionRequiredMixin,DeleteVie
     template_name = "abogados/tp_abogado_borrar.html"
     success_url=reverse_lazy('tipo_de_abogado')
 
+#Bloque de vistas para la sesion
 class Login(FormView):
-    template_name = 'sesion/login.html'
+    template_name = 'registration/login.html'
     form_class = FormLogin
     context_object_name='login'
     success_url = reverse_lazy('inicio')
@@ -89,17 +89,61 @@ def someview(request):
    ...
    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
+#Bloque de vistas para Casos
+class ListarCasosClientes(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required='Sistema_juridico.view_caso_cliente'
+    model=Caso
+    template_name = "casos/caso_list_cliente.html"
+    context_object_name='casos'
+    paginate_by=10
+    
+    def get_queryset(self):
+        if self.request.user is not None:
+            return Caso.objects.filter(
+            Q(id_cliente=self.request.user)
+        ).distinct()
+        return super().get_queryset()
+
+class ListarCasos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required='Sistema_juridico.view_caso'
+    model=Caso
+    template_name = "casos/caso_list.html"
+    context_object_name='casos'
+    paginate_by=10
+    queryset=Caso.objects.all()
+    
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Caso.objects.filter(
+            Q(codigo_caso__icontains=self.request.GET['buscar'])|
+            Q(estado__icontains=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+    #success_url=reverse_lazy('inicio')
+
 class CrearCaso(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
     permission_required='Sistema_juridico.add_caso'
     model = Caso, Cliente
     form_class=CasoForm
     template_name = "casos/crear_caso.html"
     success_url=reverse_lazy('caso')
-<<<<<<< HEAD
-=======
-    
->>>>>>> b18015e653a9b022da6327cc0de1a8113c625792
 
+class DetalleCaso(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
+    permission_required='Sistema_juridico.view_caso'
+    model = Caso
+    template_name = "casos/detalle_caso.html"
+    success_url=reverse_lazy('caso')
+
+class ActualizarCaso(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
+    permission_required='Sistema_juridico.change_caso'
+    model = Caso
+    form_class=CasoForm
+    template_name = "casos/caso_editar.html"
+    success_url=reverse_lazy('caso')
+
+
+#Bloque de vistas para Tipo de Procesos
 class ListarTiposDeProcesos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_tipodeproceso'
     model = TipoDeProceso
@@ -126,7 +170,7 @@ class CrearTipoDeProceso(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
     success_url=reverse_lazy('tipo_de_proceso')
 
 class ActualizarTipoDeProceso(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
-    permission_required='Sistema_juridico.change_caso'
+    permission_required='Sistema_juridico.change_tipodeproceso'
     model = TipoDeProceso
     form_class=TipoDeProcesoForm
     template_name = "procesos/tp_proceso_editar.html"
@@ -134,18 +178,19 @@ class ActualizarTipoDeProceso(LoginRequiredMixin,PermissionRequiredMixin,UpdateV
     success_url=reverse_lazy('tipo_de_proceso')
 
 class EliminarTipoDeProceso(LoginRequiredMixin,PermissionRequiredMixin,DeleteView):
-    permission_required='Sistema_juridico.delete_caso'
+    permission_required='Sistema_juridico.delete_tipodeproceso'
     model = TipoDeProceso
     template_name = "abogados/tp_abogado_borrar.html"
     success_url=reverse_lazy('tipo_de_proceso')
 
-class ListaAbogado(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+
+#Bloque de vistas para Abogado
+class ListarAbogado(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_abogado'
     model=Abogado
     template_name = "abogados/abogado_list.html"
     context_object_name='abogados'
-    #solo los que son abogado
-    paginate_by=3
+    paginate_by=10
     queryset=Abogado.objects.all()
     
     def get_queryset(self):
@@ -179,6 +224,7 @@ class DetalleAbogado(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     template_name = "abogados/detalle_abogado.html"
     success_url = reverse_lazy('abogados')
 
+#Bloque de vistas para Cliente
 class ListaCliente(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_cliente'
     model=Cliente
@@ -186,7 +232,7 @@ class ListaCliente(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     context_object_name='clientes'
     #solo los que son cliente
     queryset=Cliente.objects.all()
-    paginate_by=4
+    paginate_by=10
     
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
@@ -196,7 +242,6 @@ class ListaCliente(LoginRequiredMixin,PermissionRequiredMixin,ListView):
             Q(dui__icontains=self.request.GET['buscar'])
         ).distinct()
         return super().get_queryset()
-    #success_url=reverse_lazy('inicio')
 
 class CrearCliente(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
     permission_required='Sistema_juridico.add_cliente'
@@ -213,128 +258,14 @@ class ActualizarCliente(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
     template_name = "clientes/cliente_editar.html"
     success_url=reverse_lazy('cliente')
 
-class EliminarCliente(LoginRequiredMixin,PermissionRequiredMixin,DeleteView):
-    permission_required='Sistema_juridico.delete_cliente'
-    model = Cliente
-    template_name = "clientes/cliente_borrar.html"
-    success_url=reverse_lazy('cliente')
-
 class DetalleCliente(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required='Sistema_juridico.view_cliente'
     model = Cliente
     template_name = "clientes/detalle_cliente.html"
     success_url=reverse_lazy('clientes')
 
-class ListaCasos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
-    permission_required='Sistema_juridico.view_caso'
-    model=Caso
-    template_name = "casos/caso_list.html"
-    context_object_name='casos'
-    #solo los que son cliente
-    queryset=Caso.objects.all()
-    
-    def get_queryset(self):
-        if self.request.GET.get('buscar') is not None:
-            return Caso.objects.filter(
-<<<<<<< HEAD
-            Q(codigo_caso__icontains=self.request.GET['buscar'])|
-            Q(estado__icontains=self.request.GET['buscar'])
-=======
-<<<<<<< HEAD
-            Q(estado__icontains=self.request.GET['buscar'])|
-            Q(codigo_caso__icontains=self.request.GET['buscar'])
-=======
-<<<<<<< HEAD
-            Q(nombre__icontains=self.request.GET['buscar'])|
-            Q(correo__icontains=self.request.GET['buscar'])|
-            Q(dui__icontains=self.request.GET['buscar'])
-=======
-            Q(codigo_caso__icontains=self.request.GET['buscar'])|
-            Q(estado__icontains=self.request.GET['buscar'])
->>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
->>>>>>> b18015e653a9b022da6327cc0de1a8113c625792
->>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0
-        ).distinct()
-        return super().get_queryset()
-    #success_url=reverse_lazy('inicio')
 
-class ListaReportes(LoginRequiredMixin,PermissionRequiredMixin,ListView):
-    permission_required='Sistema_juridico.view_reporte'
-    #model=Reporte
-    template_name = "reportes/reporte_list.html"
-    context_object_name='reportes'
-    #queryset=Reporte.objects.all()
-    paginate_by=10
-    
-    def get_queryset(self):
-        if self.request.GET.get('buscar') is not None:
-            return Caso.objects.filter(
-            Q(codigo__icontains=self.request.GET['buscar'])|
-            Q(descripcion__icontains=self.request.GET['buscar'])
-        ).distinct()
-        return super().get_queryset()
-    #success_url=reverse_lazy('inicio')
-
-class DetalleCaso(DetailView):
-    model = Caso
-    template_name = "casos/detalle_caso.html"
-    success_url=reverse_lazy('caso')
-    
-
-class ActualizarCaso(UpdateView):
-    model = Caso
-    form_class=CasoForm
-    template_name = "casos/caso_editar.html"
-<<<<<<< HEAD
-    success_url=reverse_lazy('caso')
-
-class CrearFormaDePagoModal(CreateView):
-    model = FormaDePago
-    form_class=FormaDePagoForm
-    template_name = "formapago/crear.html"
-    context_object_name='formapagos'
-    success_url=reverse_lazy('crear_caso')
-
-class CrearFormaDePago(CreateView):
-    model = FormaDePago
-    form_class=FormaDePagoForm
-    template_name = "formapago/formapago_crear.html"
-    context_object_name='formapagos'
-    success_url=reverse_lazy('formaPago')     
-
-class ListaFormaDePago(ListView):
-    model=FormaDePago
-    template_name = "formapago/formapago_listar.html"
-    context_object_name='formapagos'
-    queryset=FormaDePago.objects.all()
-    
-    def get_queryset(self):
-        if self.request.GET.get('buscar') is not None:
-            return FormaDePago.objects.filter(
-            Q(cuota__icontains=self.request.GET['buscar'])|
-            Q(plazo__icontains=self.request.GET['buscar'])|
-            Q(monto__icontains=self.request.GET['buscar'])
-        ).distinct()
-        return super().get_queryset()
-    #success_url=reverse_lazy('inicio')
-
-class EliminarFormaDePago(DeleteView):
-    permission_required='Sistema_juridico.delete_pago'
-    model = FormaDePago
-    template_name = "formapago/formapago_borrar.html"
-    success_url=reverse_lazy('formaPago')
-
-class ActualizarFormaDePago(UpdateView):
-    permission_required='Sistema_juridico.change_pago'
-    model = FormaDePago
-    form_class=FormaDePagoForm
-    template_name = "formapago/formapago_editar.html"
-    success_url=reverse_lazy('formaPago')
-
-=======
-    success_url=reverse_lazy('caso')  
->>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0
-
+#Bloque de vistas para Institucion
 class ListarInstitucion(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_institucion'
     model = Institucion
@@ -359,12 +290,11 @@ class CrearInstitucion(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
     template_name = "institucion/crear_institucion.html"
     context_object_name='institucion'
     success_url=reverse_lazy('institucion')
-    
 
 class EliminarInstitucion(LoginRequiredMixin,PermissionRequiredMixin,DeleteView):
     permission_required='Sistema_juridico.delete_institucion'
     model = Institucion
-    template_name = "institucion/institucion_confirm_delete.html"
+    template_name = "institucion/borrar_institucion.html"
     success_url=reverse_lazy('institucion')
 
 class ActualizarInstitucion(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
@@ -375,23 +305,9 @@ class ActualizarInstitucion(LoginRequiredMixin,PermissionRequiredMixin,UpdateVie
     context_object_name='institucion'
     success_url=reverse_lazy('institucion')
 
-def handler403(request,exception=None):
-    return render(request,'errores/403.html')
-
-def handler404(request,exception=None):
-    return render(request,'errores/404.html')
-
-
-class CrearAudiencia(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
-    permission_required='Sistema_juridico.add_caso'
-    model = Audiencia, Caso
-    form_class= AudienciaForm
-    template_name = "audiencia/crear_audiencia.html"
-    context_object_name='audiencia'
-    success_url=reverse_lazy('audiencia')
-
+#Bloque de vistas para Audiencia
 class ListaAudiencia(LoginRequiredMixin,PermissionRequiredMixin,ListView):
-    permission_required='Sistema_juridico.view_caso'
+    permission_required='Sistema_juridico.view_Audiencia'
     model = Audiencia, Caso
     template_name = "audiencia/audiencia_list.html"
     context_object_name='audiencia'
@@ -403,44 +319,31 @@ class ListaAudiencia(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
             return Audiencia.objects.filter(
-<<<<<<< HEAD
-            Q(codigo_caso=self.request.GET['buscar'])
-=======
             Q(detalle__icontains=self.request.GET['buscar'])|
             Q(codigo_caso_id=self.request.GET['buscar'])|
             Q(descripcion__icontains=self.request.GET['buscar'])
->>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0
         ).distinct()
         return super().get_queryset()
 
+class CrearAudiencia(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
+    permission_required='Sistema_juridico.add_Audiencia'
+    model = Audiencia
+    form_class= AudienciaForm
+    template_name = "audiencia/crear_audiencia.html"
+    context_object_name='audiencia'
+    success_url=reverse_lazy('audiencia')
+
 class ActualizarAudiencia(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
-    permission_required='Sistema_juridico.change_caso'
+    permission_required='Sistema_juridico.change_Audiencia'
     model = Audiencia
     form_class=AudienciaForm
     template_name = "audiencia/audiencia_editar.html"
     context_object_name='audiencia'
     success_url=reverse_lazy('audiencia')
 
-
-<<<<<<< HEAD
-class ListarCasosClientes(LoginRequiredMixin,PermissionRequiredMixin,ListView):
-    permission_required='Sistema_juridico.view_caso_cliente'
-    model=Caso
-    template_name = "casos/caso_list_cliente.html"
-    context_object_name='casos'
-    
-    def get_queryset(self):
-        if self.request.user is not None:
-            return Caso.objects.filter(
-            Q(id_cliente=self.request.user)
-        ).distinct()
-        return super().get_queryset()
-=======
-<<<<<<< HEAD
-#Pagos
-
-class ListPagos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
-    permission_required='Sistema_juridico.view_caso'
+#Bloque de vistas para Pagos
+class ListarPagos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required='Sistema_juridico.view_pago'
     model = Pago
     template_name = "pagos/pago_list.html"
     context_object_name='pagos'
@@ -457,7 +360,7 @@ class ListPagos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
         return super().get_queryset()
 
 class CrearPago(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
-    permission_required='Sistema_juridico.add_caso'
+    permission_required='Sistema_juridico.add_pago'
     model = Pago, Caso
     form_class= PagoForm
     template_name = "pagos/crear_pago.html"
@@ -465,7 +368,7 @@ class CrearPago(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
     success_url=reverse_lazy('pagos')
 
 class AbonarPago(LoginRequiredMixin,PermissionRequiredMixin,ListView):
-    permission_required='Sistema_juridico.add_caso'
+    permission_required={'Sistema_juridico.add_pago','Sistema_juridico.change_pago','Sistema_juridico.change_pago'}
     model = Pago, Caso
     form_class= PagoForm
     template_name = "pagos/crear_pagos.html"
@@ -473,12 +376,16 @@ class AbonarPago(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     success_url=reverse_lazy('pagos')
 
 class ActualizarPago(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
-    permission_required='Sistema_juridico.change_caso'
+    permission_required='Sistema_juridico.change_pago'
     model = Pago
     form_class= PagoForm
     template_name = "pagos/editar_pago.html"
-    success_url=reverse_lazy('pagos')  
-=======
->>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
->>>>>>> b18015e653a9b022da6327cc0de1a8113c625792
->>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0
+    success_url=reverse_lazy('pagos') 
+
+
+#Bloque de vistas para Errores
+def handler403(request,exception=None):
+    return render(request,'errores/403.html')
+
+def handler404(request,exception=None):
+    return render(request,'errores/404.html')

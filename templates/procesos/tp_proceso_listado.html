@@ -7,18 +7,7 @@
         <div class="row ">
             <div class="col-md-12 search">
                 <!--Barra de busqueda-->
-                <form method="GET">
-                    <div id="custom-search-input">
-                        <div class="input-group col-md-10">
-                            <label for="nombre" style="margin: 5px;">Nombre: </label>
-                            <input type="text" class="form-control" placeholder="Ingrese el nombre a buscar" name="buscar" style="border-radius: 5px;" id="buscar" value="{{request.GET.buscar}}">
-                            <span class="input-group-list">
-                                        <i class="icon icon-search"></i>
-                                        <button type="submit" class="btn btn-success" id="buscar" style="margin-left: 5px;">Buscar</button>
-                                </span>
-                        </div>
-                    </div>
-                </form>
+                {%include 'barras/barra_de_busqueda.html'%}
                 <!--Fin Barra de busqueda-->
                 <br> {%if tp_p%}
             </div>
@@ -46,7 +35,7 @@
                             <td>{{ti.nombre}}</td>
                             <td>{{ti.descripcion}}</td>
                             <td>
-                                <a onclick="abrir_modal_edicion('{% url 'editar_tipo_de_proceso' ti.id %}')" class="btn btn-warning">Editar</a>
+                                <a class="btn btn-warning" href="{% url 'editar_tipo_de_proceso' ti.id %}" id="editar">Editar</a>
                                 <a onclick="abrir_modal_eliminacion('{% url 'eliminar_tipo_de_proceso' ti.id %}')" class="btn btn-danger">Eliminar</a>
                             </td>
                         </tr>
@@ -68,18 +57,13 @@
     </div>
 </div>
 {%endif%}
-<div id="edicion" class="modal fade" role="dialog">
-</div>
+<!--Paginacion-->
+{%include 'barras/paginador.html'%}
+<!--Fin paginacion-->
 <div id="eliminacion" class="modal fade" role="dialog">
 </div>
 
 <script type="text/javascript">
-    function abrir_modal_edicion(url) {
-        $('#edicion').load(url, function() {
-            $(this).modal('show');
-        });
-    }
-
     function abrir_modal_eliminacion(url) {
         $('#eliminacion').load(url, function() {
             $(this).modal('show');

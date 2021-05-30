@@ -1,13 +1,12 @@
 {%load static%}
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title> Login</title>
-
+    <title> Inicio de Sesion</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--JQUERY-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js "></script>
 
@@ -41,15 +40,15 @@
                     <div class="col-12 user-img ">
                         <img src="{% static 'img/user.png'%} " th:src="@{/img/user.png} " />
                     </div>
-                    <form method="POST" class="col-12 " th:action="@{/login} ">
+                    <form method="post" class="col-12 ">
                         {% csrf_token %}
                         <div class="form-group " id="user-group ">
                             {{ form.username }}
                         </div>
-                        <div class="form-group " id="contrasena-group ">
+                        <div class="form-group " id="user-group ">
                             {{ form.password }}
                         </div>
-                        <button type="submit " class="btn btn-primary "><i class="fas fa-sign-in-alt "></i>  Ingresar </button>
+                        <button type="submit " class="btn btn-primary "><i class="fas fa-sign-in-alt "></i>  Enviar </button>
                     </form>
                     <div class="col-12 forgot ">
                         <a href="{% url 'password_reset' %} ">¿Contraseña olvidada?</a>

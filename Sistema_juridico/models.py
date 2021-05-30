@@ -136,13 +136,8 @@ Estado_Civil= (
 )
 class Usuario(AbstractBaseUser, PermissionsMixin):
     correo = models.EmailField(verbose_name='correo electronico',max_length=100,unique=True)
-<<<<<<< HEAD
-    nombre= models.CharField(max_length = 150,)
-    apellido = models.CharField(max_length = 150,)
-=======
-    nombre= models.CharField(max_length = 150)
-    apellido = models.CharField(max_length = 150)
->>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0
+    nombre= models.CharField(max_length = 150,validators=[RegexValidator("[a-zA-Z]+[ a-zA-Z-_]*$",message="Introduzca letras del alfabeto")])
+    apellido = models.CharField(max_length = 150,validators=[RegexValidator("[a-zA-Z]+[ a-zA-Z-_]*$",message="Introduzca letras del alfabeto")])
     direccion = models.CharField(max_length = 150)
     dui = models.CharField(max_length = 10, validators=[RegexValidator("^\d{8}-\d{1}$",message="Dui invalido")])
     telefono=models.CharField(max_length = 9,validators=[RegexValidator("^\d{4}-\d{4}$",message="Telefono invalido")])
@@ -217,17 +212,13 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     
 
 class Cliente(Usuario):
-    #es_cliente=models.BooleanField(default=False)
     class Meta:
         verbose_name = 'Cliente'
         verbose_name_plural = 'Clientes'
-        permissions = ( 
-            ('view_caso', 'puede ver publicaciones y categorías del blog'),
-        )
     
 class Abogado(Usuario):
     Tipo_de_abogado=models.OneToOneField(TipoDeAbogado, verbose_name=("Tipo De Abogado"), on_delete=models.CASCADE)
-    #es_abogado=models.BooleanField(default=False)
+    
 
 
 Estados = (
@@ -253,8 +244,6 @@ class Caso(models.Model):
     estado = models.CharField(choices=Estados, max_length=220)
     tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
     pago_caso = models.FloatField( max_length=220)
-    #pago=models.ForeignKey(Pago,on_delete=models.CASCADE)
-    #audiencia=models.ForeignKey(Audiencia,on_delete=models.CASCADE)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
     class Meta:

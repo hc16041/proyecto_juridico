@@ -7,22 +7,7 @@
         <div class="row ">
             <div class="col-md-12 search">
                 <!--Barra de busqueda-->
-<<<<<<< HEAD:templates/casos/caso_list.html
                 {%include 'barras/barra_de_busqueda.html'%}
-=======
-                <form method="GET">
-                    <div id="custom-search-input">
-                        <div class="input-group col-md-10">
-                            <label for="nombre" style="margin: 5px;">Codigo de caso </label>
-                            <input type="text" class="form-control" placeholder="Ingrese el codigo del caso" name="buscar" style="border-radius: 5px;" id="buscar" value="{{request.GET.buscar}}">
-                            <span class="input-group-list">
-                                        <i class="icon icon-search"></i>
-                                        <button type="submit" class="btn btn-success" id="buscar" style="margin-left: 5px;">Buscar</button>
-                                </span>
-                        </div>
-                    </div>
-                </form>
->>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0:templates/casos/listar.html
                 <!--Fin Barra de busqueda-->
                 <br> {%if casos%}
             </div>
@@ -54,15 +39,8 @@
                             <td>{{caso.codigo_caso}}</td>
                             <td>{{caso.descripcion}}</td>
                             <td>{{caso.estado}}</td>
-<<<<<<< HEAD:templates/casos/caso_list.html
-=======
-<<<<<<< HEAD
-                            <td><a class="btn btn-warning"href="{% url 'editar_caso' caso.codigo_caso %}" id="editar">Editar</a>
-=======
->>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
->>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0:templates/casos/listar.html
+
                             <td><a class="btn btn-warning" href="{% url 'editar_caso' caso.codigo_caso %}" id="editar">Editar</a>
->>>>>>> b18015e653a9b022da6327cc0de1a8113c625792
                                 <a onclick="abrir_modal_detalle('{% url 'detalle_caso' caso.codigo_caso %}')" class="btn btn-danger">Detalle</a>
                             </td>
                         </tr>
@@ -84,6 +62,9 @@
     </div>
 </div>
 {%endif%}
+<!--Paginacion-->
+{%include 'barras/paginador.html'%}
+<!--Fin paginacion-->
 <div id="view" class="modal fade" role="dialog">
 </div>
 <div id="edicion" class="modal fade" role="dialog">

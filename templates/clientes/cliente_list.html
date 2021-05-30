@@ -29,7 +29,7 @@
                             <th scope="col ">Telefono</th>
                             <th scope="col ">Fecha de Nacimiento</th>
                             <th scope="col ">Usuario</th>
-                            <th scope="col ">Opciones</th>
+                            <th scope="col ">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,7 +40,7 @@
                             <td>{{cliente.dui}}</td>
                             <td>{{cliente.telefono}}</td>
                             <td>{{cliente.fecha_nacimiento}}</td>
-                            <td>{{cliente.rol.rol}}</td>
+                            <td>{{cliente.username}}</td>
                             <td>
                                 <a class="btn btn-warning" href="{% url 'editar_cliente' cliente.id %}" id="editar" style="float: right;">Editar</a>
                                 <a onclick="abrir_modal_edicion('{% url 'detalle_cliente' cliente.id %}')" class="btn btn-danger">Detalle</a>

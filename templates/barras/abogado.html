@@ -1,8 +1,9 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light">
     <ul class="navbar-nav ml-auto">
         <li>
-            <h2>{{user}}</h2>
+            <h3>{{user.nombre}}</h3>
         </li>
+        <br>
         <li>
             <a class="btn btn-outline-danger" href="{%url 'logout'%} ">Cerrar Sesión</a>
         </li>
@@ -23,11 +24,7 @@
                 <a class="nav-link" href="{%url 'audiencia'%}">Audiencia</a>
             </li>
             <li class="nav-item">
-<<<<<<< HEAD
-                <a class="nav-link" href="{%url 'cliente'%}">Clientes</a>
-=======
-                <a class="nav-link" href="{%url 'pagos'%}">Honorarios</a>
->>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0
+                <a class="nav-link" href="{%url 'pagos'%}">Pagos</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{%url 'cliente'%}">Clientes</a>

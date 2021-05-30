@@ -2,11 +2,10 @@ from django import forms
 from .models import *
 from django.contrib.auth.forms import AuthenticationForm, ReadOnlyPasswordHashField
 from django.contrib.auth.models import Permission, User #Usuario
-from django.contrib.auth.hashers import make_password 
+from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from proyecto_juridico import settings
 
-<<<<<<< HEAD
 
 class TipoDeAbogadoForm(forms.ModelForm):
     class Meta:
@@ -35,6 +34,34 @@ class TipoDeAbogadoForm(forms.ModelForm):
             ),
         }
     
+class TipoDeProcesoForm(forms.ModelForm):
+    class Meta:
+        model=TipoDeProceso
+        fields='__all__'
+        labels={
+            'nombre': 'Nombre del tipo',
+            'descripcion':'Descripcion'
+        }
+        widgets={
+            'nombre': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese el nombre del tipo de proceso',
+                    'id':'nombre',
+                    
+                }
+            ),
+            'descripcion':forms.Textarea(
+                attrs={
+                    'class':'form-control',
+                    'rows':'3',
+                    'placeholder':'Ingrese descripcion del tipo de proceso',
+                    'rows': '3',
+                    'id':'descripcion',
+                }
+            ),
+        }
+
 class FormLogin(AuthenticationForm):
     class Meta:
         db_table = Usuario
@@ -60,12 +87,6 @@ class FormLogin(AuthenticationForm):
                 }
             ),
         }
-    # def __init__(self, *args, **kwargs):
-    #     super(FormLogin, self).__init__(*args,**kwargs)
-    #     self.fields['username'].widget.attrs['class'] = 'form-control'
-    #     self.fields['username'].widget.attrs['placeholder'] = 'Nombre de Usuario'
-    #     self.fields['password'].widget.attrs['class'] = 'form-control'
-    #     self.fields['password'].widget.attrs['placeholder'] = 'Contraseña'
     
 class CasoForm(forms.ModelForm):
     codigo_caso=forms.IntegerField(min_value=1,max_value=1500000)
@@ -81,7 +102,6 @@ class CasoForm(forms.ModelForm):
                 attrs={
                     'id':'id_cliente',
                     'class':'form-control form-control-sm col-sm-6',
-                    #'disabled': 'true',
                 }
             ),
             'id_abogado': forms.Select(
@@ -127,260 +147,6 @@ class CasoForm(forms.ModelForm):
             
         }
     
-class TipoDeProcesoForm(forms.ModelForm):
-    class Meta:
-        model=TipoDeProceso
-        fields='__all__'
-        labels={
-            'nombre': 'Nombre del tipo',
-            'descripcion':'Descripcion'
-        }
-        widgets={
-            'nombre': forms.TextInput(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'Ingrese el nombre del tipo de proceso',
-                    'id':'nombre',
-                    
-                }
-            ),
-            'descripcion':forms.Textarea(
-                attrs={
-                    'class':'form-control',
-                    'rows':'3',
-                    'placeholder':'Ingrese descripcion del tipo de proceso',
-                    'rows': '3',
-                    'id':'descripcion',
-                }
-            ),
-        }
-    
-
-=======
-#Para registrar superusuarios
-class FormRegistro(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'password',
-        }
-        ),max_length = 150)
-    password1 = forms.CharField(label='Confirm password',widget=forms.PasswordInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'confirm password',
-        }
-        ),max_length = 150)
-
-    class Meta:
-        model=Usuario
-        fields=('correo','nombre')
-    
-    
-    def clean_email(self):
-        correo=self.cleaned_data.get('correo')
-        qs=Usuario.objects.filter(correo=correo)
-        if qs.exists():
-            raise forms.ValidationError("Correo ya registrado")
-        return correo
-    
-    def clean_password2(self):
-        password1=self.clean_data.get("password1")
-        password2=self.clean_data.get("password2")
-        if password1 and password2 and password1!=password2:
-            raise forms.ValidationError("Contraseñas no coinciden")
-        return password2
-    
-#Para actualizar usuario
-class FormActualizarUsuario(forms.ModelForm):
-    password=ReadOnlyPasswordHashField()
-    class Meta:
-        model = Usuario
-        fields = ('correo','password','nombre','apellido')
-    
-    def clean_password(self):
-        return self.initial['password']
-
-#Login
-class FormLogin(AuthenticationForm):
-    class Meta:
-        db_table = Usuario
-        fields=['correo','password']
-        labels={
-            'username': 'Nombre del tipo',
-            'password':'Contraseña'
-        }
-    
-        widgets={
-            'correo': forms.TextInput(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'Ingrese el correo ',
-                    'id':'correo'
-                }
-            ),
-            'password':forms.PasswordInput(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'Ingrese contraseña',
-                    'id':'password',
-                }
-            ),
-        }
-    # def __init__(self, *args, **kwargs):
-    #     super(FormLogin, self).__init__(*args,**kwargs)
-    #     self.fields['username'].widget.attrs['class'] = 'form-control'
-    #     self.fields['username'].widget.attrs['placeholder'] = 'Nombre de Usuario'
-    #     self.fields['password'].widget.attrs['class'] = 'form-control'
-    #     self.fields['password'].widget.attrs['placeholder'] = 'Contraseña'
-
-#Form para contacto Email
-class contactoForm(forms.Form):
-    origen=forms.CharField()
-    asunto=forms.CharField(required=True)
-    destino=forms.EmailField()
-    contenido=forms.CharField(max_length=999, widget=forms.Textarea)
-
-#Form Usuario 
-class FormUsuario(forms.ModelForm):
-    password1 = forms.CharField(label='Contraseña',widget=forms.PasswordInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'Contraseña',
-            'id':'password1',
-            'required':'required'
-        }
-        ))
-    password2 = forms.CharField(label='Confirmar Contraseña',widget=forms.PasswordInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'Confirmar Contraseña',
-            'id':'password2',
-            'required':'required'
-        }
-        ))
-    class Meta:
-        model=Usuario
-        fields=('correo','nombre','apellido',)
-        widgets={
-                 'nombre': forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese el nombre',
-                         'id':'nombre',
-                       
-                     }
-                 ),
-                 'correo':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese correo',
-                         'id':'descripcion',
-                     }
-                 ),
-                 'apellido':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese apellido',
-                         'id':'descripcion',
-                     }
-                 ),
-                 'direccion':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese la direccion',
-                         'id':'descripcion',
-                     }
-                 ),
-                 'telefono':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese telefono',
-                         'id':'descripcion',
-                     }
-                 ),
-             }
-       
-    def clean_password2(self):
-        password1=self.cleaned_data.get("password1")
-        password2=self.cleaned_data.get("password2")
-        if password1!=password2:
-            raise forms.ValidationError("Contraseñas no coinciden")
-        return password2
-    
-    def save(self,commit=True):
-         #guarda contraseña en formato Hash
-        usuario=super().save(commit=False)
-        usuario.set_password(self.cleaned_data["password1"])
-        if commit:
-            usuario.save()
-        return usuario
->>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0
-
-#Forms mostrados directamente en el sistema
-class CasoForm(forms.ModelForm):
-    class Meta:
-        model=Caso
-        fields='__all__'
-        labels={
-            'codigo caso': 'Codigo caso',
-            'descripcion':'Descripcion'
-        }
-        widgets={
-            'id_cliente': forms.Select(
-                attrs={
-                    'id':'id_cliente',
-                    'class':'form-control form-control-sm col-sm-6',
-                    #'disabled': 'true',
-                }
-            ),
-            'rol_cliente': forms.Select(
-                attrs={
-                    'id':'rol_cliente',
-                    'class':'form-control form-control-sm col-sm-6',
-                }
-            ),
-            'id_abogado': forms.Select(
-                attrs={
-                    'id':'id_abogado',
-                    'class':'form-control form-control-sm col-sm-6',
-                }
-            ),
-            'codigo_caso': forms.NumberInput(
-                attrs={
-                    'class':'form-control form-control-sm col-sm-6',
-                    'placeholder':'Ingrese el codigo del caso',
-                    'id':'codigo_caso',
-                    'min':'1'
-                }
-            ),
-            'descripcion':forms.Textarea(
-                attrs={
-                    'class':'form-control form-control-sm col-sm-6',
-                    'placeholder':'Ingrese descripcion detallada sobre el caso',
-                    'id':'descripcion',
-                }
-            ),
-            'estado':forms.Select(
-                attrs={
-                    'id':'estado',
-                    'class':'form-control form-control-sm col-sm-6'
-                }
-            ),
-            'tipo_de_proceso':forms.Select(
-                attrs={
-                    'id':'tipo_de_proceso',
-                    'class':'form-control form-control-sm col-sm-6'
-                }
-            ),
-            'pago_caso':forms.TextInput(
-                attrs={
-                    'id':'pago_caso',
-                    'class':'form-control form-control-sm col-sm-6'
-                }
-            ),            
-        }
-
 class AudienciaForm(forms.ModelForm):
     class Meta:
         model=Audiencia
@@ -504,8 +270,7 @@ class FormCliente(forms.ModelForm):
                          'class':'form-control',
                          'placeholder':'Ingrese la direccion del cliente',
                          'id':'direccion',
-                     }
-            ),
+                     }),
                  'telefono':forms.TextInput(
                      attrs={
                          'class':'form-control',
@@ -535,98 +300,31 @@ class FormCliente(forms.ModelForm):
                          }
                  )   
              }
-<<<<<<< HEAD
-        
-        
-=======
-    def clean_password2(self):
-        password1=make_password('')
-        # password2=self.cleaned_data.get("password2")
-        # if password1!=password2:
-        #     raise forms.ValidationError("Contraseñas no coinciden")
-        # return password2
-    
->>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0
-    
+
     def save(self,commit=True):
-         #guarda contraseña en formato Hash
-         #crea una contraseña aleatoria
+        #creacion de contraseña aleatoriamente
         password1=BaseUserManager().make_random_password(15)
-        print(password1)
         nombre=self.cleaned_data.get("nombre")
         apellido=self.cleaned_data.get("apellido")
         correo=self.cleaned_data.get("correo")
         usuario=super().save(commit=False)
-        #se agrega el rol de una vez
         
+        #se agrega el rol de una vez
         usuario.rol=Rol.objects.get(id=1)
+        
         #Se crea un usuario aleatorio
         username=nombre[0:3]+apellido[0:3]
         usuario.username=username
-        correoe=settings.EMAIL_HOST_USER
-        subject="A"
-        message='leer "{}" at {} comentario:{}'.format(Rol.objects.get(id=1),nombre,password1)
-        send_mail(subject,message,correoe,[correo])
+        #Envio del correo al usuario
+        correoAdmin=settings.EMAIL_HOST_USER
+        subject="Datos de ingreso"
+        message='Datos de ingreso al sistema. \nNombre del usuario: {} \nCorreo del usuario:{} \nContraseña: {}'.format(nombre,correo,password1)
+        send_mail(subject,message,correoAdmin,[correo])
         usuario.set_password(password1)
         if commit:
             usuario.save()
         return usuario
 
-class TipoDeAbogadoForm(forms.ModelForm):
-    class Meta:
-        model=TipoDeAbogado
-        fields='__all__'
-        labels={
-            'nombre': 'Nombre del tipo',
-            'descripcion':'Descripcion'
-        }
-        widgets={
-            'nombre': forms.TextInput(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'Ingrese el nombre del tipo de abogado',
-                    'id':'nombre',
-                    
-                }
-            ),
-            'descripcion':forms.Textarea(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'Ingrese descripcion del tipo de abogado',
-                    'rows': '3',
-                    'id':'descripcion',
-                }
-            ),
-        }
-        
-class TipoDeProcesoForm(forms.ModelForm):
-    class Meta:
-        model=TipoDeProceso
-        fields='__all__'
-        labels={
-            'nombre': 'Nombre del tipo',
-            'descripcion':'Descripcion'
-        }
-        widgets={
-            'nombre': forms.TextInput(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'Ingrese el nombre del tipo de proceso',
-                    'id':'nombre',
-                    
-                }
-            ),
-            'descripcion':forms.Textarea(
-                attrs={
-                    'class':'form-control',
-                    'rows':'3',
-                    'placeholder':'Ingrese descripcion del tipo de proceso',
-                    'rows': '3',
-                    'id':'descripcion',
-                }
-            ),
-        }
-    
 class FormAbogado(forms.ModelForm):
     class Meta:
         model= Abogado
@@ -697,83 +395,32 @@ class FormAbogado(forms.ModelForm):
              }
         
     def save(self,commit=True):
-         #guarda contraseña en formato Hash
-         #crea una contraseña aleatoria
+        #crea una contraseña aleatoria
         password1=BaseUserManager().make_random_password(15)
-        print(password1)
+        #Captura datos
         nombre=self.cleaned_data.get("nombre")
         apellido=self.cleaned_data.get("apellido")
         correo=self.cleaned_data.get("correo")
         usuario=super().save(commit=False)
+
         #se agrega el rol de una vez
         usuario.rol=Rol.objects.get(id=2)
-        #Se crea un usuario aleatorio
+        
+        #Se crea un usuario aleatorio y se asigna
         username=nombre[0:3]+apellido[0:3]
         usuario.username=username
+        
+        #Envio del correo al usuario
+        correoAdmin=settings.EMAIL_HOST_USER
+        subject="Datos de ingreso"
+        message='Datos de ingreso al sistema. \nNombre del usuario: {} \nCorreo del usuario:{} \nContraseña: {}'.format(nombre,correo,password1)
+        send_mail(subject,message,correoAdmin,[correo])
         
         usuario.set_password(password1)
         if commit:
             usuario.save()
         return usuario
 
-<<<<<<< HEAD
-=======
-
-class ReporteForm(forms.ModelForm):
-    class Meta:
-        model=Caso
-        fields=('__all__')
-        labels={
-            'codigo de caso': 'codigo de caso',
-            'dui cliente':'dui cliente',
-            'nombre abogado':'nombre abogado',
-            'tipo de proceso':'tipo de proceso',
-            'estado cliente':'estado cliente'
-
-        }
-        
-       
-        widgets={
-                 'codigo_de_caso': forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese el codigo de caso',
-                         'id':'codigo_de_caso',
-                       
-                     }
-            ),
-                 'dui_cliente':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese dui del cliente',
-                         'id':'dui_cliente',
-                     }
-            ),
-                 'nombre_abogado':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese el nombre de Abogado',
-                         'id':'nombre_abogado',
-                     }
-                 ),
-            
-                 'tipo_de_proceso':forms.Select(
-                attrs={
-                    'id':'tipo_de_proces',
-                    'class':'form-control form-control-sm col-sm-2'
-                }
-            ),
-                 'Rol_Cliente':forms.Select(
-                     attrs={
-                         'class':'form-control form-control-sm col-sm-4',
-                         'id':'Rol_cliente'
-                         }
-    
-                 )
-                 
-             }
-
->>>>>>> b18015e653a9b022da6327cc0de1a8113c625792
 class InstitucionForm(forms.ModelForm):
     class Meta:
         model=Institucion

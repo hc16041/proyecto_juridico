@@ -1,4 +1,4 @@
-{%extends 'base.html'%}{%load static%}{%block title%}Honorarios{%endblock%} {%block content%}
+{%extends 'base.html'%}{%load static%}{%block title%}Pagos{%endblock%} {%block content%}
 <div class="card">
     <div class="card-header">
         <strong>Honorarios</strong>
@@ -7,18 +7,7 @@
         <div class="row ">
             <div class="col-md-12 search">
                 <!--Barra de busqueda-->
-                <form method="GET">
-                    <div id="custom-search-input">
-                        <div class="input-group col-md-10">
-                            <label for="nombre" style="margin: 5px;">Codigo de Caso: </label>
-                            <input type="text" class="form-control" placeholder="Ingrese el codigo de caso" name="buscar" style="border-radius: 5px;" id="buscar" value="{{request.GET.buscar}}">
-                            <span class="input-group-list">
-                                        <i class="icon icon-search"></i>
-                                        <button type="submit" class="btn btn-success" id="buscar" style="margin-left: 5px;">Buscar</button>
-                                </span>
-                        </div>
-                    </div>
-                </form>
+                {%include 'barras/barra_de_busqueda.html'%}
                 <!--Fin Barra de busqueda-->
                 <br> {%if pagos%}
             </div>
@@ -47,7 +36,7 @@
                             <td>{{pago.fecha}}</td>
                             <td>{{pago.descripcion}}</td>
                             <td>{{pago.monto}}</td>
-                            <td><a class="btn btn-success" href="{% url 'editar_pago' pago.id %}" id="editar">Editar Pago</a>
+                            <td><a class="btn btn-warning" href="{% url 'editar_pago' pago.id %}" id="editar">Editar Pago</a>
                             </td>
                         </tr>
                         {%endfor%}
@@ -68,6 +57,9 @@
     </div>
 </div>
 {%endif%}
+<!--Paginacion-->
+{%include 'barras/paginador.html'%}
+<!--Fin paginacion-->
 <div id="view" class="modal fade" role="dialog">
 </div>
 <div id="edicion" class="modal fade" role="dialog">

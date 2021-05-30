@@ -24,6 +24,7 @@
                         <tr>
                             <th scope="col ">Nombre</th>
                             <th scope="col ">Direccion</th>
+                            <th scope="col ">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,7 +33,7 @@
                             <td>{{instituciones.nombre}}</td>
                             <td>{{instituciones.direccion}}</td>
                             <td>
-                                <a onclick="abrir_modal_edicion('{% url 'editar_institucion' instituciones.id %}')" class="btn btn-warning">Editar</a>
+                                <a class="btn btn-warning" href="{% url 'editar_institucion' instituciones.id %}" id="editar">Editar</a>
                                 <a onclick="abrir_modal_eliminacion('{% url 'eliminar_institucion' instituciones.id %}')" class="btn btn-danger">Eliminar</a>
                             </td>
                         </tr>
