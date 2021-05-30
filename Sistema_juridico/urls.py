@@ -49,14 +49,7 @@ urlpatterns = [
     path('audiencia/', ListaAudiencia.as_view(), name= 'audiencia'),
     path('crear_audiencia/', CrearAudiencia.as_view(), name='crear_audiencia'),
     path('editar_audiencia/<int:pk>', ActualizarAudiencia.as_view(), name='editar_audiencia'),
-
     
     path('403/', handler403),
     path('404/', handler404),
-<<<<<<< HEAD
-=======
 
-
-
->>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
-]
