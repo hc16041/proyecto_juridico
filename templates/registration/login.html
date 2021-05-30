@@ -3,30 +3,30 @@
 
 
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
     <title> Login</title>
 
     <!--JQUERY-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js "></script>
 
     <!-- FRAMEWORK BOOTSTRAP para el estilo de la pagina-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet " href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css ">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js "></script>
 
     <!-- Los iconos tipo Solid de Fontawesome-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css">
-    <script src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+    <link rel="stylesheet " href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css ">
+    <script src="https://use.fontawesome.com/releases/v5.0.7/js/all.js "></script>
 
     <!-- Nuestro css-->
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet " href="{% static 'css/style.css' %} ">
 
 </head>
 
 <body>
-    <div class="card" style="background-image: url({% static 'img/fondo.jpeg'%}); background-repeat: no-repeat; background-size:100% 100%;">
+    <div class="card " style="background-image: url({% static 'img/fondo.jpeg'%}); background-repeat: no-repeat; background-size:100% 100%; ">
         <div class="container-fluid ">
             <div class="card-header ">
                 <nav class="navbar navbar-expand-md navbar-dark bg-dark ">
@@ -41,7 +41,7 @@
                     <div class="col-12 user-img ">
                         <img src="{% static 'img/user.png'%} " th:src="@{/img/user.png} " />
                     </div>
-                    <form method="POST" class="col-12" th:action="@{/login}">
+                    <form method="POST" class="col-12 " th:action="@{/login} ">
                         {% csrf_token %}
                         <div class="form-group " id="user-group ">
                             {{ form.username }}
@@ -52,7 +52,7 @@
                         <button type="submit " class="btn btn-primary "><i class="fas fa-sign-in-alt "></i>  Ingresar </button>
                     </form>
                     <div class="col-12 forgot ">
-                        <a href="# ">¿Contraseña olvidada?</a>
+                        <a href="{% url 'password_reset' %} ">¿Contraseña olvidada?</a>
                     </div>
                 </div>
             </div>

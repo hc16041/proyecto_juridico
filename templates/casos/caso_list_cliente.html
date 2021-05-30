@@ -1,0 +1,70 @@
+{%extends 'base.html'%}{%load static%}{%block title%}Casos{%endblock%} {%block content%}
+<div class="card">
+    <div class="card-header">
+        <strong>Casos</strong>
+    </div>
+    <div class="card-body card_block">
+        <div class="row ">
+            <div class="col-md-12 search">
+                <br> {%if casos%}
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-responsive table-hover">
+                    <thead class="thead-dark ">
+                        <tr>
+                            <th scope="col ">Cliente</th>
+                            <th scope="col ">Abogado</th>
+                            <th scope="col ">codigo</th>
+                            <th scope="col ">Descripcion</th>
+                            <th scope="col ">Estado</th>
+                            <th scope="col ">Acciones</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for caso in casos%}
+                        <tr>
+                            <td>{{caso.id_cliente.correo}}</td>
+                            <td>{{caso.id_abogado.get_full_name}}</td>
+                            <td>{{caso.codigo_caso}}</td>
+                            <td>{{caso.descripcion}}</td>
+                            <td>{{caso.estado}}</td>
+                            <td>
+                                <a onclick="abrir_modal_detalle('{% url 'detalle_caso' caso.codigo_caso %}')" class="btn btn-danger">Detalle</a>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {%else%}
+        <div class="container">
+            <h1>No existen Casos</h1>
+
+        </div>
+    </div>
+</div>
+{%endif%}
+<div id="view" class="modal fade" role="dialog">
+</div>
+<div id="edicion" class="modal fade" role="dialog">
+</div>
+
+<script type="text/javascript">
+    function abrir_modal_detalle(url) {
+        $('#view').load(url, function() {
+            $(this).modal('show');
+        });
+    }
+
+    function abrir_modal_audienciaA(url) {
+        $('#edicion').load(url, function() {
+            $(this).modal('show');
+        });
+    }
+</script>
+
+{%endblock%}

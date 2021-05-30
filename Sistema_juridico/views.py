@@ -16,6 +16,7 @@ from .mixins import LoginYSuperStaffMixin,LoginMixin,ValidarPermisosMixin
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
 from django.template import RequestContext
+from urllib import request
 
 
 # Create your views here.
@@ -29,7 +30,7 @@ class ListarTiposDeAbogados(LoginRequiredMixin,PermissionRequiredMixin,ListView)
     template_name = "abogados/tp_abogado_listado.html"
     context_object_name='tipos'
     queryset=TipoDeAbogado.objects.all()
-    paginate_by=3
+    paginate_by=10
     
     #Para la barra de busqueda
     def get_queryset(self):
@@ -225,7 +226,7 @@ class DetalleCliente(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
 class ListaCasos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_caso'
     model=Caso
-    template_name = "casos/listar.html"
+    template_name = "casos/caso_list.html"
     context_object_name='casos'
     #solo los que son cliente
     queryset=Caso.objects.all()
@@ -233,14 +234,8 @@ class ListaCasos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
             return Caso.objects.filter(
-<<<<<<< HEAD
-            Q(nombre__icontains=self.request.GET['buscar'])|
-            Q(correo__icontains=self.request.GET['buscar'])|
-            Q(dui__icontains=self.request.GET['buscar'])
-=======
             Q(codigo_caso__icontains=self.request.GET['buscar'])|
             Q(estado__icontains=self.request.GET['buscar'])
->>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
         ).distinct()
         return super().get_queryset()
     #success_url=reverse_lazy('inicio')
@@ -305,11 +300,13 @@ class ListaFormaDePago(ListView):
     #success_url=reverse_lazy('inicio')
 
 class EliminarFormaDePago(DeleteView):
+    permission_required='Sistema_juridico.delete_pago'
     model = FormaDePago
     template_name = "formapago/formapago_borrar.html"
     success_url=reverse_lazy('formaPago')
 
 class ActualizarFormaDePago(UpdateView):
+    permission_required='Sistema_juridico.change_pago'
     model = FormaDePago
     form_class=FormaDePagoForm
     template_name = "formapago/formapago_editar.html"
@@ -362,8 +359,6 @@ def handler403(request,exception=None):
 def handler404(request,exception=None):
     return render(request,'errores/404.html')
 
-<<<<<<< HEAD
-=======
 
 class CrearAudiencia(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
     permission_required='Sistema_juridico.add_caso'
@@ -386,8 +381,7 @@ class ListaAudiencia(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
             return Audiencia.objects.filter(
-            Q(detalle__icontains=self.request.GET['buscar'])|
-            Q(codigo_caso_id=int(self.request.GET['buscar']))
+            Q(codigo_caso=self.request.GET['buscar'])
         ).distinct()
         return super().get_queryset()
 
@@ -400,4 +394,15 @@ class ActualizarAudiencia(LoginRequiredMixin,PermissionRequiredMixin,UpdateView)
     success_url=reverse_lazy('audiencia')
 
 
->>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
+class ListarCasosClientes(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required='Sistema_juridico.view_caso_cliente'
+    model=Caso
+    template_name = "casos/caso_list_cliente.html"
+    context_object_name='casos'
+    
+    def get_queryset(self):
+        if self.request.user is not None:
+            return Caso.objects.filter(
+            Q(id_cliente=self.request.user)
+        ).distinct()
+        return super().get_queryset()

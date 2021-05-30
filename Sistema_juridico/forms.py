@@ -154,123 +154,7 @@ class TipoDeProcesoForm(forms.ModelForm):
             ),
         }
     
-#para registrar superusuarios
-class FormRegistro(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'password',
-        }
-        ),max_length = 150)
-    password1 = forms.CharField(label='Confirm password',widget=forms.PasswordInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'confirm password',
-        }
-        ),max_length = 150)
 
-    class Meta:
-        model=Usuario
-        fields=('correo','nombre')
-    
-    
-    def clean_email(self):
-        correo=self.cleaned_data.get('correo')
-        qs=Usuario.objects.filter(correo=correo)
-        if qs.exists():
-            raise forms.ValidationError("Correo ya registrado")
-        return correo
-    
-    def clean_password2(self):
-        password1=self.clean_data.get("password1")
-        password2=self.clean_data.get("password2")
-        if password1 and password2 and password1!=password2:
-            raise forms.ValidationError("Contraseñas no coinciden")
-        return password2
-    
-#para actualizar usuario
-class FormActualizarUsuario(forms.ModelForm):
-    password=ReadOnlyPasswordHashField()
-    class Meta:
-        model = Usuario
-        fields = ('correo','password','nombre','apellido')
-    
-    def clean_password(self):
-        return self.initial['password']
-
-class FormUsuario(forms.ModelForm):
-    password1 = forms.CharField(label='Contraseña',widget=forms.PasswordInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'Contraseña',
-            'id':'password1',
-            'required':'required'
-        }
-        ))
-    password2 = forms.CharField(label='Confirmar Contraseña',widget=forms.PasswordInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'Confirmar Contraseña',
-            'id':'password2',
-            'required':'required'
-        }
-        ))
-    class Meta:
-        model=Usuario
-        fields=('correo','nombre','apellido',)
-        widgets={
-                 'nombre': forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese el nombre del cliente',
-                         'id':'nombre',
-                       
-                     }
-                 ),
-                 'correo':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese correo del cliente',
-                         'id':'descripcion',
-                     }
-                 ),
-                 'apellido':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese apellido del cliente',
-                         'id':'descripcion',
-                     }
-                 ),
-                 'direccion':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese la direccion del cliente',
-                         'id':'descripcion',
-                     }
-                 ),
-                 'telefono':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese telefono del cliente',
-                         'id':'descripcion',
-                     }
-                 ),
-             }
-       
-    def clean_password2(self):
-        password1=self.cleaned_data.get("password1")
-        password2=self.cleaned_data.get("password2")
-        if password1!=password2:
-            raise forms.ValidationError("Contraseñas no coinciden")
-        return password2
-    
-    def save(self,commit=True):
-         #guarda contraseña en formato Hash
-        usuario=super().save(commit=False)
-        usuario.set_password(self.cleaned_data["password1"])
-        if commit:
-            usuario.save()
-        return usuario
 
 
 class FormCliente(forms.ModelForm):
@@ -341,14 +225,6 @@ class FormCliente(forms.ModelForm):
              }
         
         
-    
-    def clean_password2(self):
-        password1=make_password('')
-        # password2=self.cleaned_data.get("password2")
-        # if password1!=password2:
-        #     raise forms.ValidationError("Contraseñas no coinciden")
-        # return password2
-    
     
     def save(self,commit=True):
          #guarda contraseña en formato Hash
@@ -443,14 +319,7 @@ class FormAbogado(forms.ModelForm):
                       }
                  )
              }
-       
-    def clean_password2(self):
-        password1=self.cleaned_data.get("password1")
-        password2=self.cleaned_data.get("password2")
-        if password1!=password2:
-            raise forms.ValidationError("Contraseñas no coinciden")
-        return password2
-    
+        
     def save(self,commit=True):
          #guarda contraseña en formato Hash
          #crea una contraseña aleatoria
@@ -534,7 +403,7 @@ class InstitucionForm(forms.ModelForm):
             'nombre': 'Nombre de la institucion',
             'direccion': 'Direccion de la institucion',
             'descripcion':'Descripcion',
-            'correo':'Correo',
+            'correo':'correo',
             'telefono':'Telefono',
             'tipo':'Tipo de institucion',
         }
@@ -565,7 +434,7 @@ class InstitucionForm(forms.ModelForm):
             'correo': forms.TextInput(
                 attrs={
                     'class':'form-control',
-                    'placeholder':'Ingrese el email de la institucion',
+                    'placeholder':'Ingrese el correo de la institucion',
                     'id':'correo',
                 }
             ),

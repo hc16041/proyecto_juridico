@@ -7,12 +7,13 @@ from django.utils.datetime_safe import datetime
 from django.contrib.admin import widgets
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import RegexValidator
+from django.core.mail import send_mail
 # Create your models here.
 
 
 
 class TipoDeAbogado(models.Model):
-    nombre = models.CharField(max_length = 100, blank=False, null=False,validators=[RegexValidator("^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$",message="Introduzca letras del alfabeto")])
+    nombre = models.CharField(max_length = 100, blank=False, null=False,validators=[RegexValidator("[a-zA-Z]+[ a-zA-Z-_]*$",message="Introduzca letras del alfabeto")])
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
@@ -25,7 +26,7 @@ class TipoDeAbogado(models.Model):
         return self.nombre
     
 class TipoDeProceso(models.Model):
-    nombre = models.CharField(max_length = 100, blank=False, null=False,validators=[RegexValidator("^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$",message="Introduzca letras del alfabeto")])
+    nombre = models.CharField(max_length = 100, blank=False, null=False,validators=[RegexValidator("[a-zA-Z]+[ a-zA-Z-_]*$",message="Introduzca letras del alfabeto")])
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
@@ -39,7 +40,7 @@ class TipoDeProceso(models.Model):
         return self.nombre
     
 class Institucion(models.Model):
-    nombre = models.CharField(max_length = 150,blank=False, null=False,validators=[RegexValidator("^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$",message="Introduzca letras del alfabeto")])
+    nombre = models.CharField(max_length = 150,blank=False, null=False,validators=[RegexValidator("[a-zA-Z]+[ a-zA-Z-_]*$",message="Introduzca letras del alfabeto")])
     direccion = models.CharField(max_length = 150,blank=False, null=False)
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
     correo = models.EmailField(max_length=150,blank=False, null=False)
@@ -136,7 +137,7 @@ class Rol(models.Model):
 class ManejadorUsuario(BaseUserManager):
     def _create_user(self,nombre, apellido,correo, password, **extra_fields):
         """
-        Create and save a user with the given username, email, and password.
+        Create and save a user with the given username, correo, and password.
         """
         if not correo:
             raise ValueError('The given correo must be set')
@@ -171,8 +172,8 @@ Estado_Civil= (
 )
 class Usuario(AbstractBaseUser, PermissionsMixin):
     correo = models.EmailField(verbose_name='correo electronico',max_length=100,unique=True)
-    nombre= models.CharField(max_length = 150,validators=[RegexValidator("^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$",message="Introduzca letras del alfabeto")])
-    apellido = models.CharField(max_length = 150,validators=[RegexValidator("^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$",message="Introduzca letras del alfabeto")])
+    nombre= models.CharField(max_length = 150,)
+    apellido = models.CharField(max_length = 150,)
     direccion = models.CharField(max_length = 150)
     dui = models.CharField(max_length = 10, validators=[RegexValidator("^\d{8}-\d{1}$",message="Dui invalido")])
     telefono=models.CharField(max_length = 9,validators=[RegexValidator("^\d{4}-\d{4}$",message="Telefono invalido")])
@@ -213,6 +214,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         """Return the short name for the user."""
         return self.nombre
+    
     
     def __str__(self):
         return self.nombre + ' ' + self.apellido + ' ' + self.correo
