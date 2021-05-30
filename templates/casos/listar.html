@@ -10,8 +10,8 @@
                 <form method="GET">
                     <div id="custom-search-input">
                         <div class="input-group col-md-10">
-                            <label for="nombre" style="margin: 5px;">Nombre: </label>
-                            <input type="text" class="form-control" placeholder="Ingrese el nombre del caso a buscar" name="buscar" style="border-radius: 5px;" id="buscar" value="{{request.GET.buscar}}">
+                            <label for="nombre" style="margin: 5px;">Codigo de caso </label>
+                            <input type="text" class="form-control" placeholder="Ingrese el codigo del caso" name="buscar" style="border-radius: 5px;" id="buscar" value="{{request.GET.buscar}}">
                             <span class="input-group-list">
                                         <i class="icon icon-search"></i>
                                         <button type="submit" class="btn btn-success" id="buscar" style="margin-left: 5px;">Buscar</button>
@@ -50,7 +50,7 @@
                             <td>{{caso.codigo_caso}}</td>
                             <td>{{caso.descripcion}}</td>
                             <td>{{caso.estado}}</td>
-                            <td><a class="btn btn-warning" href="{% url 'editar_caso' caso.codigo_caso %}" id="editar">Editar</a>
+                            <td><a class="btn btn-warning"href="{% url 'editar_caso' caso.codigo_caso %}" id="editar">Editar</a>
                                 <a onclick="abrir_modal_detalle('{% url 'detalle_caso' caso.codigo_caso %}')" class="btn btn-danger">Detalle</a>
                             </td>
                         </tr>

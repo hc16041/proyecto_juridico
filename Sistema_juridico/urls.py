@@ -35,16 +35,22 @@ urlpatterns = [
     path('detalle_cliente/<int:pk>', DetalleCliente.as_view(), name='detalle_cliente'),
 
     path('crear_caso/',CrearCaso.as_view(),name='crear_caso'),
-    path('editar_caso/<int:pk>', ActualizarCaso.as_view(), name='editar_caso'),
-    path('detalle_caso/<int:pk>', DetalleCaso.as_view(), name='detalle_caso'),
+    path('editar_caso/<pk>', ActualizarCaso.as_view(), name='editar_caso'),
+    path('detalle_caso/<pk>', DetalleCaso.as_view(), name='detalle_caso'),
     path('caso/',ListaCasos.as_view(), name='caso'),
+
+    #Pagos
+
+    path('crear_pago', CrearPago.as_view(), name='crear_pago'),
+    path('pagos/', ListPagos.as_view(), name= 'pagos'),
+    path('abonar_pago/<id>', AbonarPago.as_view(), name= 'abonar_pago'),
+    path('editar_pago/<pk>', ActualizarPago.as_view(), name = 'editar_pago'),
 
     path('audiencia/', ListaAudiencia.as_view(), name= 'audiencia'),
     path('crear_audiencia/', CrearAudiencia.as_view(), name='crear_audiencia'),
     path('editar_audiencia/<int:pk>', ActualizarAudiencia.as_view(), name='editar_audiencia'),
 
-
-    path('reporte/',ListaReportes.as_view(),name='reporte'),
+    
     path('403/', handler403),
     path('404/', handler404),
 

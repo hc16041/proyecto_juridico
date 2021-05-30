@@ -4,155 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm, ReadOnlyPasswordHashFi
 from django.contrib.auth.models import Permission, User #Usuario
 from django.contrib.auth.hashers import make_password 
 
-
-class TipoDeAbogadoForm(forms.ModelForm):
-    class Meta:
-        model=TipoDeAbogado
-        fields='__all__'
-        labels={
-            'nombre': 'Nombre del tipo',
-            'descripcion':'Descripcion'
-        }
-        widgets={
-            'nombre': forms.TextInput(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'Ingrese el nombre del tipo de abogado',
-                    'id':'nombre',
-                    
-                }
-            ),
-            'descripcion':forms.Textarea(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'Ingrese descripcion del tipo de abogado',
-                    'rows': '3',
-                    'id':'descripcion',
-                }
-            ),
-        }
-    
-class FormLogin(AuthenticationForm):
-    class Meta:
-        db_table = Usuario
-        fields=['correo','password']
-        labels={
-            'username': 'Nombre del tipo',
-            'password':'Contraseña'
-        }
-    
-        widgets={
-            'correo': forms.TextInput(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'Ingrese el correo ',
-                    'id':'correo'
-                }
-            ),
-            'password':forms.PasswordInput(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'Ingrese contraseña',
-                    'id':'password',
-                }
-            ),
-        }
-    # def __init__(self, *args, **kwargs):
-    #     super(FormLogin, self).__init__(*args,**kwargs)
-    #     self.fields['username'].widget.attrs['class'] = 'form-control'
-    #     self.fields['username'].widget.attrs['placeholder'] = 'Nombre de Usuario'
-    #     self.fields['password'].widget.attrs['class'] = 'form-control'
-    #     self.fields['password'].widget.attrs['placeholder'] = 'Contraseña'
-    
-class CasoForm(forms.ModelForm):
-    codigo_caso=forms.IntegerField(min_value=1,max_value=1500000)
-    class Meta:
-        model=Caso
-        fields='__all__'
-        labels={
-            'codigo caso': 'Codigo caso',
-            'descripcion':'Descripcion'
-        }
-        widgets={
-            'id_cliente': forms.Select(
-                attrs={
-                    'id':'id_cliente',
-                    'class':'form-control form-control-sm col-sm-6',
-                    #'disabled': 'true',
-                }
-            ),
-            'id_abogado': forms.Select(
-                attrs={
-                    'id':'id_abogado',
-                    'class':'form-control form-control-sm col-sm-6',
-                }
-            ),
-            'codigo': forms.TextInput(
-                attrs={
-                    'class':'form-control form-control-sm col-sm-6',
-                    'placeholder':'Ingrese el codigo del caso',
-                    'id':'codigo',
-                    
-                }
-            ),
-            'descripcion':forms.Textarea(
-                attrs={
-                    'class':'form-control form-control-sm col-sm-6',
-                    'placeholder':'Ingrese descripcion del tipo de abogado',
-                    'id':'descripcion',
-                }
-            ),
-            'estado':forms.Select(
-                attrs={
-                    'id':'estado',
-                    'class':'form-control form-control-sm col-sm-6'
-                }
-            ),
-            'tipo_de_proceso':forms.Select(
-                attrs={
-                    'id':'tipo_de_proceso',
-                    'class':'form-control form-control-sm col-sm-6'
-                }
-            ),
-            'tipo_pago':forms.RadioSelect(
-                attrs={
-                    '':'Contado',
-                    '':'Credito',
-                    'id':'tipo_pago',
-                }
-            ),
-            
-        }
-    
-class TipoDeProcesoForm(forms.ModelForm):
-    class Meta:
-        model=TipoDeProceso
-        fields='__all__'
-        labels={
-            'nombre': 'Nombre del tipo',
-            'descripcion':'Descripcion'
-        }
-        widgets={
-            'nombre': forms.TextInput(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'Ingrese el nombre del tipo de proceso',
-                    'id':'nombre',
-                    
-                }
-            ),
-            'descripcion':forms.Textarea(
-                attrs={
-                    'class':'form-control',
-                    'rows':'3',
-                    'placeholder':'Ingrese descripcion del tipo de proceso',
-                    'rows': '3',
-                    'id':'descripcion',
-                }
-            ),
-        }
-    
-#para registrar superusuarios
+#Para registrar superusuarios
 class FormRegistro(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(
         attrs={
@@ -186,7 +38,7 @@ class FormRegistro(forms.ModelForm):
             raise forms.ValidationError("Contraseñas no coinciden")
         return password2
     
-#para actualizar usuario
+#Para actualizar usuario
 class FormActualizarUsuario(forms.ModelForm):
     password=ReadOnlyPasswordHashField()
     class Meta:
@@ -196,6 +48,47 @@ class FormActualizarUsuario(forms.ModelForm):
     def clean_password(self):
         return self.initial['password']
 
+#Login
+class FormLogin(AuthenticationForm):
+    class Meta:
+        db_table = Usuario
+        fields=['correo','password']
+        labels={
+            'username': 'Nombre del tipo',
+            'password':'Contraseña'
+        }
+    
+        widgets={
+            'correo': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese el correo ',
+                    'id':'correo'
+                }
+            ),
+            'password':forms.PasswordInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese contraseña',
+                    'id':'password',
+                }
+            ),
+        }
+    # def __init__(self, *args, **kwargs):
+    #     super(FormLogin, self).__init__(*args,**kwargs)
+    #     self.fields['username'].widget.attrs['class'] = 'form-control'
+    #     self.fields['username'].widget.attrs['placeholder'] = 'Nombre de Usuario'
+    #     self.fields['password'].widget.attrs['class'] = 'form-control'
+    #     self.fields['password'].widget.attrs['placeholder'] = 'Contraseña'
+
+#Form para contacto Email
+class contactoForm(forms.Form):
+    origen=forms.CharField()
+    asunto=forms.CharField(required=True)
+    destino=forms.EmailField()
+    contenido=forms.CharField(max_length=999, widget=forms.Textarea)
+
+#Form Usuario 
 class FormUsuario(forms.ModelForm):
     password1 = forms.CharField(label='Contraseña',widget=forms.PasswordInput(
         attrs={
@@ -220,7 +113,7 @@ class FormUsuario(forms.ModelForm):
                  'nombre': forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese el nombre del cliente',
+                         'placeholder':'Ingrese el nombre',
                          'id':'nombre',
                        
                      }
@@ -228,28 +121,28 @@ class FormUsuario(forms.ModelForm):
                  'correo':forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese correo del cliente',
+                         'placeholder':'Ingrese correo',
                          'id':'descripcion',
                      }
                  ),
                  'apellido':forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese apellido del cliente',
+                         'placeholder':'Ingrese apellido',
                          'id':'descripcion',
                      }
                  ),
                  'direccion':forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese la direccion del cliente',
+                         'placeholder':'Ingrese la direccion',
                          'id':'descripcion',
                      }
                  ),
                  'telefono':forms.TextInput(
                      attrs={
                          'class':'form-control',
-                         'placeholder':'Ingrese telefono del cliente',
+                         'placeholder':'Ingrese telefono',
                          'id':'descripcion',
                      }
                  ),
@@ -270,6 +163,160 @@ class FormUsuario(forms.ModelForm):
             usuario.save()
         return usuario
 
+#Forms mostrados directamente en el sistema
+class CasoForm(forms.ModelForm):
+    class Meta:
+        model=Caso
+        fields='__all__'
+        labels={
+            'codigo caso': 'Codigo caso',
+            'descripcion':'Descripcion'
+        }
+        widgets={
+            'id_cliente': forms.Select(
+                attrs={
+                    'id':'id_cliente',
+                    'class':'form-control form-control-sm col-sm-6',
+                    #'disabled': 'true',
+                }
+            ),
+            'rol_cliente': forms.Select(
+                attrs={
+                    'id':'rol_cliente',
+                    'class':'form-control form-control-sm col-sm-6',
+                }
+            ),
+            'id_abogado': forms.Select(
+                attrs={
+                    'id':'id_abogado',
+                    'class':'form-control form-control-sm col-sm-6',
+                }
+            ),
+            'codigo_caso': forms.NumberInput(
+                attrs={
+                    'class':'form-control form-control-sm col-sm-6',
+                    'placeholder':'Ingrese el codigo del caso',
+                    'id':'codigo_caso',
+                    'min':'1'
+                }
+            ),
+            'descripcion':forms.Textarea(
+                attrs={
+                    'class':'form-control form-control-sm col-sm-6',
+                    'placeholder':'Ingrese descripcion detallada sobre el caso',
+                    'id':'descripcion',
+                }
+            ),
+            'estado':forms.Select(
+                attrs={
+                    'id':'estado',
+                    'class':'form-control form-control-sm col-sm-6'
+                }
+            ),
+            'tipo_de_proceso':forms.Select(
+                attrs={
+                    'id':'tipo_de_proceso',
+                    'class':'form-control form-control-sm col-sm-6'
+                }
+            ),
+            'pago_caso':forms.TextInput(
+                attrs={
+                    'id':'pago_caso',
+                    'class':'form-control form-control-sm col-sm-6'
+                }
+            ),            
+        }
+
+class AudienciaForm(forms.ModelForm):
+    class Meta:
+        model=Audiencia
+        fields= '__all__'
+        labels={
+        }
+        widgets={
+            'codigo_caso':forms.Select(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'--',
+                    'id':'codigo_caso',
+                }
+            ),
+            'id_cliente':forms.Select(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'-- ',
+                    'id':'id_cliente',
+                }
+            ),
+           'detalle':forms.Select(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'--',
+                    'id':'detalle',
+                }
+            ),
+           'fecha':forms.SelectDateWidget(
+                     years=range(2021, 2100),
+                     attrs={
+                         'class':'form-control form-control-sm col-sm-2',
+                         'type': 'date',
+                         'id':'fecha',
+                         }
+                 ),   
+           'hora':forms.TimeInput(
+                attrs={
+                    'type': 'time',
+                    'id':'hora',
+                    'class':'form-control',
+                }
+            ),
+           'juzgado':forms.Select(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'---',
+                    'id':'juzgado',
+                }
+            ),
+            'descripcion':forms.Textarea(
+                attrs={
+                    'class':'form-control',
+                    'rows' : '4',
+                    'placeholder':'Descripcion de audiencia',
+                    'id':'descripcion'
+                         }
+                 ),
+        }
+
+class PagoForm(forms.ModelForm):
+    class Meta:
+        model=Pago
+        fields='__all__'
+        labels={
+        }
+        widgets={
+           'fecha':forms.SelectDateWidget(
+                     years=range(2021, 2100),
+                     attrs={
+                         'class':'form-control form-control-sm col-sm-2',
+                         'type': 'date',
+                         'id':'fecha_pago',
+                         }
+                 ),
+            'descripcion':forms.Textarea(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese descripcion sobre el abono realizado',
+                    'rows': '2',
+                    'id':'descripcion',
+                        }
+                ),
+            'monto':forms.TextInput(
+                     attrs={
+                         'class':'form-control form-control-sm col-sm-4',
+                         'id':'monto'
+                         }
+                 ),
+        }
 
 class FormCliente(forms.ModelForm):
     
@@ -282,7 +329,6 @@ class FormCliente(forms.ModelForm):
                          'class':'form-control',
                          'placeholder':'Ingrese el nombre del cliente',
                          'id':'nombre',
-                       
                      }
             ),
                  'correo':forms.TextInput(
@@ -318,7 +364,6 @@ class FormCliente(forms.ModelForm):
                          'class':'form-control',
                          'placeholder': 'Ingrese numero de dui',
                          'id':'dui',
-                       
                      }
             ),
                  'estado_civil':forms.Select(
@@ -334,12 +379,8 @@ class FormCliente(forms.ModelForm):
                          'type': 'date',
                          'id':'fecha_nacimiento',
                          }
-                 )
-                 
+                 )   
              }
-        
-        
-    
     def clean_password2(self):
         password1=make_password('')
         # password2=self.cleaned_data.get("password2")
@@ -368,7 +409,61 @@ class FormCliente(forms.ModelForm):
             usuario.save()
         return usuario
 
-
+class TipoDeAbogadoForm(forms.ModelForm):
+    class Meta:
+        model=TipoDeAbogado
+        fields='__all__'
+        labels={
+            'nombre': 'Nombre del tipo',
+            'descripcion':'Descripcion'
+        }
+        widgets={
+            'nombre': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese el nombre del tipo de abogado',
+                    'id':'nombre',
+                    
+                }
+            ),
+            'descripcion':forms.Textarea(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese descripcion del tipo de abogado',
+                    'rows': '3',
+                    'id':'descripcion',
+                }
+            ),
+        }
+        
+class TipoDeProcesoForm(forms.ModelForm):
+    class Meta:
+        model=TipoDeProceso
+        fields='__all__'
+        labels={
+            'nombre': 'Nombre del tipo',
+            'descripcion':'Descripcion'
+        }
+        widgets={
+            'nombre': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ingrese el nombre del tipo de proceso',
+                    'id':'nombre',
+                    
+                }
+            ),
+            'descripcion':forms.Textarea(
+                attrs={
+                    'class':'form-control',
+                    'rows':'3',
+                    'placeholder':'Ingrese descripcion del tipo de proceso',
+                    'rows': '3',
+                    'id':'descripcion',
+                }
+            ),
+        }
+    
 class FormAbogado(forms.ModelForm):
     class Meta:
         model= Abogado
@@ -465,66 +560,6 @@ class FormAbogado(forms.ModelForm):
             usuario.save()
         return usuario
 
-
-class ReporteForm(forms.ModelForm):
-    class Meta:
-        model=Caso
-        fields=('__all__')
-        labels={
-            'codigo de caso': 'codigo de caso',
-            'dui cliente':'dui cliente',
-            'nombre abogado':'nombre abogado',
-            'tipo de proceso':'tipo de proceso',
-            'estado cliente':'estado cliente'
-
-        }
-        
-       
-        widgets={
-                 'codigo_de_caso': forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese el codigo de caso',
-                         'id':'codigo_de_caso',
-                       
-                     }
-            ),
-                 'dui_cliente':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese dui del cliente',
-                         'id':'dui_cliente',
-                     }
-            ),
-                 'nombre_abogado':forms.TextInput(
-                     attrs={
-                         'class':'form-control',
-                         'placeholder':'Ingrese el nombre de Abogado',
-                         'id':'nombre_abogado',
-                     }
-                 ),
-            
-                 'tipo_de_proceso':forms.Select(
-                attrs={
-                    'id':'tipo_de_proces',
-                    'class':'form-control form-control-sm col-sm-2'
-                }
-            ),
-                 'Rol_Cliente':forms.Select(
-                     attrs={
-                         'class':'form-control form-control-sm col-sm-4',
-                         'id':'Rol_cliente'
-                         }
-    
-                 )
-                 
-             }
-class contactoForm(forms.Form):
-    origen=forms.CharField()
-    asunto=forms.CharField(required=True)
-    destino=forms.EmailField()
-    contenido=forms.CharField(max_length=999, widget=forms.Textarea)
-
 class InstitucionForm(forms.ModelForm):
     class Meta:
         model=Institucion
@@ -585,99 +620,4 @@ class InstitucionForm(forms.ModelForm):
             ),
         }
 
-class FormaDePagoForm(forms.ModelForm):
-    class Meta:
-        model=FormaDePago
-        fields='__all__'
-        labels={
-          
-        }
-        widgets={
 
-           'plazo':forms.NumberInput (
-                attrs={
-                    'class':'form-control form-control-sm col-sm-4',
-                    'placeholder':'Ingrese cantidad del plazo',
-                    'id':'plazo',
-                }
-            ),   
-
-           'cuota':forms.NumberInput(
-                attrs={
-                    'id':'cuota',
-                    'class':'form-control form-control-sm col-sm-4'
-                }
-            ),
-        
-            'monto':forms.TextInput(
-                     attrs={
-                         'class':'form-control form-control-sm col-sm-4',
-                         'id':'monto'
-                         }
-    
-                 ),
-
-            'fecha_fin_credito':forms.DateInput(
-                     attrs={
-                         'class':'form-control form-control-sm col-sm-4',
-                         'type': 'date',
-                         'id':'fecha_fin_credito'
-                         }
-    
-                 )
-        }
-
-class AudienciaForm(forms.ModelForm):
-    class Meta:
-        model=Audiencia
-        fields= '__all__'
-        labels={
-          
-        }
-        widgets={
-
-           'detalle':forms.Select(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'---------------------',
-                    'id':'detalle',
-                }
-            ),
-
-           'fecha':forms.SelectDateWidget(
-                     years=range(2021, 2100),
-                     attrs={
-                         'class':'form-control form-control-sm col-sm-2',
-                         'type': 'date',
-                         'id':'fecha',
-                         }
-                 ),   
-
-           'hora':forms.TimeInput(
-                attrs={
-                    'type': 'time',
-                    'id':'hora',
-                    'class':'form-control',
-                }
-            ),
-
-           'juzgado':forms.Select(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'---------------------',
-                    'id':'juzgado',
-                }
-            ),
-        
-            'descripcion':forms.Textarea(
-                attrs={
-                    'class':'form-control',
-                    'rows' : '4',
-                    'placeholder':'Descripcion',
-                    'id':'descripcion'
-                         }
-    
-                 ),
-
-    
-        }

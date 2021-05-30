@@ -1,0 +1,77 @@
+{%extends 'base.html'%}{%load static%}{%block title%}Honorarios{%endblock%} {%block content%}
+<div class="card">
+    <div class="card-header">
+        <strong>Honorarios</strong>
+    </div>
+    <div class="card-body card_block">
+        <div class="row ">
+            <div class="col-md-12 search">
+                <!--Barra de busqueda-->
+                <form method="GET">
+                    <div id="custom-search-input">
+                        <div class="input-group col-md-10">
+                            <label for="nombre" style="margin: 5px;">Codigo de Caso: </label>
+                            <input type="text" class="form-control" placeholder="Ingrese el codigo de caso" name="buscar" style="border-radius: 5px;" id="buscar" value="{{request.GET.buscar}}">
+                            <span class="input-group-list">
+                                        <i class="icon icon-search"></i>
+                                        <button type="submit" class="btn btn-success" id="buscar" style="margin-left: 5px;">Buscar</button>
+                                </span>
+                        </div>
+                    </div>
+                </form>
+                <!--Fin Barra de busqueda-->
+                <br> {%if pagos%}
+            </div>
+        </div>
+        <div class="col-md-10">
+            <a class="btn btn-primary" href="{%url 'crear_pago'%}" id="crear" style="float: right;">Crear Pago</a>
+        </div>
+        <br>
+        <br>
+        <div class="card-body">
+            <div class="table">
+                <table class="table table-responsive table-hover">
+                    <thead class="thead-dark ">
+                        <tr>
+                            <th scope="col ">Codigo Caso</th>
+                            <th scope="col ">Fecha</th>
+                            <th scope="col ">Descripción</th>
+                            <th scope="col ">Monto</th>
+                            <th scope="col ">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for pago in pagos%}
+                        <tr>
+                            <td>{{pago.codigo_caso_id}}</td>
+                            <td>{{pago.fecha}}</td>
+                            <td>{{pago.descripcion}}</td>
+                            <td>{{pago.monto}}</td>
+                            <td><a class="btn btn-success" href="{% url 'editar_pago' pago.id %}" id="editar">Editar Pago</a>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {%else%}
+        <div class="container">
+            <div class="col-md-8">
+                <a class="btn btn-primary" href="{%url 'crear_pago'%}" id="crear" style="float: right;">Crear Pago</a>
+            </div>
+            <br>
+            <br>
+            <h1>No existen Honorarios registrados</h1>
+
+        </div>
+    </div>
+</div>
+{%endif%}
+<div id="view" class="modal fade" role="dialog">
+</div>
+<div id="edicion" class="modal fade" role="dialog">
+</div>
+
+
+{%endblock%}
