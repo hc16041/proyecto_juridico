@@ -44,7 +44,7 @@ class Institucion(models.Model):
     direccion = models.CharField(max_length = 150,blank=False, null=False)
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
     correo = models.EmailField(max_length=150,blank=False, null=False)
-    telefono = models.IntegerField(max_length = 9,validators=[RegexValidator("^\d{4}-\d{4}$",message="Telefono invalido")])
+    telefono = models.CharField(max_length = 9,validators=[RegexValidator("^\d{4}-\d{4}$",message="Telefono invalido")])
     tipo = models.CharField(max_length = 150,blank=False, null=False)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
     
@@ -54,42 +54,6 @@ class Institucion(models.Model):
 
     def __str__(self):
         return self.nombre
-
-
-class FormaDePago(models.Model):
-    id = models.AutoField(primary_key = True)
-    plazo = models.IntegerField()
-    cuota = models.IntegerField()
-    monto=models.DecimalField( max_digits=5, decimal_places=2)
-    fecha_fin_credito = models.DateField(null=True)
-    fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
-    
-    class Meta:
-        verbose_name = 'FormaDePago'
-        verbose_name_plural = 'FormaDePagos'
-
-    def __str__(self):
-        return self.fecha_fin_credito
-
-
-class Pago(models.Model):
-    fecha = models.DateField()
-    descripcion = models.TextField(max_length = 220, blank=False, null=False)
-    cargo = models.DecimalField(max_digits=5, decimal_places=2)
-    monto = models.DecimalField(max_digits=6, decimal_places=2)
-    saldo_total = models.DecimalField(max_digits=6, decimal_places=2)
-    tipo_de_pago=models.ForeignKey(FormaDePago, blank=False, null=False,on_delete=models.CASCADE)
-    fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
-    
-    class Meta:
-        """Meta definition for Pago."""
-
-        verbose_name = 'Pago'
-        verbose_name_plural = 'Pagos'
-
-    def __str__(self):
-        """Unicode representation of Pago."""
-        return self.descripcion
 
 class Rol(models.Model):
     """Model definition for Rol."""
@@ -172,8 +136,13 @@ Estado_Civil= (
 )
 class Usuario(AbstractBaseUser, PermissionsMixin):
     correo = models.EmailField(verbose_name='correo electronico',max_length=100,unique=True)
+<<<<<<< HEAD
     nombre= models.CharField(max_length = 150,)
     apellido = models.CharField(max_length = 150,)
+=======
+    nombre= models.CharField(max_length = 150)
+    apellido = models.CharField(max_length = 150)
+>>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0
     direccion = models.CharField(max_length = 150)
     dui = models.CharField(max_length = 10, validators=[RegexValidator("^\d{8}-\d{1}$",message="Dui invalido")])
     telefono=models.CharField(max_length = 9,validators=[RegexValidator("^\d{4}-\d{4}$",message="Telefono invalido")])
@@ -278,12 +247,12 @@ Tipo_Pago =(
 class Caso(models.Model):
     id_cliente=models.ForeignKey(Cliente, verbose_name=("Id Cliente:"), on_delete=models.CASCADE)
     id_abogado=models.ForeignKey(Abogado, verbose_name=("Id Abogado"), on_delete=models.CASCADE)
-    codigo_caso= models.IntegerField(primary_key=True)
+    codigo_caso= models.CharField(primary_key=True, max_length=10)
     rol_cliente = models.CharField(choices=Rol_Cliente, max_length=220)
     descripcion = models.TextField(max_length = 220, blank=False, null=False)
     estado = models.CharField(choices=Estados, max_length=220)
     tipo_de_proceso = models.ForeignKey(TipoDeProceso,on_delete=models.CASCADE)
-    tipo_pago = models.CharField(choices=Tipo_Pago, max_length=220)
+    pago_caso = models.FloatField( max_length=220)
     #pago=models.ForeignKey(Pago,on_delete=models.CASCADE)
     #audiencia=models.ForeignKey(Audiencia,on_delete=models.CASCADE)
     fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
@@ -294,7 +263,7 @@ class Caso(models.Model):
 
     
     def __str__(self):
-        return self.descripcion
+        return self.codigo_caso
 
 Detalle =(
     ("Nuevo", "Nuevo"),
@@ -319,3 +288,19 @@ class Audiencia(models.Model):
     def __str__(self):
         return self.detalle
 
+class Pago(models.Model):
+    fecha = models.DateField()
+    codigo_caso = models.ForeignKey(Caso, on_delete=models.CASCADE)
+    descripcion = models.TextField(max_length = 220, blank=False, null=False)
+    monto = models.DecimalField(max_digits=6, decimal_places=2)
+    fecha_creacion = models.DateField('Fecha de creacion',auto_now=True, auto_now_add=False)
+    
+    class Meta:
+        """Meta definition for Pago."""
+
+        verbose_name = 'Pago'
+        verbose_name_plural = 'Pagos'
+
+    def __str__(self):
+        """Unicode representation of Pago."""
+        return self.descripcion

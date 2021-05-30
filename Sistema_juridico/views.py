@@ -89,14 +89,16 @@ def someview(request):
    ...
    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
 class CrearCaso(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
     permission_required='Sistema_juridico.add_caso'
     model = Caso, Cliente
     form_class=CasoForm
     template_name = "casos/crear_caso.html"
     success_url=reverse_lazy('caso')
+<<<<<<< HEAD
+=======
     
+>>>>>>> b18015e653a9b022da6327cc0de1a8113c625792
 
 class ListarTiposDeProcesos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_tipodeproceso'
@@ -234,8 +236,24 @@ class ListaCasos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
             return Caso.objects.filter(
+<<<<<<< HEAD
             Q(codigo_caso__icontains=self.request.GET['buscar'])|
             Q(estado__icontains=self.request.GET['buscar'])
+=======
+<<<<<<< HEAD
+            Q(estado__icontains=self.request.GET['buscar'])|
+            Q(codigo_caso__icontains=self.request.GET['buscar'])
+=======
+<<<<<<< HEAD
+            Q(nombre__icontains=self.request.GET['buscar'])|
+            Q(correo__icontains=self.request.GET['buscar'])|
+            Q(dui__icontains=self.request.GET['buscar'])
+=======
+            Q(codigo_caso__icontains=self.request.GET['buscar'])|
+            Q(estado__icontains=self.request.GET['buscar'])
+>>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
+>>>>>>> b18015e653a9b022da6327cc0de1a8113c625792
+>>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0
         ).distinct()
         return super().get_queryset()
     #success_url=reverse_lazy('inicio')
@@ -267,6 +285,7 @@ class ActualizarCaso(UpdateView):
     model = Caso
     form_class=CasoForm
     template_name = "casos/caso_editar.html"
+<<<<<<< HEAD
     success_url=reverse_lazy('caso')
 
 class CrearFormaDePagoModal(CreateView):
@@ -312,6 +331,9 @@ class ActualizarFormaDePago(UpdateView):
     template_name = "formapago/formapago_editar.html"
     success_url=reverse_lazy('formaPago')
 
+=======
+    success_url=reverse_lazy('caso')  
+>>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0
 
 class ListarInstitucion(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_institucion'
@@ -381,7 +403,13 @@ class ListaAudiencia(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     def get_queryset(self):
         if self.request.GET.get('buscar') is not None:
             return Audiencia.objects.filter(
+<<<<<<< HEAD
             Q(codigo_caso=self.request.GET['buscar'])
+=======
+            Q(detalle__icontains=self.request.GET['buscar'])|
+            Q(codigo_caso_id=self.request.GET['buscar'])|
+            Q(descripcion__icontains=self.request.GET['buscar'])
+>>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0
         ).distinct()
         return super().get_queryset()
 
@@ -394,6 +422,7 @@ class ActualizarAudiencia(LoginRequiredMixin,PermissionRequiredMixin,UpdateView)
     success_url=reverse_lazy('audiencia')
 
 
+<<<<<<< HEAD
 class ListarCasosClientes(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required='Sistema_juridico.view_caso_cliente'
     model=Caso
@@ -406,3 +435,50 @@ class ListarCasosClientes(LoginRequiredMixin,PermissionRequiredMixin,ListView):
             Q(id_cliente=self.request.user)
         ).distinct()
         return super().get_queryset()
+=======
+<<<<<<< HEAD
+#Pagos
+
+class ListPagos(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required='Sistema_juridico.view_caso'
+    model = Pago
+    template_name = "pagos/pago_list.html"
+    context_object_name='pagos'
+    queryset=Pago.objects.order_by('fecha')
+    paginate_by=10
+    
+    #Para la barra de busqueda
+
+    def get_queryset(self):
+        if self.request.GET.get('buscar') is not None:
+            return Pago.objects.filter(
+            Q(codigo_caso_id=self.request.GET['buscar'])
+        ).distinct()
+        return super().get_queryset()
+
+class CrearPago(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
+    permission_required='Sistema_juridico.add_caso'
+    model = Pago, Caso
+    form_class= PagoForm
+    template_name = "pagos/crear_pago.html"
+    context_object_name='pagos'
+    success_url=reverse_lazy('pagos')
+
+class AbonarPago(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required='Sistema_juridico.add_caso'
+    model = Pago, Caso
+    form_class= PagoForm
+    template_name = "pagos/crear_pagos.html"
+    context_object_name='pagos'
+    success_url=reverse_lazy('pagos')
+
+class ActualizarPago(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
+    permission_required='Sistema_juridico.change_caso'
+    model = Pago
+    form_class= PagoForm
+    template_name = "pagos/editar_pago.html"
+    success_url=reverse_lazy('pagos')  
+=======
+>>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
+>>>>>>> b18015e653a9b022da6327cc0de1a8113c625792
+>>>>>>> b80c5795099f6b6b029e1961bb03e937a3d98aa0

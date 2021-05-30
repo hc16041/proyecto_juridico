@@ -9,6 +9,17 @@
     margin-left: 5px;
     float: right;
 }
+<<<<<<< HEAD
+.header {
+    color: #36A0FF;
+    font-size: 27px;
+    padding: 10px;
+}
+
+.bigicon {
+    font-size: 35px;
+    color: #36A0FF;
+=======
 
 .main-section {
     margin: 10 auto;
@@ -70,4 +81,5 @@ button {
 
 .forgot a {
     color: white;
+>>>>>>> b18015e653a9b022da6327cc0de1a8113c625792
 }
