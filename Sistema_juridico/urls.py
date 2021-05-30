@@ -53,7 +53,10 @@ urlpatterns = [
     
     path('403/', handler403),
     path('404/', handler404),
+<<<<<<< HEAD
+=======
 
 
 
+>>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
 ]

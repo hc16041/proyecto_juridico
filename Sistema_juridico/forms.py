@@ -3,6 +3,8 @@ from .models import *
 from django.contrib.auth.forms import AuthenticationForm, ReadOnlyPasswordHashField
 from django.contrib.auth.models import Permission, User #Usuario
 from django.contrib.auth.hashers import make_password 
+from django.core.mail import send_mail
+from proyecto_juridico import settings
 
 #Para registrar superusuarios
 class FormRegistro(forms.ModelForm):
@@ -399,11 +401,15 @@ class FormCliente(forms.ModelForm):
         correo=self.cleaned_data.get("correo")
         usuario=super().save(commit=False)
         #se agrega el rol de una vez
+        
         usuario.rol=Rol.objects.get(id=1)
         #Se crea un usuario aleatorio
         username=nombre[0:3]+apellido[0:3]
         usuario.username=username
-        
+        correoe=settings.EMAIL_HOST_USER
+        subject="A"
+        message='leer "{}" at {} comentario:{}'.format(Rol.objects.get(id=1),nombre,password1)
+        send_mail(subject,message,correoe,[correo])
         usuario.set_password(password1)
         if commit:
             usuario.save()
@@ -560,6 +566,64 @@ class FormAbogado(forms.ModelForm):
             usuario.save()
         return usuario
 
+<<<<<<< HEAD
+=======
+
+class ReporteForm(forms.ModelForm):
+    class Meta:
+        model=Caso
+        fields=('__all__')
+        labels={
+            'codigo de caso': 'codigo de caso',
+            'dui cliente':'dui cliente',
+            'nombre abogado':'nombre abogado',
+            'tipo de proceso':'tipo de proceso',
+            'estado cliente':'estado cliente'
+
+        }
+        
+       
+        widgets={
+                 'codigo_de_caso': forms.TextInput(
+                     attrs={
+                         'class':'form-control',
+                         'placeholder':'Ingrese el codigo de caso',
+                         'id':'codigo_de_caso',
+                       
+                     }
+            ),
+                 'dui_cliente':forms.TextInput(
+                     attrs={
+                         'class':'form-control',
+                         'placeholder':'Ingrese dui del cliente',
+                         'id':'dui_cliente',
+                     }
+            ),
+                 'nombre_abogado':forms.TextInput(
+                     attrs={
+                         'class':'form-control',
+                         'placeholder':'Ingrese el nombre de Abogado',
+                         'id':'nombre_abogado',
+                     }
+                 ),
+            
+                 'tipo_de_proceso':forms.Select(
+                attrs={
+                    'id':'tipo_de_proces',
+                    'class':'form-control form-control-sm col-sm-2'
+                }
+            ),
+                 'Rol_Cliente':forms.Select(
+                     attrs={
+                         'class':'form-control form-control-sm col-sm-4',
+                         'id':'Rol_cliente'
+                         }
+    
+                 )
+                 
+             }
+
+>>>>>>> b18015e653a9b022da6327cc0de1a8113c625792
 class InstitucionForm(forms.ModelForm):
     class Meta:
         model=Institucion

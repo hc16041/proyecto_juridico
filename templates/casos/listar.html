@@ -49,8 +49,20 @@
                             <td>{{caso.id_abogado.get_full_name}}</td>
                             <td>{{caso.codigo_caso}}</td>
                             <td>{{caso.descripcion}}</td>
+<<<<<<< HEAD
+                            {% firstof caso.estado as value %} {%if value %}
+                            <td>Finalizado</td>
+                            {%else%}
+                            <td>En Proceso</td>
+                            {%endif%}
+=======
                             <td>{{caso.estado}}</td>
+<<<<<<< HEAD
                             <td><a class="btn btn-warning"href="{% url 'editar_caso' caso.codigo_caso %}" id="editar">Editar</a>
+=======
+>>>>>>> a171a513ab5eb240d962602dddd97959f84a043f
+                            <td><a class="btn btn-warning" href="{% url 'editar_caso' caso.codigo_caso %}" id="editar">Editar</a>
+>>>>>>> b18015e653a9b022da6327cc0de1a8113c625792
                                 <a onclick="abrir_modal_detalle('{% url 'detalle_caso' caso.codigo_caso %}')" class="btn btn-danger">Detalle</a>
                             </td>
                         </tr>
@@ -78,7 +90,6 @@
 </div>
 
 <script type="text/javascript">
-
     function abrir_modal_detalle(url) {
         $('#view').load(url, function() {
             $(this).modal('show');
