@@ -43,10 +43,10 @@
                     <form method="post" class="col-12 ">
                         {% csrf_token %}
                         <div class="form-group " id="user-group ">
-                            {{ form.username }}
+                            <input type="text" name="username" autofocus="" required="" id="id_username" placeholder="Ingrese el correo">
                         </div>
                         <div class="form-group " id="user-group ">
-                            {{ form.password }}
+                            <input type="password" name="password" required="" id="id_password" placeholder="Ingrese la contraseña">
                         </div>
                         <button type="submit " class="btn btn-primary "><i class="fas fa-sign-in-alt "></i>  Enviar </button>
                     </form>
