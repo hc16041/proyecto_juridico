@@ -318,7 +318,7 @@ class FormCliente(forms.ModelForm):
         #Envio del correo al usuario
         correoAdmin=settings.EMAIL_HOST_USER
         subject="Datos de ingreso"
-        message='Datos de ingreso al sistema. \nNombre del usuario: {} \nCorreo del usuario:{} \nContraseña: {}'.format(nombre,correo,password1)
+        message='Datos de ingreso al sistema. \nNombre del usuario: {} \nCorreo del usuario: {} \nContraseña: {}'.format(nombre,correo,password1)
         send_mail(subject,message,correoAdmin,[correo])
         usuario.set_password(password1)
         if commit:
@@ -413,7 +413,7 @@ class FormAbogado(forms.ModelForm):
         #Envio del correo al usuario
         correoAdmin=settings.EMAIL_HOST_USER
         subject="Datos de ingreso"
-        message='Datos de ingreso al sistema. \nNombre del usuario: {} \nCorreo del usuario:{} \nContraseña: {}'.format(nombre,correo,password1)
+        message='Datos de ingreso al sistema. \nNombre del usuario: {} \nCorreo del usuario: {} \nContraseña: {}'.format(nombre,correo,password1)
         send_mail(subject,message,correoAdmin,[correo])
         
         usuario.set_password(password1)
