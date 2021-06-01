@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Sistema_juridico.apps.SistemaJuridicoConfig',
-    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
