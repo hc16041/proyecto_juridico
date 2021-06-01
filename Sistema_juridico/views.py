@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-
+import requests
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView, FormView,View
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 #Decoradores
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
@@ -389,3 +389,7 @@ def handler403(request,exception=None):
 
 def handler404(request,exception=None):
     return render(request,'errores/404.html')
+def index(request):
+    r = requests.get('http://httpbin.org/status/418')
+    print(r.text)
+    return HttpResponse('<pre>' + r.text + '</pre>')
