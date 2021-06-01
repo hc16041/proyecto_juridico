@@ -217,7 +217,7 @@ class Cliente(Usuario):
         verbose_name_plural = 'Clientes'
     
 class Abogado(Usuario):
-    Tipo_de_abogado=models.OneToOneField(TipoDeAbogado, verbose_name=("Tipo De Abogado"), on_delete=models.CASCADE)
+    Tipo_de_abogado=models.ForeignKey(TipoDeAbogado, verbose_name=("Tipo De Abogado"), on_delete=models.CASCADE)
     
 
 

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
+
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView, FormView,View
 from django.db.models import Q
 from django.http import HttpResponseRedirect
@@ -13,7 +14,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.models import User
 #Posiblemente este no ira.
 from django.contrib.auth.decorators import permission_required
-from django.core.mail import send_mail
 from .forms import *
 from .models import *
 
@@ -307,7 +307,7 @@ class ActualizarInstitucion(LoginRequiredMixin,PermissionRequiredMixin,UpdateVie
 
 #Bloque de vistas para Audiencia
 class ListaAudiencia(LoginRequiredMixin,PermissionRequiredMixin,ListView):
-    permission_required='Sistema_juridico.view_Audiencia'
+    permission_required='Sistema_juridico.view_audiencia'
     model = Audiencia, Caso
     template_name = "audiencia/audiencia_list.html"
     context_object_name='audiencia'
@@ -326,7 +326,7 @@ class ListaAudiencia(LoginRequiredMixin,PermissionRequiredMixin,ListView):
         return super().get_queryset()
 
 class CrearAudiencia(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
-    permission_required='Sistema_juridico.add_Audiencia'
+    permission_required='Sistema_juridico.add_audiencia'
     model = Audiencia
     form_class= AudienciaForm
     template_name = "audiencia/crear_audiencia.html"
@@ -334,7 +334,7 @@ class CrearAudiencia(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
     success_url=reverse_lazy('audiencia')
 
 class ActualizarAudiencia(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
-    permission_required='Sistema_juridico.change_Audiencia'
+    permission_required='Sistema_juridico.change_audiencia'
     model = Audiencia
     form_class=AudienciaForm
     template_name = "audiencia/audiencia_editar.html"
