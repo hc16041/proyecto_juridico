@@ -2,5 +2,6 @@
     "git.ignoreLimitWarning": true,
     "python.linting.flake8Enabled": false,
     "python.linting.enabled": true,
-    "python.linting.pylintEnabled": true
+    "python.linting.pylintEnabled": true,
+    "python.pythonPath": "C:\\Users\\JoseHernandez\\AppData\\Local\\Programs\\Python\\Python39\\python.exe"
 }
